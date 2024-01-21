@@ -78,21 +78,22 @@ export default {
     const db = connect();
 
     const stmQueryCurrent1 = db.prepare(
-      `select * from category_table where current = "1"`,
+      `select * from category_table where current = 1`,
     );
-    const stmUpdate2 = db.prepare(`UPDATE category_table SET current = "2"`);
+    const stmUpdate2 = db.prepare(`UPDATE category_table SET current = 2`);
     const stmUpdate1 = db.prepare(
-      `UPDATE category_table SET current = "1" WHERE name = @name`,
+      `UPDATE category_table SET current = 1 WHERE name = @name`,
     );
 
     try {
-      const item = stmQueryCurrent1.get();
-      if (!item) {
-        return { code: 400, msg: '没有查到code', data: item };
-      }
       stmUpdate2.run();
       stmUpdate1.run({ name });
-      return { code: 200, msg: '成功' };
+      const item = stmQueryCurrent1.get();
+      console.log(333, item);
+      if (!item) {
+        return { code: 400, msg: '没有查到code' };
+      }
+      return { code: 200, msg: '成功', data: item };
     } catch (error) {
       return { code: 400, msg: error };
     }

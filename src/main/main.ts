@@ -35,6 +35,51 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
+ipcMain.on('ipc-example', async (event, arg) => {
+  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
+  console.log(msgTemplate(arg));
+  event.reply('ipc-example', msgTemplate('pong'));
+});
+
+// list操作
+ipcMain.handle('add-data', async (event, message) => {
+  const result = listApi.addList(message);
+  return result;
+});
+
+ipcMain.handle('update-data', async (event, message) => {
+  const result = listApi.updateList(message);
+  return result;
+});
+
+ipcMain.handle('get-list', async (event, message) => {
+  console.log(`receive message from render: ${message}`);
+  const result = listApi.getList(message);
+  return result;
+});
+
+// 分类操作
+ipcMain.handle('add-category', async (event, message) => {
+  const result = categoryApi.addData(message);
+  return result;
+});
+ipcMain.handle('get-category', async () => {
+  const result = categoryApi.getData();
+  return result;
+});
+ipcMain.handle('update-category', async (event, message) => {
+  const result = categoryApi.updateData(message);
+  return result;
+});
+ipcMain.handle('delete-category', async (event, message) => {
+  const result = categoryApi.delData(message);
+  return result;
+});
+ipcMain.handle('set-category-current', async (event, message) => {
+  const result = categoryApi.setCurrent(message);
+  return result;
+});
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -75,8 +120,8 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: 1270,
+    height: 750,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
@@ -87,6 +132,8 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
+  init();
+
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -96,6 +143,13 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
     }
+  });
+
+  mainWindow?.on('resize', () => {
+    mainWindow?.webContents.send(
+      'mainWindowResize',
+      mainWindow?.isFullScreen(),
+    );
   });
 
   mainWindow.on('closed', () => {
@@ -128,58 +182,9 @@ app.on('window-all-closed', () => {
   }
 });
 
-const ipcFunc = () => {
-  ipcMain.on('ipc-example', async (event, arg) => {
-    const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-    console.log(msgTemplate(arg));
-    event.reply('ipc-example', msgTemplate('pong'));
-  });
-
-  // list操作
-  ipcMain.handle('add-data', async (event, message) => {
-    const result = listApi.addList(message);
-    return result;
-  });
-
-  ipcMain.handle('update-data', async (event, message) => {
-    const result = listApi.updateList(message);
-    return result;
-  });
-
-  ipcMain.handle('get-list', async (event, message) => {
-    console.log(`receive message from render: ${message}`);
-    const result = listApi.getList(message);
-    return result;
-  });
-
-  // 分类操作
-  ipcMain.handle('add-category', async (event, message) => {
-    const result = categoryApi.addData(message);
-    return result;
-  });
-  ipcMain.handle('get-category', async () => {
-    const result = categoryApi.getData();
-    return result;
-  });
-  ipcMain.handle('update-category', async (event, message) => {
-    const result = categoryApi.updateData(message);
-    return result;
-  });
-  ipcMain.handle('delete-category', async (event, message) => {
-    const result = categoryApi.delData(message);
-    return result;
-  });
-  ipcMain.handle('set-category-current', async (event, message) => {
-    const result = categoryApi.setCurrent(message);
-    return result;
-  });
-};
-
 app
   .whenReady()
   .then(() => {
-    init();
-    ipcFunc();
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

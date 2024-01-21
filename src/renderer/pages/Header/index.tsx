@@ -23,6 +23,7 @@ export default function HeaderCom() {
   const [workSpaceForm] = Form.useForm();
 
   window.electron.ipcRenderer.on('mainWindowResize', (arg) => {
+    console.log(331, arg);
     setIsFullScreen(arg);
   });
 
@@ -55,7 +56,8 @@ export default function HeaderCom() {
         name: form.getFieldsValue()?.name,
       },
     );
-    const cur: any = resp.data?.[0];
+    console.log(331, resp);
+    const cur: any = resp.data;
     const categoryCurrent = cur?.name;
     localStorage.setItem('category_current', categoryCurrent);
     setCurrentCategory(cur);
@@ -73,7 +75,7 @@ export default function HeaderCom() {
         isFullScreen
           ? {}
           : {
-              marginLeft: '57px',
+              // marginLeft: '57px',
             }
       }
     >
@@ -133,7 +135,7 @@ export default function HeaderCom() {
         </div>
       </Dropdown>
 
-      <span>分类：{currentCategory.name}</span>
+      <span>分类：{currentCategory?.name}</span>
 
       <Modal
         title="分类设置"
