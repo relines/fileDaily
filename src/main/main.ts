@@ -18,6 +18,7 @@ import { resolveHtmlPath } from './util';
 import { init } from './database/index';
 import listApi from './database/listApi';
 import categoryApi from './database/categoryApi';
+import fileApi from './file/index';
 
 class AppUpdater {
   constructor() {
@@ -29,56 +30,64 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
+const ipcFunc = () => {
+  ipcMain.on('ipc-example', async (event, arg) => {
+    const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
+    console.log(msgTemplate(arg));
+    event.reply('ipc-example', msgTemplate('pong'));
+  });
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
+  ipcMain.on('ipc-example', async (event, arg) => {
+    const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
+    console.log(msgTemplate(arg));
+    event.reply('ipc-example', msgTemplate('pong'));
+  });
 
-// list操作
-ipcMain.handle('add-data', async (event, message) => {
-  const result = listApi.addList(message);
-  return result;
-});
+  // list操作
+  ipcMain.handle('add-data', async (event, message) => {
+    const result = listApi.addList(message);
+    return result;
+  });
 
-ipcMain.handle('update-data', async (event, message) => {
-  const result = listApi.updateList(message);
-  return result;
-});
+  ipcMain.handle('update-data', async (event, message) => {
+    const result = listApi.updateList(message);
+    return result;
+  });
 
-ipcMain.handle('get-list', async (event, message) => {
-  console.log(`receive message from render: ${message}`);
-  const result = listApi.getList(message);
-  return result;
-});
+  ipcMain.handle('get-list', async (event, message) => {
+    console.log(`receive message from render: ${message}`);
+    const result = listApi.getList(message);
+    return result;
+  });
 
-// 分类操作
-ipcMain.handle('add-category', async (event, message) => {
-  const result = categoryApi.addData(message);
-  return result;
-});
-ipcMain.handle('get-category', async () => {
-  const result = categoryApi.getData();
-  return result;
-});
-ipcMain.handle('update-category', async (event, message) => {
-  const result = categoryApi.updateData(message);
-  return result;
-});
-ipcMain.handle('delete-category', async (event, message) => {
-  const result = categoryApi.delData(message);
-  return result;
-});
-ipcMain.handle('set-category-current', async (event, message) => {
-  const result = categoryApi.setCurrent(message);
-  return result;
-});
+  // 分类操作
+  ipcMain.handle('add-category', async (event, message) => {
+    const result = categoryApi.addData(message);
+    return result;
+  });
+  ipcMain.handle('get-category', async () => {
+    const result = categoryApi.getData();
+    return result;
+  });
+  ipcMain.handle('update-category', async (event, message) => {
+    const result = categoryApi.updateData(message);
+    return result;
+  });
+  ipcMain.handle('delete-category', async (event, message) => {
+    const result = categoryApi.delData(message);
+    return result;
+  });
+  ipcMain.handle('set-category-current', async (event, message) => {
+    const result = categoryApi.setCurrent(message);
+    return result;
+  });
+
+  // 文件操作
+  ipcMain.handle('choose-folder', async () => {
+    const result = fileApi.chooseFolder();
+    return result;
+  });
+};
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -185,6 +194,7 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
+    ipcFunc();
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

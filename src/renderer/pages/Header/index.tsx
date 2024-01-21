@@ -23,7 +23,6 @@ export default function HeaderCom() {
   const [workSpaceForm] = Form.useForm();
 
   window.electron.ipcRenderer.on('mainWindowResize', (arg) => {
-    console.log(331, arg);
     setIsFullScreen(arg);
   });
 
@@ -194,6 +193,13 @@ export default function HeaderCom() {
       >
         123
       </div> */}
+      <div
+        onClick={async () => {
+          await window.electron.ipcRenderer.invoke('choose-folder', {});
+        }}
+      >
+        1234
+      </div>
       <Modal
         title="工作空间选择"
         open={showWorkSpaceChooseModal}

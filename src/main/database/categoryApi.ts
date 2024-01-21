@@ -4,6 +4,13 @@ export default {
   getData() {
     const db = connect();
 
+    // const stmAllTable = db.prepare('select * from sqlite_master');
+    const stmAllTable = db.prepare(
+      `select name from sqlite_master where type='table' order by name`,
+    );
+    const tables = stmAllTable.all();
+    console.log('-------------->tables:', tables);
+
     // 获取total语法
     const stmTotal = db.prepare('select count(*) total from category_table');
     // 实现分页语法
