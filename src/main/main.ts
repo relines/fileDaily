@@ -14,14 +14,10 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import {
-  deleteTODO,
-  getAllTODO,
-  getOneTODO,
-  insertTODO,
-  updateTODO,
-  TODO,
-} from './services/Database.service';
+
+import { init } from './database/index';
+import listApi from './database/listApi';
+import categoryApi from './database/categoryApi';
 
 class AppUpdater {
   constructor() {
@@ -132,24 +128,58 @@ app.on('window-all-closed', () => {
   }
 });
 
+const ipcFunc = () => {
+  ipcMain.on('ipc-example', async (event, arg) => {
+    const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
+    console.log(msgTemplate(arg));
+    event.reply('ipc-example', msgTemplate('pong'));
+  });
+
+  // list操作
+  ipcMain.handle('add-data', async (event, message) => {
+    const result = listApi.addList(message);
+    return result;
+  });
+
+  ipcMain.handle('update-data', async (event, message) => {
+    const result = listApi.updateList(message);
+    return result;
+  });
+
+  ipcMain.handle('get-list', async (event, message) => {
+    console.log(`receive message from render: ${message}`);
+    const result = listApi.getList(message);
+    return result;
+  });
+
+  // 分类操作
+  ipcMain.handle('add-category', async (event, message) => {
+    const result = categoryApi.addData(message);
+    return result;
+  });
+  ipcMain.handle('get-category', async () => {
+    const result = categoryApi.getData();
+    return result;
+  });
+  ipcMain.handle('update-category', async (event, message) => {
+    const result = categoryApi.updateData(message);
+    return result;
+  });
+  ipcMain.handle('delete-category', async (event, message) => {
+    const result = categoryApi.delData(message);
+    return result;
+  });
+  ipcMain.handle('set-category-current', async (event, message) => {
+    const result = categoryApi.setCurrent(message);
+    return result;
+  });
+};
+
 app
   .whenReady()
   .then(() => {
-    ipcMain.handle('todo:insert', async (_, todo: TODO) => {
-      insertTODO(todo);
-    });
-    ipcMain.handle('todo:update', async (_, todo: TODO) => {
-      updateTODO(todo);
-    });
-    ipcMain.handle('todo:delete', async (_, id: number) => {
-      deleteTODO(id);
-    });
-    ipcMain.handle('todo:getOne', async (_, id: number) => {
-      return getOneTODO(id);
-    });
-    ipcMain.handle('todo:getAll', async () => {
-      return getAllTODO();
-    });
+    init();
+    ipcFunc();
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
