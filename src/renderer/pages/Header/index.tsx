@@ -14,13 +14,10 @@ export default function HeaderCom() {
   const [isFullScreen, setIsFullScreen] = useState<any>(false);
   const [showCategorySetModal, setShowCategorySetModal] = useState(false);
   const [showCategoryChooseModal, setShowCategoryChooseModal] = useState(false);
-  const [showWorkSpaceChooseModal, setShowWorkSpaceChooseModal] =
-    useState(false);
   const [categoryOption, setCategoryOption] = useState<any[]>([]);
   const [currentCategory, setCurrentCategory] = useState<any>({});
 
   const [form] = Form.useForm();
-  const [workSpaceForm] = Form.useForm();
 
   window.electron.ipcRenderer.on('mainWindowResize', (arg) => {
     setIsFullScreen(arg);
@@ -55,7 +52,6 @@ export default function HeaderCom() {
         name: form.getFieldsValue()?.name,
       },
     );
-    console.log(331, resp);
     const cur: any = resp.data;
     const categoryCurrent = cur?.name;
     localStorage.setItem('category_current', categoryCurrent);
@@ -85,7 +81,14 @@ export default function HeaderCom() {
             {
               key: '1',
               label: (
-                <div onClick={() => setShowWorkSpaceChooseModal(true)}>
+                <div
+                  onClick={async () => {
+                    await window.electron.ipcRenderer.invoke(
+                      'choose-folder',
+                      {},
+                    );
+                  }}
+                >
                   工作空间选择
                 </div>
               ),
@@ -133,6 +136,14 @@ export default function HeaderCom() {
           <MenuUnfoldOutlined />
         </div>
       </Dropdown>
+
+      <span
+        style={{
+          marginRight: '10px',
+        }}
+      >
+        工作空间目录：{currentCategory?.name}
+      </span>
 
       <span>分类：{currentCategory?.name}</span>
 
@@ -182,63 +193,6 @@ export default function HeaderCom() {
             rules={[{ required: true, message: '请输入' }]}
           >
             <Select style={{ width: 120 }} options={categoryOption} />
-          </Form.Item>
-        </Form>
-      </Modal>
-      {/* <div
-        onClick={async () => {
-          const dirHandle = await window.showDirectoryPicker();
-          console.log(333, dirHandle);
-        }}
-      >
-        123
-      </div> */}
-      <div
-        onClick={async () => {
-          await window.electron.ipcRenderer.invoke('choose-folder', {});
-        }}
-      >
-        1234
-      </div>
-      <Modal
-        title="工作空间选择"
-        open={showWorkSpaceChooseModal}
-        width={400}
-        onOk={() => {
-          changeCurrentCategory();
-        }}
-        onCancel={() => setShowWorkSpaceChooseModal(false)}
-      >
-        <Form
-          name="workSpaceChoose"
-          form={workSpaceForm}
-          style={{
-            margin: '20px 0',
-          }}
-          labelCol={{
-            style: {
-              width: '80px',
-            },
-          }}
-          wrapperCol={{
-            style: {
-              width: '200px',
-            },
-          }}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="名称"
-            name="name"
-            rules={[{ required: true, message: '请输入' }]}
-          >
-            <input
-              type="file"
-              webkitdirectory="directory"
-              onChange={(e) => {
-                console.log(333, e.target.files);
-              }}
-            />
           </Form.Item>
         </Form>
       </Modal>

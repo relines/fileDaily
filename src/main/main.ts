@@ -30,6 +30,8 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
+console.log('---------------->333', app.getPath('documents'));
+
 const ipcFunc = () => {
   ipcMain.on('ipc-example', async (event, arg) => {
     const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
