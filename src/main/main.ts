@@ -1,15 +1,7 @@
-/* eslint global-require: off, no-console: off, promise/always-return: off */
-
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `npm run build` or `npm run build:main`, this file is compiled to
- * `./src/main.js` using webpack. This gives us some performance wins.
- */
-import path from 'path';
+/* eslint-disable global-require */
+/* eslint-disable promise/always-return */
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import path from 'path';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -100,6 +92,7 @@ const ipcFunc = () => {
   // 文件操作
   ipcMain.handle('choose-folder', async () => {
     const result = await fileApi.chooseFolder();
+    console.log(444444, result);
     store.set('workSpace', result);
     return result;
   });
@@ -157,9 +150,6 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
-  fileApi.initFolder();
-  init();
-
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -208,9 +198,19 @@ app.on('window-all-closed', () => {
   }
 });
 
+const initWorkSpace = () => {
+  if (!store.get('workSpace')) {
+    const documentUrl = app.getPath('documents');
+    store.set('workSpace', `${documentUrl}/fileDaily`);
+  }
+};
+
 app
   .whenReady()
   .then(() => {
+    initWorkSpace();
+    fileApi.initFolder();
+    init();
     ipcFunc();
     createWindow();
     app.on('activate', () => {
