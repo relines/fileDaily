@@ -89,7 +89,6 @@ export default {
       stmUpdate2.run();
       stmUpdate1.run({ name });
       const item = stmQueryCurrent1.get();
-      console.log(333, item);
       if (!item) {
         return { code: 400, msg: '没有查到code' };
       }

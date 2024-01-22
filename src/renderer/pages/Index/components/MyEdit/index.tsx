@@ -31,7 +31,6 @@ export default function Index(props: Iprops) {
       content: value,
       tag: 'default',
     });
-    console.log(333, result);
     setLoading(false);
     message.success('保存成功');
     changeDataSource('save', result?.data);

@@ -27,7 +27,6 @@ type Iprops = {
 export default function Index(props: Iprops) {
   const { dataSource, total, activeItem, changeActiveItem, changeDataSource } =
     props;
-  console.log(333, total, dataSource);
 
   const [loading, setLoading] = useState<boolean>(false);
 

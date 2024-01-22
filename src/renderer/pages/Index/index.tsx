@@ -16,13 +16,10 @@ export default function IndexCom() {
 
   const pageIndexRef = useRef<number>(0);
 
-  const workSpace = window.electron.ipcRenderer.getStoreValue('token');
-
   const getData = async () => {
     const result = await window.electron.ipcRenderer.invoke('get-list', {
       pageIndex: pageIndexRef.current,
     });
-    console.log(333, result);
     setTotal(result?.total || total);
     return result;
   };
