@@ -36,18 +36,6 @@ const ipcFunc = () => {
     _.returnValue = value || '';
   });
 
-  ipcMain.on('ipc-example', async (event, arg) => {
-    const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-    console.log(msgTemplate(arg));
-    event.reply('ipc-example', msgTemplate('pong'));
-  });
-
-  ipcMain.on('ipc-example', async (event, arg) => {
-    const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-    console.log(msgTemplate(arg));
-    event.reply('ipc-example', msgTemplate('pong'));
-  });
-
   // list操作
   ipcMain.handle('add-data', async (event, message) => {
     const result = listApi.addList(message);
@@ -90,11 +78,18 @@ const ipcFunc = () => {
   // 文件操作
   ipcMain.handle('choose-folder', async () => {
     const result = await fileApi.chooseFolder();
-    console.log(444444, result);
-    store.set('workSpace', result);
-    fileApi.initFolder();
-    init();
-    return result;
+    if (result) {
+      store.set('workSpace', result);
+      fileApi.initFolder();
+      init();
+      return result;
+    }
+    return null;
+  });
+
+  // 窗口操作
+  ipcMain.on('main-window-reload', () => {
+    mainWindow?.reload();
   });
 };
 

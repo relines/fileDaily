@@ -14,7 +14,7 @@ const electronHandler = {
       const resp = ipcRenderer.sendSync('getStore', key);
       return resp;
     },
-    sendMessage(channel: Channels, ...args: unknown[]) {
+    send(channel: Channels, ...args: unknown[]) {
       ipcRenderer.send(channel, ...args);
     },
     invoke: async (channel: Channels, data: any) => {

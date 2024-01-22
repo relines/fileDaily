@@ -9,6 +9,9 @@ const store = new Store();
 export default {
   async chooseFolder() {
     const resp = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+    if (resp.canceled) {
+      return '';
+    }
     return resp.filePaths[0];
   },
   initFolder() {

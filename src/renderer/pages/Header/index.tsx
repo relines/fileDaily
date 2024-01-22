@@ -84,10 +84,14 @@ export default function HeaderCom() {
               label: (
                 <div
                   onClick={async () => {
-                    await window.electron.ipcRenderer.invoke(
+                    const resp = await window.electron.ipcRenderer.invoke(
                       'choose-folder',
                       {},
                     );
+                    if (resp) {
+                      localStorage.setItem('workSpace', resp);
+                      window.electron.ipcRenderer.send('main-window-reload');
+                    }
                   }}
                 >
                   工作空间选择
