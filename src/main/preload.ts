@@ -6,6 +6,14 @@ export type Channels = string;
 
 const electronHandler = {
   ipcRenderer: {
+    setStoreValue: (key: string, value: any) => {
+      ipcRenderer.send('setStore', key, value);
+    },
+
+    getStoreValue(key: string) {
+      const resp = ipcRenderer.sendSync('getStore', key);
+      return resp;
+    },
     sendMessage(channel: Channels, ...args: unknown[]) {
       ipcRenderer.send(channel, ...args);
     },

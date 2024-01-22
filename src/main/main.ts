@@ -14,11 +14,14 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-
 import { init } from './database/index';
 import listApi from './database/listApi';
 import categoryApi from './database/categoryApi';
 import fileApi from './file/index';
+
+const Store = require('electron-store');
+
+const store = new Store();
 
 class AppUpdater {
   constructor() {
@@ -33,6 +36,16 @@ let mainWindow: BrowserWindow | null = null;
 console.log('---------------->333', app.getPath('documents'));
 
 const ipcFunc = () => {
+  // electron-store
+  ipcMain.on('setStore', (_, key, value) => {
+    store.set(key, value);
+  });
+
+  ipcMain.on('getStore', (_, key) => {
+    const value = store.get(key);
+    _.returnValue = value || '';
+  });
+
   ipcMain.on('ipc-example', async (event, arg) => {
     const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
     console.log(msgTemplate(arg));
@@ -86,7 +99,8 @@ const ipcFunc = () => {
 
   // 文件操作
   ipcMain.handle('choose-folder', async () => {
-    const result = fileApi.chooseFolder();
+    const result = await fileApi.chooseFolder();
+    store.set('workSpace', result);
     return result;
   });
 };
@@ -143,6 +157,7 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
+  fileApi.initFolder();
   init();
 
   mainWindow.on('ready-to-show', () => {

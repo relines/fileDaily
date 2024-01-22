@@ -1,14 +1,19 @@
 /* eslint-disable global-require */
+// import { app } from 'electron';
 import sqlite from 'better-sqlite3';
 import path from 'path';
 
 let db: any;
 
-export default function connect() {
-  const os = require('os');
-  const homedir = os.homedir(); // 用于获取当前用户的主目录路径
-  const dbUrl = homedir.replace(/\\/g, '\\\\'); // 替换绝对和相对路径
+const os = require('os');
 
+const homedir = os.homedir(); // 用于获取当前用户的主目录路径
+const dbUrl = homedir.replace(/\\/g, '\\\\'); // 替换绝对和相对路径
+
+// const documentUrl = app.getPath('documents');
+// console.log(111, documentUrl);
+
+export default function connect() {
   return sqlite(path.join(dbUrl, '/jhy/db/daily.db'), {
     verbose: () => {
       console.log('👉👉👉-----------------sqlite3已经连接成功');
