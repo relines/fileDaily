@@ -25,8 +25,6 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-console.log('---------------->333', app.getPath('documents'));
-
 const ipcFunc = () => {
   // electron-store
   ipcMain.on('setStore', (_, key, value) => {
@@ -94,6 +92,8 @@ const ipcFunc = () => {
     const result = await fileApi.chooseFolder();
     console.log(444444, result);
     store.set('workSpace', result);
+    fileApi.initFolder();
+    init();
     return result;
   });
 };
@@ -200,6 +200,7 @@ app.on('window-all-closed', () => {
 
 const initWorkSpace = () => {
   if (!store.get('workSpace')) {
+    // 默认工作空间在Document/fileDaily
     const documentUrl = app.getPath('documents');
     store.set('workSpace', `${documentUrl}/fileDaily`);
   }

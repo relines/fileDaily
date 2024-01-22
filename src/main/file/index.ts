@@ -13,9 +13,9 @@ export default {
   },
   initFolder() {
     const workSpace = store.get('workSpace');
-    console.log('👉👉👉-----------------workSpace', workSpace);
-    // 查看fileDaily文件夹是否存在，不存在则创建
+    // 查看workSpace文件夹是否存在，不存在则创建
     fs.access(workSpace, (err: any) => {
+      console.log('👉👉👉--------------->fileDaily文件夹是否存在', err);
       if (err) {
         fs.mkdir(workSpace, (error: any) => {
           if (error) return;
@@ -23,10 +23,10 @@ export default {
         });
       }
     });
-    // 查看fileDaily/file文件夹是否存在，不存在则创建
-    fs.access(workSpace, (err: any) => {
+    // 查看workSpace/file文件夹是否存在，不存在则创建
+    fs.access(`${workSpace}/file`, (err: any) => {
       if (err) {
-        fs.mkdir(workSpace, (error: any) => {
+        fs.mkdir(`${workSpace}/file`, (error: any) => {
           if (error) return;
           console.log('👉👉👉--------------->file目录创建成功');
         });

@@ -9,6 +9,7 @@ const store = new Store();
 
 const workSpaceUrl = store.get('workSpace') || '';
 let db: any;
+
 export default function connect() {
   return sqlite(path.join(workSpaceUrl, '/daily.db'), {});
 }
@@ -20,7 +21,6 @@ export function init() {
     `select name from sqlite_master where type='table' order by name`,
   );
   const tables = stmAllTable.all()?.map((item: any) => item.name);
-  console.log('-------------->tables:', tables);
 
   if (!tables.includes('list_table')) {
     db.exec(`create table if not exists list_table (
