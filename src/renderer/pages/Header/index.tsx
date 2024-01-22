@@ -98,7 +98,7 @@ export default function HeaderCom() {
               label: '分类',
               children: [
                 {
-                  key: '1-1',
+                  key: '21',
                   label: (
                     <div onClick={() => setShowCategorySetModal(true)}>
                       设置分类
@@ -106,7 +106,7 @@ export default function HeaderCom() {
                   ),
                 },
                 {
-                  key: '1-2',
+                  key: '22',
                   label: (
                     <div onClick={() => setShowCategoryChooseModal(true)}>
                       选择分类
@@ -120,11 +120,11 @@ export default function HeaderCom() {
               label: '标签',
               children: [
                 {
-                  key: '1-1',
+                  key: '31',
                   label: '新建标签',
                 },
                 {
-                  key: '1-2',
+                  key: '32',
                   label: '2nd menu item',
                 },
               ],
