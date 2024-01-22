@@ -18,6 +18,7 @@ export default function HeaderCom() {
   const [currentCategory, setCurrentCategory] = useState<any>({});
 
   const [form] = Form.useForm();
+  const workSpace = window.electron.ipcRenderer.getStoreValue('workSpace');
 
   window.electron.ipcRenderer.on('mainWindowResize', (arg) => {
     setIsFullScreen(arg);
@@ -142,7 +143,7 @@ export default function HeaderCom() {
           marginRight: '10px',
         }}
       >
-        工作空间目录：{currentCategory?.name}
+        工作空间目录：{workSpace}
       </span>
 
       <span>分类：{currentCategory?.name}</span>
