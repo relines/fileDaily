@@ -4,10 +4,13 @@
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
 import React, { useState } from 'react';
-import VirtualList from 'rc-virtual-list';
+
 import { List } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
+import VirtualList from 'rc-virtual-list';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import dayjs from 'dayjs';
 
 import styles from './index.module.less';
@@ -52,7 +55,7 @@ export default function Index(props: Iprops) {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.listContainer}>
       <List split={false}>
         <div className={styles.header}>
           <span>共{total}条</span>
@@ -98,7 +101,19 @@ export default function Index(props: Iprops) {
                   changeActiveItem(item);
                 }}
               >
-                <div className={styles.text}>{item.content}</div>
+                {/* <div className={styles.text}>{item.content}</div> */}
+                <ReactQuill
+                  theme="snow"
+                  value={item.content}
+                  modules={{
+                    toolbar: null,
+                  }}
+                  readOnly
+                  style={{
+                    maxHeight: '186px',
+                    overflow: 'hidden',
+                  }}
+                />
                 <div className={styles.img}>
                   {/* <Avatar src={item.picture} /> */}
                 </div>

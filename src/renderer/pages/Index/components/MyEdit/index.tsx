@@ -60,6 +60,7 @@ export default function Index(props: Iprops) {
             // toolbar: [[{ color: [] }, { background: [] }]],
           }
         }
+        // className="ql-editor"
         style={{
           // width: '608px',
           height: '160px',
