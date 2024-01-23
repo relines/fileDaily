@@ -66,7 +66,6 @@ export default function Index(props: Iprops) {
             onClick={() => addData()}
           />
         </div>
-        <div className={styles.liner}> </div>
         <VirtualList
           data={dataSource}
           height={ContainerHeight}
@@ -81,15 +80,16 @@ export default function Index(props: Iprops) {
                   {dayjs(item.createTime).format('DD')}
                 </div>
                 <div className={styles.right}>
-                  <div className={styles.month}>
-                    {dayjs(item.createTime).format('MM')}月
-                  </div>
-                  <div className={styles.week}>
+                  <div>{dayjs(item.createTime).format('MM')}月</div>
+                  <div>
                     {dayjs(item.createTime).locale('zh-cn').format('dddd')}
                   </div>
                 </div>
               </div>
-              <div className={styles.circlePoint} />
+              <div className={styles.liner}>
+                <div className={styles.circle} />
+                <div className={styles.line} />
+              </div>
               <div
                 className={`${styles.content} ${
                   activeItem?.code === item.code && styles.activedContent

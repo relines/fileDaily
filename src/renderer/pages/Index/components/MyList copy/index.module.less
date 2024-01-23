@@ -1,7 +1,5 @@
 .container {
   padding: 5px;
-  position: relative;
-  overflow: hidden;
 
   .header {
     border: 1px solid #f00;
@@ -14,22 +12,11 @@
 
   .listItem {
     padding: 5px 0 0;
-    position: relative;
-  }
-
-  .liner {
-    position: absolute;
-    left: 68px;
-    z-index: 9;
-    width: 1px;
-    height: 100%;
-    background-color: #1677ff;
   }
 
   .timeLine {
-    position: absolute;
-    top: 7px;
     text-align: right;
+    width: 75px;
     height: 80px;
     min-width: 60px;
 
@@ -43,37 +30,35 @@
     }
 
     .right {
-      text-align: right;
+      text-align: left;
       display: inline-block;
-      width: 22px;
+      width: 30px;
       font-size: 10px;
       vertical-align: top;
-      .month {
-        font-size: 10px;
-      }
-      .week {
-        font-size: 7px;
-      }
     }
   }
 
-  .circlePoint {
-    position: absolute;
-    top: 7px;
-    left: 65px;
-    z-index: 10;
-    width: 5px;
-    height: 5px;
-    border: 1px solid #1677ff;
-    background-color: #fff;
-    border-radius: 5px;
+  .liner {
+    margin: 0 5px;
+
+    .circle {
+      width: 5px;
+      height: 5px;
+      border: 1px solid #1677ff;
+      border-radius: 5px;
+    }
+
+    .line {
+      width: 1px;
+      height: 80px;
+      background-color: #1677ff;
+      margin-left: 3px;
+    }
   }
 
   .content {
     border: 1px solid #f00;
     width: 100%;
-    margin-left: 75px;
-    margin-top: 5px;
     min-height: 70px;
     border-radius: 5px;
     cursor: pointer;
