@@ -13,6 +13,7 @@ export default function IndexCom() {
   const [activeItem, setActiveItem] = useState({});
   const [tableData, setTableData] = useState<any[]>([]);
   const [total, setTotal] = useState<number>(0);
+  const [isLast, setIsLast] = useState<boolean>(false);
 
   const pageIndexRef = useRef<number>(0);
 
@@ -36,9 +37,11 @@ export default function IndexCom() {
       const result = await getData();
       if (result.data?.length) {
         setTableData(tableData.concat(result.data));
+        setIsLast(false);
         message.success('+10条数据');
       } else {
-        message.warning('没有更多数据了');
+        setIsLast(true);
+        // message.warning('没有更多数据了');
       }
     }
     if (type === 'new') {
@@ -75,6 +78,7 @@ export default function IndexCom() {
         <MyList
           dataSource={tableData}
           total={total}
+          isLast={isLast}
           activeItem={activeItem}
           changeActiveItem={setActiveItem}
           changeDataSource={changeDataSource}

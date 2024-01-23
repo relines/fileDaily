@@ -22,16 +22,24 @@ const ContainerHeight = 500;
 type Iprops = {
   dataSource: any[];
   total: number;
+  isLast: boolean;
   activeItem: any;
   changeActiveItem: any;
   changeDataSource: (type: 'more' | 'new' | 'save', data?: any) => void;
 };
 
 export default function Index(props: Iprops) {
-  const { dataSource, total, activeItem, changeActiveItem, changeDataSource } =
-    props;
+  const {
+    dataSource,
+    total,
+    isLast,
+    activeItem,
+    changeActiveItem,
+    changeDataSource,
+  } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [isBottom, setIsBottom] = useState<boolean>(false);
 
   const addData = async () => {
     changeActiveItem();
@@ -46,11 +54,13 @@ export default function Index(props: Iprops) {
   };
 
   const onScroll = (e: React.UIEvent<HTMLElement, UIEvent>) => {
+    setIsBottom(false);
     if (
       e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
       ContainerHeight
     ) {
       changeDataSource('more');
+      setIsBottom(true);
     }
   };
 
@@ -143,6 +153,9 @@ export default function Index(props: Iprops) {
           )}
         </VirtualList>
       </List>
+      {isLast && isBottom && (
+        <div className={styles.listBottom}>学到的知识越多，遗憾就越少</div>
+      )}
     </div>
   );
 }
