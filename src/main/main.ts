@@ -36,7 +36,7 @@ const openViewWindow = () => {
     height: 620,
     minWidth: 900,
     minHeight: 620,
-    title: '项目名',
+    title: 'view',
     autoHideMenuBar: true,
     webPreferences: {
       contextIsolation: false,
