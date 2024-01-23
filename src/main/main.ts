@@ -38,6 +38,7 @@ const openViewWindow = () => {
     minHeight: 620,
     title: 'view',
     autoHideMenuBar: true,
+    frame: false,
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
