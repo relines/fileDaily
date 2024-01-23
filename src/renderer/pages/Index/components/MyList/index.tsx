@@ -53,7 +53,7 @@ export default function Index(props: Iprops) {
 
   return (
     <div className={styles.container}>
-      <List>
+      <List split={false}>
         <div className={styles.header}>
           <span>共{total}条</span>
           <PlusCircleOutlined
