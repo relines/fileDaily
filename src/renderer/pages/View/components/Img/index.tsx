@@ -5,7 +5,7 @@
 /* eslint-disable promise/catch-or-return */
 import React, { useState } from 'react';
 
-import { List, Image } from 'antd';
+import { List } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
 import VirtualList from 'rc-virtual-list';
@@ -97,41 +97,25 @@ export default function Index(props: Iprops) {
                 className={`${styles.content} ${
                   activeItem?.code === item.code && styles.activedContent
                 }`}
+                onClick={() => {
+                  changeActiveItem(item);
+                }}
               >
                 {/* <div className={styles.text}>{item.content}</div> */}
-                <div
-                  className={styles.text}
-                  onClick={() => {
-                    changeActiveItem(item);
+                <ReactQuill
+                  theme="snow"
+                  value={item.content}
+                  modules={{
+                    toolbar: null,
                   }}
-                >
-                  <ReactQuill
-                    theme="snow"
-                    value={item.content}
-                    modules={{
-                      toolbar: null,
-                    }}
-                    readOnly
-                    style={{
-                      maxHeight: '186px',
-                      overflow: 'hidden',
-                    }}
-                  />
-                </div>
-
-                <div className={styles.imgList}>
-                  <div
-                    className={styles.imgItem}
-                    onClick={() => {
-                      window.electron.ipcRenderer.send('open-view-window');
-                    }}
-                  >
-                    <img
-                      width={100}
-                      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                      alt=""
-                    />
-                  </div>
+                  readOnly
+                  style={{
+                    maxHeight: '186px',
+                    overflow: 'hidden',
+                  }}
+                />
+                <div className={styles.img}>
+                  {/* <Avatar src={item.picture} /> */}
                 </div>
                 <div className={styles.bottom}>
                   <span className={styles.time}>

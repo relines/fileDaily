@@ -24,6 +24,32 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let viewWindow: BrowserWindow | null = null;
+
+const openViewWindow = () => {
+  if (viewWindow) {
+    viewWindow.focus(); // 存在 则聚焦
+    return;
+  }
+  viewWindow = new BrowserWindow({
+    width: 900,
+    height: 620,
+    minWidth: 900,
+    minHeight: 620,
+    title: '项目名',
+    autoHideMenuBar: true,
+    webPreferences: {
+      contextIsolation: false,
+      preload: app.isPackaged
+        ? path.join(__dirname, 'preload.js')
+        : path.join(__dirname, '../../.erb/dll/preload.js'),
+    },
+  });
+  viewWindow.loadURL(`${resolveHtmlPath('index.html')}/#/view`);
+  viewWindow.on('close', () => {
+    viewWindow = null;
+  });
+};
 
 const ipcFunc = () => {
   // electron-store
@@ -48,7 +74,6 @@ const ipcFunc = () => {
   });
 
   ipcMain.handle('get-list', async (event, message) => {
-    console.log(`receive message from render: ${message}`);
     const result = listApi.getList(message);
     return result;
   });
@@ -90,6 +115,9 @@ const ipcFunc = () => {
   // 窗口操作
   ipcMain.on('main-window-reload', () => {
     mainWindow?.reload();
+  });
+  ipcMain.on('open-view-window', () => {
+    openViewWindow();
   });
 };
 
