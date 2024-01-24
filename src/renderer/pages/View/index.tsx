@@ -8,33 +8,38 @@ export default function IndexCom() {
     {
       name: 'pic1',
       type: 'img',
-      url: '/Users/jianghuayu/Documents/p1.jpg',
+      url: 'atom://Users/popmart/Documents/fileDaily/file/test.png',
     },
-    {
-      name: 'pic2',
-      type: 'img',
-      url: '/Users/jianghuayu/Documents/p2.jpg',
-    },
+    // {
+    //   name: 'pic2',
+    //   type: 'img',
+    //   url: 'atom:///file://Users/popmart/Documents/fileDaily/file/test.png',
+    // },
+    // {
+    //   name: 'pic2',
+    //   type: 'img',
+    //   url: '/Users/jianghuayu/Documents/p2.jpg',
+    // },
     {
       name: 'video1',
       type: 'video',
-      url: '/Users/jianghuayu/Documents/想某人.mp4',
+      url: 'atom://Users/popmart/Documents/fileDaily/file/13th.mp4',
     },
-    {
-      name: 'pic3',
-      type: 'img',
-      url: '/Users/jianghuayu/Documents/p3.jpg',
-    },
+    // {
+    //   name: 'pic3',
+    //   type: 'img',
+    //   url: '/Users/jianghuayu/Documents/p3.jpg',
+    // },
     {
       name: 'video2',
       type: 'video',
-      url: '/Users/jianghuayu/Documents/test.mp4',
+      url: 'atom://Users/popmart/Documents/fileDaily/file/oceans.mp4',
     },
-    {
-      name: 'pic4',
-      type: 'img',
-      url: '/Users/jianghuayu/Documents/p4',
-    },
+    // {
+    //   name: 'pic4',
+    //   type: 'img',
+    //   url: '/Users/jianghuayu/Documents/p4',
+    // },
   ];
   return (
     <div className={styles.viewContainer}>
@@ -50,10 +55,13 @@ export default function IndexCom() {
         if (item.type === 'video') {
           return (
             <div key={item.name}>
-              <img
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                alt=""
-              />
+              <video controls muted loop width="300">
+                <source
+                  // src="http://vjs.zencdn.net/v/oceans.mp4"
+                  src={item.url}
+                  type="video/mp4"
+                />
+              </video>
             </div>
           );
         }

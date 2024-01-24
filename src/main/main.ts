@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 /* eslint-disable promise/always-return */
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, protocol, net } from 'electron';
 import path from 'path';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -232,6 +232,16 @@ const initWorkSpace = () => {
 app
   .whenReady()
   .then(() => {
+    // protocol.registerFileProtocol('atom', (request, callback) => {
+    //   const url = request.url.substr(7);
+    //   console.log(3333333, decodeURI(path.normalize(url)));
+    //   callback(decodeURI(path.normalize(url)));
+    // });
+    protocol.handle('atom', (request) => {
+      const url = request.url.slice(6);
+      console.log(333, decodeURIComponent(`file://${url}`));
+      return net.fetch(decodeURIComponent(`file://${url}`));
+    });
     initWorkSpace();
     fileApi.initFolder();
     init();
