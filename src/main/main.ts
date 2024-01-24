@@ -11,6 +11,7 @@ import listApi from './database/listApi';
 import categoryApi from './database/categoryApi';
 import fileApi from './file/index';
 
+const fs = require('fs');
 const Store = require('electron-store');
 
 const store = new Store();
@@ -110,6 +111,12 @@ const ipcFunc = () => {
       return result;
     }
     return null;
+  });
+  ipcMain.handle('get-video-path', async () => {
+    const resp = await fileApi.getVideoPath();
+    return {
+      data: resp,
+    };
   });
 
   // 窗口操作

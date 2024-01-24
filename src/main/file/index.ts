@@ -36,4 +36,13 @@ export default {
       }
     });
   },
+  getVideoPath() {
+    const videoPath = '/Users/popmart/Documents/fileDaily/file/oceans.mp4';
+    return new Promise((resolve, reject) => {
+      fs.readFile(videoPath, (err: any, data: any) => {
+        if (err) reject(err);
+        resolve(data);
+      });
+    });
+  },
 };
