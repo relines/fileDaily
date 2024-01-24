@@ -6,41 +6,41 @@ import styles from './index.module.less';
 export default function IndexCom() {
   const [testUrl, setTestUrl] = useState<string>();
   const data = [
-    {
-      name: 'pic1',
-      type: 'img',
-      url: 'atom://Users/popmart/Documents/fileDaily/file/test.png',
-    },
+    // {
+    //   name: 'pic1',
+    //   type: 'img',
+    //   url: 'atom://Users/popmart/Documents/fileDaily/file/test.png',
+    // },
     // {
     //   name: 'pic2',
     //   type: 'img',
     //   url: 'atom:///file://Users/popmart/Documents/fileDaily/file/test.png',
     // },
-    // {
-    //   name: 'pic2',
-    //   type: 'img',
-    //   url: '/Users/jianghuayu/Documents/p2.jpg',
-    // },
+    {
+      name: 'pic2',
+      type: 'img',
+      url: 'atom://Users/jianghuayu/Documents/p2.jpg',
+    },
     {
       name: 'video1',
       type: 'video',
-      url: 'atom://Users/popmart/Documents/fileDaily/file/13th.mp4',
+      url: 'atom://Users/jianghuayu/Documents/想某人.mp4',
+    },
+    {
+      name: 'pic3',
+      type: 'img',
+      url: 'atom://Users/jianghuayu/Documents/p3.jpg',
     },
     // {
-    //   name: 'pic3',
-    //   type: 'img',
-    //   url: '/Users/jianghuayu/Documents/p3.jpg',
+    //   name: 'video2',
+    //   type: 'video',
+    //   url: 'atom://Users/popmart/Documents/fileDaily/file/oceans.mp4',
     // },
     {
-      name: 'video2',
-      type: 'video',
-      url: 'atom://Users/popmart/Documents/fileDaily/file/oceans.mp4',
+      name: 'pic4',
+      type: 'img',
+      url: 'atom://Users/jianghuayu/Documents/p4.jpg',
     },
-    // {
-    //   name: 'pic4',
-    //   type: 'img',
-    //   url: '/Users/jianghuayu/Documents/p4',
-    // },
   ];
   const getVideoPath = async () => {
     const resp = await window.electron.ipcRenderer.invoke('get-video-path', {});

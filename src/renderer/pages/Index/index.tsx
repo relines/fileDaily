@@ -71,27 +71,6 @@ export default function IndexCom() {
 
   return (
     <div className={styles.container}>
-      <div>
-        {/* <video controls muted loop width="300">
-          <source
-            // src="http://vjs.zencdn.net/v/oceans.mp4"
-            src="file:///Users/popmart/Documents/fileDaily/file/oceans.mp4"
-            type="video/mp4"
-          />
-        </video> */}
-        <video controls muted loop width="300">
-          <source
-            src="atom:///Users/popmart/Documents/fileDaily/file/oceans.mp4"
-            type="video/mp4"
-          />
-        </video>
-        <video controls muted loop width="300">
-          <source
-            src="atom2:///Users/popmart/Documents/fileDaily/file/oceans.mp4"
-            type="video/mp4"
-          />
-        </video>
-      </div>
       <div className={`${styles.content} ${styles.calendarContainer}`}>
         <MyCalendar />
       </div>
