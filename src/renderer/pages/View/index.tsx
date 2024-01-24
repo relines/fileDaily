@@ -87,7 +87,7 @@ export default function IndexCom() {
               <video controls muted loop width="300">
                 <source
                   // src="http://vjs.zencdn.net/v/oceans.mp4"
-                  src={testUrl}
+                  src={item.url}
                   type="video/mp4"
                 />
               </video>

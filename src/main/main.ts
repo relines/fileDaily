@@ -172,6 +172,7 @@ const createWindow = async () => {
     height: 750,
     icon: getAssetPath('icon.png'),
     webPreferences: {
+      // webSecurity: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
@@ -239,15 +240,17 @@ const initWorkSpace = () => {
 app
   .whenReady()
   .then(() => {
-    // protocol.registerFileProtocol('atom', (request, callback) => {
-    //   const url = request.url.substr(7);
-    //   console.log(3333333, decodeURI(path.normalize(url)));
-    //   callback(decodeURI(path.normalize(url)));
-    // });
-    protocol.handle('atom', (request) => {
+    protocol.registerFileProtocol('atom', (request, callback) => {
+      const url = request.url.slice(7);
+      console.log(3333333, decodeURI(path.normalize(url)));
+      callback(decodeURI(path.normalize(url)));
+    });
+    protocol.handle('atom2', (request) => {
       const url = request.url.slice(6);
       console.log(333, decodeURIComponent(`file://${url}`));
-      return net.fetch(decodeURIComponent(`file://${url}`));
+      console.log(1234, net.fetch(decodeURIComponent(`file://${url}`)));
+
+      return net.fetch(decodeURIComponent(`file://${url}`), {});
     });
     initWorkSpace();
     fileApi.initFolder();
