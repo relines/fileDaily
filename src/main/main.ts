@@ -33,8 +33,8 @@ const openViewWindow = () => {
     return;
   }
   viewWindow = new BrowserWindow({
-    width: 900,
-    height: 620,
+    width: 950,
+    height: 700,
     minWidth: 900,
     minHeight: 620,
     title: 'view',

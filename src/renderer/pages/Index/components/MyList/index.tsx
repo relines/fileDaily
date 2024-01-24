@@ -87,7 +87,7 @@ export default function Index(props: Iprops) {
           itemKey="code"
           onScroll={onScroll}
         >
-          {(item: any) => (
+          {(item: any, index: number) => (
             <List.Item key={item.code} className={styles.listItem}>
               <div className={styles.timeLine}>
                 <div className={styles.left}>
@@ -145,6 +145,8 @@ export default function Index(props: Iprops) {
                 </div>
                 <div className={styles.bottom}>
                   <span className={styles.time}>
+                    {index + 1}
+                    {'-->'}
                     {dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')}
                   </span>
                 </div>
