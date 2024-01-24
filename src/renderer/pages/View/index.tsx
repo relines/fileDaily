@@ -16,11 +16,11 @@ export default function ViewCom() {
       type: 'video',
       url: 'atom://Users/jianghuayu/Documents/想某人.mp4',
     },
-    {
-      name: 'video3',
-      type: 'video',
-      url: 'atom://Users/jianghuayu/Documents/HHTJ.mp4',
-    },
+    // {
+    //   name: 'video3',
+    //   type: 'video',
+    //   url: 'atom://Users/jianghuayu/Documents/HHTJ.mp4',
+    // },
     {
       name: 'pic3',
       type: 'img',

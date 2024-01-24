@@ -39,7 +39,7 @@ const openViewWindow = () => {
     minHeight: 620,
     title: 'view',
     autoHideMenuBar: true,
-    frame: false,
+    // frame: false,
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
@@ -242,14 +242,10 @@ app
   .then(() => {
     protocol.registerFileProtocol('atom', (request, callback) => {
       const url = request.url.slice(7);
-      console.log(3333333, decodeURI(path.normalize(url)));
       callback(decodeURI(path.normalize(url)));
     });
     protocol.handle('atom2', (request) => {
       const url = request.url.slice(6);
-      console.log(333, decodeURIComponent(`file://${url}`));
-      console.log(1234, net.fetch(decodeURIComponent(`file://${url}`)));
-
       return net.fetch(decodeURIComponent(`file://${url}`), {});
     });
     initWorkSpace();

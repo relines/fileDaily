@@ -5,6 +5,7 @@
 body {
   position: relative;
   /* overflow-y: hidden; */
+  margin: 0;
 }
 
 li {
