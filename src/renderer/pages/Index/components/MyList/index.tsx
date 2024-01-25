@@ -15,6 +15,8 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import dayjs from 'dayjs';
 
+import ImgListCom from '../../../../components/ImgList';
+
 import styles from './index.module.less';
 
 require('dayjs/locale/zh-cn');
@@ -183,25 +185,8 @@ export default function Index(props: Iprops) {
                   />
                 </div>
 
-                <div className={styles.imgList}>
-                  {imgList.map((item: any) => {
-                    return (
-                      <div
-                        key={item.name}
-                        className={[
-                          styles.imgItem,
-                          styles[`imgItem${imgCol}`],
-                        ].join(' ')}
-                        onClick={() => {
-                          window.electron.ipcRenderer.send('open-view-window');
-                        }}
-                        style={{
-                          backgroundImage: `url(${item.url})`,
-                        }}
-                      />
-                    );
-                  })}
-                </div>
+                <ImgListCom dataSource={imgList} />
+
                 <div className={styles.bottom}>
                   <span className={styles.time}>
                     {index + 1}

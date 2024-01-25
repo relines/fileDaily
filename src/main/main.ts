@@ -112,6 +112,14 @@ const ipcFunc = () => {
     }
     return null;
   });
+  ipcMain.handle('choose-file', async () => {
+    const result = await fileApi.chooseFile();
+    console.log(33333333, result);
+    if (result) {
+      return result;
+    }
+    return null;
+  });
   ipcMain.handle('get-video-path', async () => {
     const resp = await fileApi.getVideoPath();
     return {

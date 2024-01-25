@@ -7,6 +7,8 @@ import 'react-quill/dist/quill.snow.css';
 
 import { Button, message } from 'antd';
 
+import ImgListCom from '../../../../components/ImgList';
+
 import styles from './index.module.less';
 
 // const ReactQuill =
@@ -17,10 +19,12 @@ type Iprops = {
   changeDataSource: (type: 'more' | 'new' | 'save', data?: any) => void;
 };
 
-export default function Index(props: Iprops) {
+export default function MyEdit(props: Iprops) {
   const { activeItem, changeDataSource } = props;
+
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [imgList, setImgList] = useState([]);
 
   const quillRef = useRef<any>();
 
@@ -35,41 +39,77 @@ export default function Index(props: Iprops) {
     message.success('保存成功');
     changeDataSource('save', result?.data);
   };
+
+  const chooseFile = async () => {
+    const resp = await window.electron.ipcRenderer.invoke('choose-file', {});
+    console.log(333, resp);
+    const data = resp.map((item: any, index: number) => {
+      return {
+        name: index,
+        url: `atom:/${item}`,
+      };
+    });
+    setImgList(data);
+  };
   useEffect(() => {
     setValue(activeItem?.content);
   }, [activeItem]);
 
   return (
-    <div className={styles.container}>
-      <Button
-        type="primary"
-        loading={loading}
-        onClick={() => {
-          updateData();
+    <div className={styles.eidtContainer}>
+      <div
+        style={{
+          marginBottom: '10px',
         }}
       >
-        save
-      </Button>
+        <Button
+          type="primary"
+          loading={loading}
+          onClick={() => {
+            updateData();
+          }}
+        >
+          save
+        </Button>
+        <Button
+          type="primary"
+          loading={loading}
+          style={{
+            marginLeft: '10px',
+          }}
+          onClick={() => {
+            // updateData();
+            chooseFile();
+          }}
+        >
+          选择图片
+        </Button>
+      </div>
 
-      <ReactQuill
-        theme="snow"
-        ref={quillRef}
-        value={value}
-        modules={
-          {
-            // toolbar: [[{ color: [] }, { background: [] }]],
+      <div className={styles.editor}>
+        <ReactQuill
+          theme="snow"
+          ref={quillRef}
+          value={value}
+          modules={
+            {
+              // toolbar: [[{ color: [] }, { background: [] }]],
+            }
           }
-        }
-        // className="ql-editor"
-        style={{
-          // width: '608px',
-          height: '160px',
-          resize: 'none',
-          borderRadius: '5px',
-          marginBottom: '5px',
-        }}
-        onChange={setValue}
-      />
+          // className="ql-editor"
+          style={{
+            // width: '100%',
+            width: '404px',
+            height: '160px',
+            resize: 'none',
+            borderRadius: '5px',
+            marginBottom: '5px',
+          }}
+          onChange={setValue}
+        />
+      </div>
+
+      <ImgListCom dataSource={imgList} />
     </div>
   );
 }

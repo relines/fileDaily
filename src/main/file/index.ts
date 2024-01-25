@@ -6,6 +6,15 @@ const Store = require('electron-store');
 
 const store = new Store();
 
+const readFile = (url: string) => {
+  return new Promise((resolve, reject) => {
+    fs.stat(url, (err: any, data: any) => {
+      if (err) reject(err);
+      resolve(data);
+    });
+  });
+};
+
 export default {
   async chooseFolder() {
     const resp = await dialog.showOpenDialog({ properties: ['openDirectory'] });
@@ -13,6 +22,22 @@ export default {
       return '';
     }
     return resp.filePaths[0];
+  },
+  async chooseFile() {
+    const resp = await dialog.showOpenDialog({
+      properties: ['openFile', 'multiSelections'],
+    });
+    console.log(333, resp);
+    if (resp.canceled) {
+      return '';
+    }
+    const fileArr = resp.filePaths.map(async (item: any) => {
+      const data = await readFile(item);
+      console.log(12341234, data);
+      return data;
+    });
+    console.log(243, fileArr);
+    return resp.filePaths;
   },
   initFolder() {
     const workSpace = store.get('workSpace');
