@@ -11,9 +11,13 @@ import { ExclamationCircleFilled } from '@ant-design/icons';
 
 import styles from './index.module.less';
 
-type Iprops = {};
+type Iprops = {
+  initCateGoryOption: () => void;
+};
 
 export default function CategoryCom(props: Iprops) {
+  const { initCateGoryOption } = props;
+
   const [loading, setLoading] = useState<boolean>(false);
   const [modalType, setModalType] = useState<string>('');
   const [editRecord, setEditRecord] = useState<any>({});
@@ -45,6 +49,7 @@ export default function CategoryCom(props: Iprops) {
     if (resp.code === 200) {
       message.success('新增成功');
       getCategory();
+      initCateGoryOption();
       setModalType('');
       form.resetFields();
     } else {

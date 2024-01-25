@@ -19,7 +19,7 @@ export default {
       return { code: 400, msg: error };
     }
   },
-  addData({ name, remark, sort, category }: any) {
+  addData({ name, remark, sort }: any) {
     const db = connect();
     const createTime = new Date().getTime();
 
@@ -31,7 +31,7 @@ export default {
       `SELECT * FROM category_table WHERE sort LIKE @sort`,
     );
     const stmAdd = db.prepare(
-      `INSERT INTO category_table (name, remark, sort, category, createTime) values (@name, @remark, @sort, @category, @createTime)`,
+      `INSERT INTO category_table (name, remark, sort, createTime) values (@name, @remark, @sort, @createTime)`,
     );
 
     try {
@@ -40,7 +40,7 @@ export default {
       if (listByName.length !== 0 || listBySort.length !== 0) {
         return { code: 400, msg: 'repeat' };
       }
-      stmAdd.run({ name, remark, sort, category, createTime });
+      stmAdd.run({ name, remark, sort, createTime });
       return { code: 200, msg: '成功' };
     } catch (error) {
       return { code: 400, msg: error };

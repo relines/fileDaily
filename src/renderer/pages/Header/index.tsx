@@ -163,7 +163,7 @@ export default function HeaderCom() {
         }}
         onCancel={() => setShowCategorySetModal(false)}
       >
-        <CategorySet />
+        <CategorySet initCateGoryOption={getCategory} />
       </Modal>
       <Modal
         title="分类选择"

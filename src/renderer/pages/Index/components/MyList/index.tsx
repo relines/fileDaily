@@ -7,7 +7,7 @@
 /* eslint-disable promise/catch-or-return */
 import React, { useEffect, useState } from 'react';
 
-import { List, Image } from 'antd';
+import { List } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
 import VirtualList from 'rc-virtual-list';
@@ -74,7 +74,7 @@ export default function Index(props: Iprops) {
     },
     {
       name: 2,
-      url: 'atom:///Users/popmart/Documents/fileDaily/file/test.png',
+      url: 'atom://Users/jianghuayu/Documents/p2.jpg',
     },
     {
       name: 3,
@@ -82,7 +82,7 @@ export default function Index(props: Iprops) {
     },
     {
       name: 4,
-      url: 'atom:///Users/popmart/Documents/fileDaily/file/test.png',
+      url: 'atom://Users/jianghuayu/Documents/p2.jpg',
     },
     {
       name: 5,
@@ -90,7 +90,7 @@ export default function Index(props: Iprops) {
     },
     {
       name: 6,
-      url: 'atom:///Users/popmart/Documents/fileDaily/file/test.png',
+      url: 'atom://Users/jianghuayu/Documents/p2.jpg',
     },
     {
       name: 7,
