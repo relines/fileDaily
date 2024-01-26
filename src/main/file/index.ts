@@ -1,18 +1,51 @@
+/* eslint-disable no-new */
+/* eslint-disable prefer-template */
+/* eslint-disable func-names */
+/* eslint-disable no-undef */
 /* eslint-disable no-restricted-syntax */
-const fs = require('fs');
+import path from 'path';
+import exif from 'exif';
 
+const fs = require('fs');
 const { dialog } = require('electron');
 const Store = require('electron-store');
 
 const store = new Store();
 
-const readFile = (url: string) => {
-  return new Promise((resolve, reject) => {
-    fs.stat(url, (err: any, data: any) => {
-      if (err) reject(err);
-      resolve(data);
+export async function getExifAsync(imgPath: any) {
+  console.log(111);
+  return new Promise(function (resolve) {
+    console.log(32123, imgPath);
+    new exif.ExifImage({ image: imgPath }, function (
+      error: any,
+      exifData: any,
+    ) {
+      console.log(332, exifData, error);
+      if (error) {
+        resolve({ code: 400, data: null, message: error });
+      } else {
+        resolve({ code: 400, data: exifData, message: error });
+      }
     });
   });
+}
+
+const getFileInfo = (url: string) => {
+  const extensionName = path.extname(url);
+  if (['.png', '.jpg', '.HEIC', '.JPEG'].includes(extensionName)) {
+    return new Promise((resolve) => {
+      console.log(112);
+      const exifInfo = getExifAsync(url);
+      resolve(exifInfo);
+    });
+  }
+  return null;
+  // return new Promise((resolve, reject) => {
+  //   fs.stat(url, (err: any, data: any) => {
+  //     if (err) reject(err);
+  //     resolve(data);
+  //   });
+  // });
 };
 
 export default {
@@ -27,16 +60,16 @@ export default {
     const resp = await dialog.showOpenDialog({
       properties: ['openFile', 'multiSelections'],
     });
-    console.log(333, resp);
+    // console.log(333, resp);
     if (resp.canceled) {
       return '';
     }
     const fileArr = resp.filePaths.map(async (item: any) => {
-      const data = await readFile(item);
+      const data = await getFileInfo(item);
       console.log(12341234, data);
       return data;
     });
-    console.log(243, fileArr);
+    console.log('fileArr', fileArr);
     return resp.filePaths;
   },
   initFolder() {

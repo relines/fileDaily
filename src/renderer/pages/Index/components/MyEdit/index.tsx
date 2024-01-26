@@ -5,6 +5,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+import EXIF from 'exif-js';
+
 import { Button, message } from 'antd';
 
 import ImgListCom from '../../../../components/ImgList';
@@ -50,6 +52,14 @@ export default function MyEdit(props: Iprops) {
       };
     });
     setImgList(data);
+    // const img = new Image();
+    // img.src = data[0].url;
+    const img = document.createElement('img');
+    img.src = data[0].url;
+
+    EXIF.getData(img, function () {
+      console.log(1243, EXIF.getAllTags(this));
+    });
   };
   useEffect(() => {
     setValue(activeItem?.content);
