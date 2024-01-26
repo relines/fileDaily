@@ -5,8 +5,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-import EXIF from 'exif-js';
-
 import { Button, message } from 'antd';
 
 import ImgListCom from '../../../../components/ImgList';
@@ -26,7 +24,7 @@ export default function MyEdit(props: Iprops) {
 
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [imgList, setImgList] = useState([]);
+  const [imgList, setImgList] = useState<any[]>([]);
 
   const quillRef = useRef<any>();
 
@@ -45,21 +43,13 @@ export default function MyEdit(props: Iprops) {
   const chooseFile = async () => {
     const resp = await window.electron.ipcRenderer.invoke('choose-file', {});
     console.log(333, resp);
-    const data = resp.map((item: any, index: number) => {
+    const data = resp.map((item: any) => {
       return {
-        name: index,
-        url: `atom:/${item}`,
+        name: item.parseUrl.base,
+        url: `atom:/${item.url}`,
       };
     });
-    setImgList(data);
-    // const img = new Image();
-    // img.src = data[0].url;
-    const img = document.createElement('img');
-    img.src = data[0].url;
-
-    EXIF.getData(img, function () {
-      console.log(1243, EXIF.getAllTags(this));
-    });
+    setImgList([...imgList, ...data]);
   };
   useEffect(() => {
     setValue(activeItem?.content);

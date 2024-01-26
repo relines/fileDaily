@@ -114,7 +114,6 @@ const ipcFunc = () => {
   });
   ipcMain.handle('choose-file', async () => {
     const result = await fileApi.chooseFile();
-    console.log(33333333, result);
     if (result) {
       return result;
     }

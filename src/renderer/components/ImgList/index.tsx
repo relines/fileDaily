@@ -1,10 +1,8 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-lonely-if */
-/* eslint-disable import/no-cycle */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable promise/always-return */
-/* eslint-disable promise/catch-or-return */
 import React, { useEffect, useState } from 'react';
 
 import styles from './index.module.less';
@@ -42,10 +40,10 @@ export default function Index(props: Iprops) {
 
   return (
     <div className={styles.imgListContainer}>
-      {dataSource.map((item: any) => {
+      {dataSource.map((item: any, index: number) => {
         return (
           <div
-            key={item.name}
+            key={`${item.name}_${index}`}
             className={[styles.imgItem, styles[`imgItem${imgCol}`]].join(' ')}
             onClick={() => {
               window.electron.ipcRenderer.send('open-view-window');
