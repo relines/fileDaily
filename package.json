@@ -96,6 +96,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@types/sortablejs": "^1.15.7",
     "antd": "^5.13.2",
     "date-fns": "^2.30.0",
     "electron-debug": "^3.2.0",
@@ -111,7 +112,9 @@
     "react-dom": "^18.2.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.11.2",
+    "react-sortablejs": "^6.1.4",
     "solarlunar": "^2.0.7",
+    "sortablejs": "^1.15.2",
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {

@@ -5,6 +5,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 
+import { ReactSortable } from 'react-sortablejs';
+
 import styles from './index.module.less';
 
 require('dayjs/locale/zh-cn');
@@ -16,19 +18,25 @@ type Iprops = {
 export default function Index(props: Iprops) {
   const { dataSource } = props;
 
+  const [data, setData] = useState<any[]>(dataSource);
   const [imgCol, setImgCol] = useState<number>(1);
 
   useEffect(() => {
-    if (dataSource.length === 1) {
+    setData(dataSource);
+  }, [dataSource]);
+
+  useEffect(() => {
+    if (!data) return;
+    if (data.length === 1) {
       setImgCol(1);
     } else {
-      if (dataSource.length < 5) {
+      if (data.length < 5) {
         setImgCol(2);
       } else {
-        if (dataSource.length < 10) {
+        if (data.length < 10) {
           setImgCol(3);
         } else {
-          if (dataSource.length < 17) {
+          if (data.length < 17) {
             setImgCol(4);
           } else {
             setImgCol(5);
@@ -36,24 +44,30 @@ export default function Index(props: Iprops) {
         }
       }
     }
-  }, [dataSource]);
+  }, [data]);
 
   return (
-    <div className={styles.imgListContainer}>
-      {dataSource.map((item: any, index: number) => {
-        return (
-          <div
-            key={`${item.name}_${index}`}
-            className={[styles.imgItem, styles[`imgItem${imgCol}`]].join(' ')}
-            onClick={() => {
-              window.electron.ipcRenderer.send('open-view-window');
-            }}
-            style={{
-              backgroundImage: `url(${item.url})`,
-            }}
-          />
-        );
-      })}
-    </div>
+    <ReactSortable
+      list={data}
+      setList={(val) => {
+        setData(val);
+      }}
+      swapThreshold={1}
+      animation={150}
+      className={styles.imgListContainer}
+    >
+      {data?.map((item, index) => (
+        <div
+          key={`${item.name}_${index}`}
+          className={[styles.imgItem, styles[`imgItem${imgCol}`]].join(' ')}
+          onClick={() => {
+            window.electron.ipcRenderer.send('open-view-window');
+          }}
+          style={{
+            backgroundImage: `url(${item.url})`,
+          }}
+        />
+      ))}
+    </ReactSortable>
   );
 }
