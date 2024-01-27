@@ -7,6 +7,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { ReactSortable } from 'react-sortablejs';
 
+import { RightCircleOutlined } from '@ant-design/icons';
+
 import styles from './index.module.less';
 
 require('dayjs/locale/zh-cn');
@@ -103,6 +105,12 @@ export default function Index(props: Iprops) {
               window.electron.ipcRenderer.send('open-view-window');
             }}
           >
+            <RightCircleOutlined
+              className={styles.videoIcon}
+              style={{
+                color: '#fff',
+              }}
+            />
             <video
               loop
               muted

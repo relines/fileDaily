@@ -42,7 +42,6 @@ const getFileCreateTime = (url: string) => {
   return new Promise((resolve, reject) => {
     fs.stat(url, (err: any, data: any) => {
       if (err) reject(err);
-      console.log(3333333, data);
       resolve({ createTime: data.birthtime, url, parseUrl });
     });
   });
