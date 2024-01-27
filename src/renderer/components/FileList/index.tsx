@@ -48,8 +48,6 @@ export default function Index(props: Iprops) {
     }
   }, [data]);
 
-  console.log(333, data);
-
   return (
     <ReactSortable
       list={data}
@@ -73,11 +71,27 @@ export default function Index(props: Iprops) {
               onClick={() => {
                 window.electron.ipcRenderer.send('open-view-window');
               }}
-              style={{
-                backgroundImage: `url(${item.url})`,
-              }}
             >
-              {/* <img src={item.url} alt="" /> */}
+              <img
+                src={item.url}
+                alt=""
+                ref={(r: any) => {
+                  fileRef.current[`${item.name}_${index}`] = r;
+                }}
+                onLoad={(e: any) => {
+                  if (e.target.width > e.target.height) {
+                    fileRef.current[`${item.name}_${index}`].style.width =
+                      'auto';
+                    fileRef.current[`${item.name}_${index}`].style.height =
+                      '100%';
+                  } else {
+                    fileRef.current[`${item.name}_${index}`].style.width =
+                      '100%';
+                    fileRef.current[`${item.name}_${index}`].style.height =
+                      'auto';
+                  }
+                }}
+              />
             </div>
           );
         }
