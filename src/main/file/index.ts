@@ -3,6 +3,7 @@
 /* eslint-disable no-restricted-syntax */
 import path from 'path';
 // import exif from 'exif';
+const ffmpeg = require('fluent-ffmpeg');
 
 const fs = require('fs');
 const { dialog } = require('electron');
@@ -41,6 +42,7 @@ const getFileCreateTime = (url: string) => {
   return new Promise((resolve, reject) => {
     fs.stat(url, (err: any, data: any) => {
       if (err) reject(err);
+      console.log(3333333, data);
       resolve({ createTime: data.birthtime, url, parseUrl });
     });
   });

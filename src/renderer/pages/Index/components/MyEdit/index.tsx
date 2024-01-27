@@ -7,7 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import { Button, message } from 'antd';
 
-import ImgListCom from '../../../../components/ImgList';
+import ImgListCom from '../../../../components/FileList';
 
 import styles from './index.module.less';
 
@@ -46,6 +46,7 @@ export default function MyEdit(props: Iprops) {
     const data = resp.map((item: any) => {
       return {
         name: item.parseUrl.base,
+        type: item.parseUrl.ext === '.mp4' ? 'video' : 'img',
         url: `atom:/${item.url}`,
       };
     });
