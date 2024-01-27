@@ -50,7 +50,11 @@ export default function Index(props: Iprops) {
     <ReactSortable
       list={data}
       setList={(val) => {
-        setData(val);
+        const orderVal = val.map((item, index) => ({
+          ...item,
+          order: index + 1,
+        }));
+        setData(orderVal);
       }}
       swapThreshold={1}
       animation={150}
