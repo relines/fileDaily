@@ -5,9 +5,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import { List } from 'antd';
+import { List, Dropdown, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
 import VirtualList from 'rc-virtual-list';
@@ -46,14 +46,23 @@ export default function Index(props: Iprops) {
   const [isBottom, setIsBottom] = useState<boolean>(false);
 
   const addData = async () => {
-    changeActiveItem();
     setLoading(true);
-    await window.electron.ipcRenderer.invoke('add-data', {
+    const resp = await window.electron.ipcRenderer.invoke('add-data', {
       content: '',
       category: localStorage.getItem('category_current'),
       tag: 'default',
+      createTime: new Date().getTime(),
     });
+    changeActiveItem(resp.data);
     setLoading(false);
+    changeDataSource('new');
+  };
+
+  const handleDelete = async (val: any) => {
+    await window.electron.ipcRenderer.invoke('delete-data', {
+      code: val.code,
+    });
+    message.success('删除成功');
     changeDataSource('new');
   };
 
@@ -112,26 +121,70 @@ export default function Index(props: Iprops) {
                   activeItem?.code === item.code && styles.activedContent
                 }`}
               >
-                {/* <div className={styles.text}>{item.content}</div> */}
-                <div
-                  className={styles.text}
-                  onClick={() => {
-                    changeActiveItem(item);
+                <Dropdown
+                  menu={{
+                    items: [
+                      {
+                        label: (
+                          <div
+                            style={{
+                              width: '30px',
+                              height: '15px',
+                              lineHeight: '15px',
+                              textAlign: 'center',
+                            }}
+                            onClick={() => {
+                              changeActiveItem(item);
+                            }}
+                          >
+                            编辑
+                          </div>
+                        ),
+                        key: 'edit',
+                      },
+                      {
+                        label: (
+                          <div
+                            style={{
+                              width: '30px',
+                              height: '15px',
+                              lineHeight: '15px',
+                              textAlign: 'center',
+                              color: '#f00',
+                            }}
+                            onClick={() => {
+                              handleDelete(item);
+                            }}
+                          >
+                            删除
+                          </div>
+                        ),
+                        key: 'del',
+                      },
+                    ],
                   }}
+                  trigger={['contextMenu']}
                 >
-                  <ReactQuill
-                    theme="snow"
-                    value={item.content}
-                    modules={{
-                      toolbar: null,
+                  <div
+                    className={styles.text}
+                    onClick={() => {
+                      changeActiveItem(item);
                     }}
-                    readOnly
-                    style={{
-                      maxHeight: '186px',
-                      overflow: 'hidden',
-                    }}
-                  />
-                </div>
+                  >
+                    <ReactQuill
+                      theme="snow"
+                      value={item.content}
+                      modules={{
+                        toolbar: null,
+                      }}
+                      readOnly
+                      style={{
+                        maxHeight: '186px',
+                        overflow: 'hidden',
+                      }}
+                    />
+                  </div>
+                </Dropdown>
 
                 <FileListCom
                   dataSource={item.fileList ? JSON.parse(item.fileList) : []}

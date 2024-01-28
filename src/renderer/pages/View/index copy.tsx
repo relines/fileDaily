@@ -49,11 +49,9 @@ export default function IndexCom() {
   ];
   const getVideoPath = async () => {
     const resp = await window.electron.ipcRenderer.invoke('get-video-path', {});
-    console.log(1234, resp);
     const uint8Buffer = Uint8Array.from(resp.data);
     const bolb = new Blob([uint8Buffer]);
     const objUrl = window.URL.createObjectURL(bolb);
-    console.log(1243, objUrl);
     setTestUrl(objUrl);
   };
 

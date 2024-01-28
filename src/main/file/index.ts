@@ -6,6 +6,7 @@ import path from 'path';
 import dayjs from 'dayjs';
 // import exif from 'exif';
 const ffmpeg = require('fluent-ffmpeg');
+const exec = require('child_process').exec;
 
 const fs = require('fs');
 const { dialog } = require('electron');
@@ -56,6 +57,9 @@ export default {
       return '';
     }
     return resp.filePaths[0];
+  },
+  async openFolder(val: any) {
+    exec(`open -R ${val}`);
   },
   async chooseFile() {
     const resp = await dialog.showOpenDialog({

@@ -5,6 +5,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useRef, useState } from 'react';
 
+import { Dropdown } from 'antd';
+
 import { ReactSortable } from 'react-sortablejs';
 
 import { RightCircleOutlined } from '@ant-design/icons';
@@ -63,6 +65,96 @@ export default function Index(props: Iprops) {
       {dataSource?.map((item, index) => {
         if (item.type === 'img') {
           return (
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    label: (
+                      <div
+                        style={{
+                          width: '86px',
+                          height: '15px',
+                          lineHeight: '15px',
+                          textAlign: 'center',
+                        }}
+                        onClick={() => {
+                          window.electron.ipcRenderer.send(
+                            'open-folder',
+                            item.url,
+                          );
+                        }}
+                      >
+                        打开文件目录
+                      </div>
+                    ),
+                    key: 'edit',
+                  },
+                ],
+              }}
+              trigger={['contextMenu']}
+            >
+              <div
+                key={`${item.name}_${index}`}
+                className={[styles.imgItem, styles[`imgItem${imgCol}`]].join(
+                  ' ',
+                )}
+                onClick={() => {
+                  window.electron.ipcRenderer.send('open-view-window');
+                }}
+              >
+                <img
+                  src={`atom:/${item.url}`}
+                  alt={item.url}
+                  ref={(r: any) => {
+                    fileRef.current[`${item.name}_${index}`] = r;
+                  }}
+                  onLoad={(e: any) => {
+                    if (e.target.width > e.target.height) {
+                      fileRef.current[`${item.name}_${index}`].style.width =
+                        'auto';
+                      fileRef.current[`${item.name}_${index}`].style.height =
+                        '100%';
+                    } else {
+                      fileRef.current[`${item.name}_${index}`].style.width =
+                        '100%';
+                      fileRef.current[`${item.name}_${index}`].style.height =
+                        'auto';
+                    }
+                  }}
+                />
+              </div>
+            </Dropdown>
+          );
+        }
+        return (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  label: (
+                    <div
+                      style={{
+                        width: '86px',
+                        height: '15px',
+                        lineHeight: '15px',
+                        textAlign: 'center',
+                      }}
+                      onClick={() => {
+                        window.electron.ipcRenderer.send(
+                          'open-folder',
+                          item.url,
+                        );
+                      }}
+                    >
+                      打开文件目录
+                    </div>
+                  ),
+                  key: 'edit',
+                },
+              ],
+            }}
+            trigger={['contextMenu']}
+          >
             <div
               key={`${item.name}_${index}`}
               className={[styles.imgItem, styles[`imgItem${imgCol}`]].join(' ')}
@@ -70,73 +162,44 @@ export default function Index(props: Iprops) {
                 window.electron.ipcRenderer.send('open-view-window');
               }}
             >
-              <img
-                src={`atom:/${item.url}`}
-                alt={item.url}
+              <RightCircleOutlined
+                className={styles.videoIcon}
+                style={{
+                  color: '#fff',
+                }}
+              />
+              <video
+                loop
+                muted
+                className={styles.videoItem}
                 ref={(r: any) => {
                   fileRef.current[`${item.name}_${index}`] = r;
                 }}
-                onLoad={(e: any) => {
-                  if (e.target.width > e.target.height) {
-                    fileRef.current[`${item.name}_${index}`].style.width =
-                      'auto';
-                    fileRef.current[`${item.name}_${index}`].style.height =
+                onCanPlay={(e: any) => {
+                  if (dataSource?.length === 1) {
+                    fileRef.current[`${item.name}_${index}`].style.maxWidth =
                       '100%';
+                    fileRef.current[`${item.name}_${index}`].style.maxHeight =
+                      'none';
                   } else {
-                    fileRef.current[`${item.name}_${index}`].style.width =
-                      '100%';
-                    fileRef.current[`${item.name}_${index}`].style.height =
-                      'auto';
+                    if (e.target.videoWidth > e.target.videoHeight) {
+                      fileRef.current[`${item.name}_${index}`].style.maxWidth =
+                        'none';
+                      fileRef.current[`${item.name}_${index}`].style.maxHeight =
+                        '100%';
+                    } else {
+                      fileRef.current[`${item.name}_${index}`].style.maxWidth =
+                        '100%';
+                      fileRef.current[`${item.name}_${index}`].style.maxHeight =
+                        'none';
+                    }
                   }
                 }}
-              />
+              >
+                <source src={`atom:/${item.url}`} type="video/mp4" />
+              </video>
             </div>
-          );
-        }
-        return (
-          <div
-            key={`${item.name}_${index}`}
-            className={[styles.imgItem, styles[`imgItem${imgCol}`]].join(' ')}
-            onClick={() => {
-              window.electron.ipcRenderer.send('open-view-window');
-            }}
-          >
-            <RightCircleOutlined
-              className={styles.videoIcon}
-              style={{
-                color: '#fff',
-              }}
-            />
-            <video
-              loop
-              muted
-              className={styles.videoItem}
-              ref={(r: any) => {
-                fileRef.current[`${item.name}_${index}`] = r;
-              }}
-              onCanPlay={(e: any) => {
-                if (dataSource?.length === 1) {
-                  fileRef.current[`${item.name}_${index}`].style.maxWidth =
-                    '100%';
-                  fileRef.current[`${item.name}_${index}`].style.maxHeight =
-                    'none';
-                }
-                if (e.target.videoWidth > e.target.videoHeight) {
-                  fileRef.current[`${item.name}_${index}`].style.maxWidth =
-                    'none';
-                  fileRef.current[`${item.name}_${index}`].style.maxHeight =
-                    '100%';
-                } else {
-                  fileRef.current[`${item.name}_${index}`].style.maxWidth =
-                    '100%';
-                  fileRef.current[`${item.name}_${index}`].style.maxHeight =
-                    'none';
-                }
-              }}
-            >
-              <source src={`atom:/${item.url}`} type="video/mp4" />
-            </video>
-          </div>
+          </Dropdown>
         );
       })}
     </ReactSortable>

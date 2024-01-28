@@ -23,10 +23,9 @@ export default {
       return { code: 400, msg: error };
     }
   },
-  addList({ content, tag }: any) {
+  addList({ content, tag, createTime }: any) {
     const db = connect();
 
-    const createTime = new Date().getTime();
     const formatDay = dayjs(new Date()).format('YYYYMMDD');
     let code = Number(`${formatDay}0001`);
 
@@ -49,7 +48,11 @@ export default {
         }
       }
       stmAdd.run({ code, content, tag, createTime });
-      return { code: 200, msg: '成功' };
+      return {
+        code: 200,
+        msg: '成功',
+        data: { code, content, tag, createTime },
+      };
     } catch (error) {
       return { code: 400, msg: error };
     }
@@ -57,7 +60,6 @@ export default {
   updateList(params: any) {
     const { code, content, fileList, tag } = params;
     const db = connect();
-    console.log(333, params);
 
     const stmInquire = db.prepare(
       `select * from list_table where code = @code`,
@@ -66,7 +68,6 @@ export default {
       `UPDATE list_table SET content = @content, fileList = @fileListStr, tag = @tag WHERE code = @code`,
     );
     const fileListStr = JSON.stringify(fileList);
-    console.log(1234, fileListStr);
 
     try {
       stmUpdate.run({ content, tag, fileListStr, code });
@@ -79,18 +80,21 @@ export default {
       return { code: 400, msg: error };
     }
   },
-  delList({ id = 1 }) {
+  delList(params: any) {
+    const { code } = params;
     const db = connect();
 
-    const stmInquire = db.prepare(`select * from list_table where id = @id`);
-    const stmDel = db.prepare(`DELETE FROM list_table WHERE id = @id`);
+    const stmInquire = db.prepare(
+      `select * from list_table where code = @code`,
+    );
+    const stmDel = db.prepare(`DELETE FROM list_table WHERE code = @code`);
 
     try {
-      const item = stmInquire.get({ id });
+      const item = stmInquire.get({ code });
       if (!item) {
         return { code: 201, msg: '没有查到code', data: item };
       }
-      stmDel.run({ id });
+      stmDel.run({ code });
       return { code: 200, msg: '成功' };
     } catch (error) {
       return { code: 400, msg: error };

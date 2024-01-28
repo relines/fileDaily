@@ -75,6 +75,11 @@ const ipcFunc = () => {
     return result;
   });
 
+  ipcMain.handle('delete-data', async (event, message) => {
+    const result = listApi.delList(message);
+    return result;
+  });
+
   ipcMain.handle('get-list', async (event, message) => {
     const result = listApi.getList(message);
     return result;
@@ -112,6 +117,9 @@ const ipcFunc = () => {
       return result;
     }
     return null;
+  });
+  ipcMain.on('open-folder', (event, message) => {
+    fileApi.openFolder(message);
   });
   ipcMain.handle('choose-file', async () => {
     const result = await fileApi.chooseFile();
