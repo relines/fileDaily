@@ -191,7 +191,12 @@ export default function Index(props: Iprops) {
                   changeDataSource={() => {}}
                 />
 
-                <div className={styles.bottom}>
+                <div
+                  className={styles.bottom}
+                  onClick={() => {
+                    changeActiveItem(item);
+                  }}
+                >
                   <span className={styles.time}>
                     {index + 1}
                     {'-->'}

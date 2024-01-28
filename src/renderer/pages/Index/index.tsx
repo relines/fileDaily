@@ -10,7 +10,7 @@ import MyEdit from './components/MyEdit';
 import styles from './index.module.less';
 
 export default function IndexCom() {
-  const [activeItem, setActiveItem] = useState({});
+  const [activeItem, setActiveItem] = useState<any>({});
   const [tableData, setTableData] = useState<any[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [isLast, setIsLast] = useState<boolean>(false);
@@ -85,9 +85,15 @@ export default function IndexCom() {
           changeDataSource={changeDataSource}
         />
       </div>
-      <div className={`${styles.content} ${styles.editContainer}`}>
-        <MyEdit activeItem={activeItem} changeDataSource={changeDataSource} />
-      </div>
+      {activeItem.code && (
+        <div className={`${styles.content} ${styles.editContainer}`}>
+          <MyEdit
+            activeItem={activeItem}
+            changeActiveItem={setActiveItem}
+            changeDataSource={changeDataSource}
+          />
+        </div>
+      )}
     </div>
   );
 }

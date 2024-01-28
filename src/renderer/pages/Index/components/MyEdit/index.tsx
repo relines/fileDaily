@@ -16,11 +16,12 @@ import styles from './index.module.less';
 
 type Iprops = {
   activeItem: any;
+  changeActiveItem: () => void;
   changeDataSource: (type: 'more' | 'new' | 'save', data?: any) => void;
 };
 
 export default function MyEdit(props: Iprops) {
-  const { activeItem, changeDataSource } = props;
+  const { activeItem, changeActiveItem, changeDataSource } = props;
 
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -69,15 +70,6 @@ export default function MyEdit(props: Iprops) {
         <Button
           type="primary"
           loading={loading}
-          onClick={() => {
-            updateData();
-          }}
-        >
-          save
-        </Button>
-        <Button
-          type="primary"
-          loading={loading}
           style={{
             marginLeft: '10px',
           }}
@@ -86,6 +78,31 @@ export default function MyEdit(props: Iprops) {
           }}
         >
           选择图片
+        </Button>
+        <Button
+          type="default"
+          loading={loading}
+          style={{
+            float: 'right',
+          }}
+          onClick={() => {
+            changeActiveItem({});
+          }}
+        >
+          取消
+        </Button>
+        <Button
+          type="primary"
+          loading={loading}
+          style={{
+            float: 'right',
+            marginRight: '10px',
+          }}
+          onClick={() => {
+            updateData();
+          }}
+        >
+          保存
         </Button>
       </div>
 
