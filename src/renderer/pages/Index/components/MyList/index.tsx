@@ -15,7 +15,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import dayjs from 'dayjs';
 
-import FileListCom from '../../../../components/FileList';
+import FileListShowCom from '../../../../components/FileListShow';
 
 import styles from './index.module.less';
 
@@ -47,6 +47,11 @@ export default function Index(props: Iprops) {
 
   const addData = async () => {
     setLoading(true);
+    console.log(1234, localStorage.getItem('category_current'));
+    if (!localStorage.getItem('category_current')) {
+      message.error('请先选择分类');
+      return;
+    }
     const resp = await window.electron.ipcRenderer.invoke('add-data', {
       content: '',
       category: localStorage.getItem('category_current'),
@@ -186,7 +191,7 @@ export default function Index(props: Iprops) {
                   </div>
                 </Dropdown>
 
-                <FileListCom
+                <FileListShowCom
                   dataSource={item.fileList ? JSON.parse(item.fileList) : []}
                   changeDataSource={() => {}}
                 />

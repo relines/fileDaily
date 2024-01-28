@@ -131,4 +131,9 @@ export default {
       fileList: newFileList,
     };
   },
+  delFile(val: any) {
+    console.log(1234, val, fs.existsSync(val));
+    if (!fs.existsSync(val)) {
+    }
+  },
 };

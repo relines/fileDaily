@@ -121,6 +121,9 @@ const ipcFunc = () => {
   ipcMain.on('open-folder', (event, message) => {
     fileApi.openFolder(message);
   });
+  ipcMain.on('delete-file', (event, message) => {
+    fileApi.delFile(message);
+  });
   ipcMain.handle('choose-file', async () => {
     const result = await fileApi.chooseFile();
     if (result) {

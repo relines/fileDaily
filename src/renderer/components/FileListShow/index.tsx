@@ -18,11 +18,10 @@ require('dayjs/locale/zh-cn');
 type Iprops = {
   dataSource: any[];
   changeDataSource: (val: any) => void;
-  activeItem: any;
 };
 
 export default function Index(props: Iprops) {
-  const { dataSource, activeItem, changeDataSource } = props;
+  const { dataSource, changeDataSource } = props;
 
   const [imgCol, setImgCol] = useState<number>(1);
 
@@ -79,14 +78,13 @@ export default function Index(props: Iprops) {
                           textAlign: 'center',
                         }}
                         onClick={() => {
-                          console.log(1243, item, activeItem);
                           window.electron.ipcRenderer.send(
-                            'delete-file',
+                            'open-folder',
                             item.url,
                           );
                         }}
                       >
-                        删除
+                        打开文件目录
                       </div>
                     ),
                     key: 'edit',
@@ -100,6 +98,9 @@ export default function Index(props: Iprops) {
                 className={[styles.imgItem, styles[`imgItem${imgCol}`]].join(
                   ' ',
                 )}
+                onClick={() => {
+                  window.electron.ipcRenderer.send('open-view-window');
+                }}
               >
                 <img
                   src={`atom:/${item.url}`}
@@ -140,12 +141,12 @@ export default function Index(props: Iprops) {
                       }}
                       onClick={() => {
                         window.electron.ipcRenderer.send(
-                          'delete-file',
+                          'open-folder',
                           item.url,
                         );
                       }}
                     >
-                      删除
+                      打开文件目录
                     </div>
                   ),
                   key: 'edit',
@@ -157,6 +158,9 @@ export default function Index(props: Iprops) {
             <div
               key={`${item.name}_${index}`}
               className={[styles.imgItem, styles[`imgItem${imgCol}`]].join(' ')}
+              onClick={() => {
+                window.electron.ipcRenderer.send('open-view-window');
+              }}
             >
               <RightCircleOutlined
                 className={styles.videoIcon}

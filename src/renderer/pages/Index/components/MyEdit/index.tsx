@@ -133,6 +133,7 @@ export default function MyEdit(props: Iprops) {
         changeDataSource={(val: any) => {
           setFileList(val);
         }}
+        activeItem={activeItem}
       />
     </div>
   );
