@@ -47,13 +47,8 @@ export default function Index(props: Iprops) {
 
   const addData = async () => {
     setLoading(true);
-    if (!localStorage.getItem('category_current')) {
-      message.error('请先选择分类');
-      return;
-    }
     const resp = await window.electron.ipcRenderer.invoke('add-data', {
       content: '',
-      category: localStorage.getItem('category_current'),
       tag: 'default',
       createTime: new Date().getTime(),
     });

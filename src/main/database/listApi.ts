@@ -23,7 +23,7 @@ export default {
       return { code: 400, msg: error };
     }
   },
-  addList({ content, category, tag, createTime }: any) {
+  addList({ content, tag, createTime }: any) {
     const db = connect();
 
     const formatDay = dayjs(new Date()).format('YYYYMMDD');
@@ -34,7 +34,7 @@ export default {
       `SELECT * FROM list_table WHERE code LIKE @formatDay`,
     );
     const stmAdd = db.prepare(
-      `INSERT INTO list_table (code, content, category, tag, createTime) values (@code, @content, @category, @tag, @createTime)`,
+      `INSERT INTO list_table (code, content, tag, createTime) values (@code, @content, @tag, @createTime)`,
     );
 
     try {
@@ -47,7 +47,7 @@ export default {
           return { code: 201, msg: '已经达到9999条数据', data: list };
         }
       }
-      stmAdd.run({ code, content, category, tag, createTime });
+      stmAdd.run({ code, content, tag, createTime });
       return {
         code: 200,
         msg: '成功',
