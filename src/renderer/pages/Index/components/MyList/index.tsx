@@ -15,7 +15,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import dayjs from 'dayjs';
 
-import ImgListCom from '../../../../components/ImgList';
+import FileListCom from '../../../../components/FileList';
 
 import styles from './index.module.less';
 
@@ -44,7 +44,6 @@ export default function Index(props: Iprops) {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isBottom, setIsBottom] = useState<boolean>(false);
-  const [imgCol, setImgCol] = useState<number>(1);
 
   const addData = async () => {
     changeActiveItem();
@@ -68,57 +67,6 @@ export default function Index(props: Iprops) {
       setIsBottom(true);
     }
   };
-
-  const imgList = [
-    {
-      name: 1,
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      name: 2,
-      url: 'atom://Users/jianghuayu/Documents/p2.jpg',
-    },
-    {
-      name: 3,
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      name: 4,
-      url: 'atom://Users/jianghuayu/Documents/p2.jpg',
-    },
-    {
-      name: 5,
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      name: 6,
-      url: 'atom://Users/jianghuayu/Documents/p2.jpg',
-    },
-    {
-      name: 7,
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-  ];
-
-  useEffect(() => {
-    if (imgList.length === 1) {
-      setImgCol(1);
-    } else {
-      if (imgList.length < 5) {
-        setImgCol(2);
-      } else {
-        if (imgList.length < 10) {
-          setImgCol(3);
-        } else {
-          if (imgList.length < 17) {
-            setImgCol(4);
-          } else {
-            setImgCol(5);
-          }
-        }
-      }
-    }
-  }, [imgList]);
 
   return (
     <div className={styles.listContainer}>
@@ -185,7 +133,10 @@ export default function Index(props: Iprops) {
                   />
                 </div>
 
-                <ImgListCom dataSource={imgList} />
+                <FileListCom
+                  dataSource={item.fileList ? JSON.parse(item.fileList) : []}
+                  changeDataSource={() => {}}
+                />
 
                 <div className={styles.bottom}>
                   <span className={styles.time}>

@@ -55,18 +55,21 @@ export default {
     }
   },
   updateList(params: any) {
-    const { code, content, tag } = params;
+    const { code, content, fileList, tag } = params;
     const db = connect();
+    console.log(333, params);
 
     const stmInquire = db.prepare(
       `select * from list_table where code = @code`,
     );
     const stmUpdate = db.prepare(
-      `UPDATE list_table SET content = @content, tag = @tag WHERE code = @code`,
+      `UPDATE list_table SET content = @content, fileList = @fileListStr, tag = @tag WHERE code = @code`,
     );
+    const fileListStr = JSON.stringify(fileList);
+    console.log(1234, fileListStr);
 
     try {
-      stmUpdate.run({ content, tag, code });
+      stmUpdate.run({ content, tag, fileListStr, code });
       const item = stmInquire.get({ code });
       if (!item) {
         return { code: 201, msg: '没有查到code', data: item };

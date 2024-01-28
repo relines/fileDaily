@@ -70,7 +70,8 @@ const ipcFunc = () => {
   });
 
   ipcMain.handle('update-data', async (event, message) => {
-    const result = listApi.updateList(message);
+    const copyResult = fileApi.copyFileList(message);
+    const result = listApi.updateList(copyResult);
     return result;
   });
 
@@ -176,7 +177,7 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1270,
-    height: 750,
+    height: 860,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       // webSecurity: false,

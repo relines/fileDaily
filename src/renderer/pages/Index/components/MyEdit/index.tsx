@@ -7,7 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import { Button, message } from 'antd';
 
-import ImgListCom from '../../../../components/FileList';
+import FileListCom from '../../../../components/FileList';
 
 import styles from './index.module.less';
 
@@ -24,7 +24,7 @@ export default function MyEdit(props: Iprops) {
 
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [imgList, setImgList] = useState<any[]>([]);
+  const [fileList, setFileList] = useState<any[]>([]);
 
   const quillRef = useRef<any>();
 
@@ -33,6 +33,8 @@ export default function MyEdit(props: Iprops) {
     const result = await window.electron.ipcRenderer.invoke('update-data', {
       code: activeItem.code,
       content: value,
+      fileList,
+      currentCategory: localStorage.getItem('category_current'),
       tag: 'default',
     });
     setLoading(false);
@@ -42,18 +44,19 @@ export default function MyEdit(props: Iprops) {
 
   const chooseFile = async () => {
     const resp = await window.electron.ipcRenderer.invoke('choose-file', {});
-    console.log(333, resp);
-    const data = resp.map((item: any) => {
+    const data = resp.map((item: any, index: number) => {
       return {
         name: item.parseUrl.base,
         type: item.parseUrl.ext === '.mp4' ? 'video' : 'img',
-        url: `atom:/${item.url}`,
+        url: item.url,
+        order: index + 1,
       };
     });
-    setImgList([...imgList, ...data]);
+    setFileList([...fileList, ...data]);
   };
   useEffect(() => {
     setValue(activeItem?.content);
+    setFileList(activeItem?.fileList ? JSON.parse(activeItem?.fileList) : []);
   }, [activeItem]);
 
   return (
@@ -79,7 +82,6 @@ export default function MyEdit(props: Iprops) {
             marginLeft: '10px',
           }}
           onClick={() => {
-            // updateData();
             chooseFile();
           }}
         >
@@ -99,7 +101,6 @@ export default function MyEdit(props: Iprops) {
           }
           // className="ql-editor"
           style={{
-            // width: '100%',
             width: '404px',
             height: '160px',
             resize: 'none',
@@ -110,7 +111,12 @@ export default function MyEdit(props: Iprops) {
         />
       </div>
 
-      <ImgListCom dataSource={imgList} />
+      <FileListCom
+        dataSource={fileList}
+        changeDataSource={(val: any) => {
+          setFileList(val);
+        }}
+      />
     </div>
   );
 }

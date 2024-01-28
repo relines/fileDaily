@@ -1,7 +1,9 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable func-names */
 /* eslint-disable no-undef */
 /* eslint-disable no-restricted-syntax */
 import path from 'path';
+import dayjs from 'dayjs';
 // import exif from 'exif';
 const ffmpeg = require('fluent-ffmpeg');
 
@@ -99,5 +101,30 @@ export default {
         resolve(data);
       });
     });
+  },
+  copyFileList(val: any) {
+    const { currentCategory, fileList } = val;
+    const workSpace = store.get('workSpace');
+    if (!fs.existsSync(`${workSpace}/file/${currentCategory}`)) {
+      //  先判断目标文件夹是否存在，不存在则创建
+      fs.mkdirSync(`${workSpace}/file/${currentCategory}`);
+    }
+    const newFileList = fileList.map((item: any) => {
+      const formatTime = dayjs(new Date()).format('YYYYMMDDHHmmss');
+      const random4 = Math.floor(1000 + Math.random() * 9000);
+      const destUrl = `${workSpace}/file/${currentCategory}/${
+        item.name.split('.')[0]
+      }-${formatTime}-${random4}.${item.name.split('.')[1]}`;
+
+      fs.createReadStream(item.url).pipe(fs.createWriteStream(destUrl));
+      return {
+        ...item,
+        url: destUrl,
+      };
+    });
+    return {
+      ...val,
+      fileList: newFileList,
+    };
   },
 };

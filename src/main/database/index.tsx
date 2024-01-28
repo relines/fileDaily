@@ -30,6 +30,7 @@ export function init() {
       createTime int,
       updateTime int,
       category varchar(500),
+      fileList TEXT,
       tag varchar(2000)
     )`);
   }
