@@ -23,7 +23,7 @@ export default {
       return { code: 400, msg: error };
     }
   },
-  addList({ content, tag, createTime }: any) {
+  addList({ content, category, tag, createTime }: any) {
     const db = connect();
 
     const formatDay = dayjs(new Date()).format('YYYYMMDD');
@@ -34,7 +34,7 @@ export default {
       `SELECT * FROM list_table WHERE code LIKE @formatDay`,
     );
     const stmAdd = db.prepare(
-      `INSERT INTO list_table (code, content, tag, createTime) values (@code, @content, @tag, @createTime)`,
+      `INSERT INTO list_table (code, content, category, tag, createTime) values (@code, @content, @category, @tag, @createTime)`,
     );
 
     try {
@@ -47,7 +47,7 @@ export default {
           return { code: 201, msg: '已经达到9999条数据', data: list };
         }
       }
-      stmAdd.run({ code, content, tag, createTime });
+      stmAdd.run({ code, content, category, tag, createTime });
       return {
         code: 200,
         msg: '成功',
@@ -58,19 +58,19 @@ export default {
     }
   },
   updateList(params: any) {
-    const { code, content, fileList, tag } = params;
+    const { code, content, fileList, category, tag } = params;
     const db = connect();
 
     const stmInquire = db.prepare(
       `select * from list_table where code = @code`,
     );
     const stmUpdate = db.prepare(
-      `UPDATE list_table SET content = @content, fileList = @fileListStr, tag = @tag WHERE code = @code`,
+      `UPDATE list_table SET content = @content, fileList = @fileListStr, category=@category, tag = @tag WHERE code = @code`,
     );
     const fileListStr = JSON.stringify(fileList);
 
     try {
-      stmUpdate.run({ content, tag, fileListStr, code });
+      stmUpdate.run({ content, category, tag, fileListStr, code });
       const item = stmInquire.get({ code });
       if (!item) {
         return { code: 201, msg: '没有查到code', data: item };

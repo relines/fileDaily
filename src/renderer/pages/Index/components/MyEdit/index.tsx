@@ -71,13 +71,22 @@ export default function MyEdit(props: Iprops) {
           type="primary"
           loading={loading}
           style={{
-            marginLeft: '10px',
+            marginRight: '10px',
           }}
           onClick={() => {
             chooseFile();
           }}
         >
           选择图片
+        </Button>
+        <Button
+          type="primary"
+          loading={loading}
+          onClick={() => {
+            // chooseFile();
+          }}
+        >
+          切换分类
         </Button>
         <Button
           type="default"

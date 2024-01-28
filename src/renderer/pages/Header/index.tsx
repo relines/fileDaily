@@ -99,28 +99,6 @@ export default function HeaderCom() {
               ),
             },
             {
-              key: '2',
-              label: '分类',
-              children: [
-                {
-                  key: '21',
-                  label: (
-                    <div onClick={() => setShowCategorySetModal(true)}>
-                      设置分类
-                    </div>
-                  ),
-                },
-                {
-                  key: '22',
-                  label: (
-                    <div onClick={() => setShowCategoryChooseModal(true)}>
-                      选择分类
-                    </div>
-                  ),
-                },
-              ],
-            },
-            {
               key: '3',
               label: '标签',
               children: [
@@ -150,7 +128,10 @@ export default function HeaderCom() {
         工作空间目录：{workSpace}
       </span>
 
-      <span>分类：{currentCategory?.name}</span>
+      <span onClick={() => setShowCategorySetModal(true)}>分类：</span>
+      <span onClick={() => setShowCategoryChooseModal(true)}>
+        {currentCategory?.name}
+      </span>
 
       <Modal
         title="分类设置"

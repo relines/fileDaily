@@ -132,7 +132,13 @@ export default {
     };
   },
   delFile(val: any) {
+    const workSpace = store.get('workSpace');
+    const fileUrl = `${workSpace}/file/${currentCategory}`
     console.log(1234, val, fs.existsSync(val));
+    if (!fs.existsSync(`${workSpace}/file/${currentCategory}`)) {
+      //  先判断目标文件夹是否存在，不存在则创建
+      fs.mkdirSync(`${workSpace}/file/${currentCategory}`);
+    }
     if (!fs.existsSync(val)) {
     }
   },

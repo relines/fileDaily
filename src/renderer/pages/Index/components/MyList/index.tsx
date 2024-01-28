@@ -47,7 +47,6 @@ export default function Index(props: Iprops) {
 
   const addData = async () => {
     setLoading(true);
-    console.log(1234, localStorage.getItem('category_current'));
     if (!localStorage.getItem('category_current')) {
       message.error('请先选择分类');
       return;
