@@ -47,18 +47,20 @@ export default function MyEdit(props: Iprops) {
     setLoading(false);
     message.success('保存成功');
     changeDataSource('save', result?.data);
+    changeActiveItem(result?.data);
   };
 
   const chooseFile = async () => {
     const resp = await window.electron.ipcRenderer.invoke('choose-file', {});
-    const data = resp.map((item: any, index: number) => {
-      return {
-        name: item.parseUrl.base,
-        type: item.parseUrl.ext === '.mp4' ? 'video' : 'img',
-        url: item.url,
-        order: index + 1,
-      };
-    });
+    const data =
+      resp?.map((item: any, index: number) => {
+        return {
+          name: item.parseUrl.base,
+          type: item.parseUrl.ext === '.mp4' ? 'video' : 'img',
+          url: item.url,
+          order: index + 1,
+        };
+      }) || [];
     setFileList([...fileList, ...data]);
   };
   useEffect(() => {

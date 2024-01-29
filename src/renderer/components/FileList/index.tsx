@@ -80,10 +80,10 @@ export default function Index(props: Iprops) {
                         }}
                         onClick={() => {
                           console.log(1243, item, activeItem);
-                          window.electron.ipcRenderer.send(
-                            'delete-file',
-                            item.url,
-                          );
+                          // window.electron.ipcRenderer.send(
+                          //   'delete-file',
+                          //   item.url,
+                          // );
                         }}
                       >
                         删除
