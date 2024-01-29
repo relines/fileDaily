@@ -6,7 +6,7 @@ import path from 'path';
 import dayjs from 'dayjs';
 // import exif from 'exif';
 const ffmpeg = require('fluent-ffmpeg');
-const exec = require('child_process').exec;
+const exec = require('child_process')?.exec;
 
 const fs = require('fs');
 const { dialog } = require('electron');
@@ -107,16 +107,16 @@ export default {
     });
   },
   copyFileList(val: any) {
-    const { currentCategory, fileList } = val;
+    const { category, fileList } = val;
     const workSpace = store.get('workSpace');
-    if (!fs.existsSync(`${workSpace}/file/${currentCategory}`)) {
+    if (!fs.existsSync(`${workSpace}/file/${category}`)) {
       //  先判断目标文件夹是否存在，不存在则创建
-      fs.mkdirSync(`${workSpace}/file/${currentCategory}`);
+      fs.mkdirSync(`${workSpace}/file/${category}`);
     }
     const newFileList = fileList.map((item: any) => {
       const formatTime = dayjs(new Date()).format('YYYYMMDDHHmmss');
       const random4 = Math.floor(1000 + Math.random() * 9000);
-      const destUrl = `${workSpace}/file/${currentCategory}/${
+      const destUrl = `${workSpace}/file/${category}/${
         item.name.split('.')[0]
       }-${formatTime}-${random4}.${item.name.split('.')[1]}`;
 
@@ -133,7 +133,7 @@ export default {
   },
   delFile(val: any) {
     const workSpace = store.get('workSpace');
-    const fileUrl = `${workSpace}/file/${currentCategory}`
+    const fileUrl = `${workSpace}/file/${currentCategory}`;
     console.log(1234, val, fs.existsSync(val));
     if (!fs.existsSync(`${workSpace}/file/${currentCategory}`)) {
       //  先判断目标文件夹是否存在，不存在则创建

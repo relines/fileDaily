@@ -1,23 +1,35 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable react/no-unstable-nested-components */
-// 分类设置
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react/jsx-no-constructed-context-values */
+import React, { useState, useEffect } from 'react';
 
-import { Modal, Table, Button, Form, Input, InputNumber, message } from 'antd';
+import {
+  Form,
+  Table,
+  Modal,
+  Button,
+  Select,
+  Input,
+  InputNumber,
+  message,
+} from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 
 import styles from './index.module.less';
 
 type Iprops = {
-  initCateGoryOption: () => void;
+  category: string;
+  changeCategory: (val: string) => void;
+  style: any;
 };
 
-export default function CategoryCom(props: Iprops) {
-  const { initCateGoryOption } = props;
+export default function HeaderCom(props: Iprops) {
+  const { style, category, changeCategory } = props;
 
+  const [showCategorySetModal, setShowCategorySetModal] = useState(false);
+  const [showCategoryChooseModal, setShowCategoryChooseModal] = useState(false);
+  const [categoryOption, setCategoryOption] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [modalType, setModalType] = useState<string>('');
   const [editRecord, setEditRecord] = useState<any>({});
@@ -25,17 +37,16 @@ export default function CategoryCom(props: Iprops) {
 
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    if (modalType === 'edit') {
-      form.setFieldsValue({
-        ...editRecord,
-      });
-    }
-  }, [modalType]);
-
   const getCategory = async () => {
     setLoading(true);
     const resp = await window.electron.ipcRenderer.invoke('get-category', {});
+    const opt = resp.data?.map((item: any) => {
+      return {
+        label: item.name,
+        value: item.name,
+      };
+    });
+    setCategoryOption(opt);
     setTableData(resp.data);
     setLoading(false);
   };
@@ -44,12 +55,10 @@ export default function CategoryCom(props: Iprops) {
     const values = form.getFieldsValue();
     const resp = await window.electron.ipcRenderer.invoke('add-category', {
       ...values,
-      current: '2', // 2 默认，1 current
     });
     if (resp.code === 200) {
       message.success('新增成功');
       getCategory();
-      initCateGoryOption();
       setModalType('');
       form.resetFields();
     } else {
@@ -159,40 +168,111 @@ export default function CategoryCom(props: Iprops) {
   ];
 
   return (
-    <div className={styles.container}>
-      <div className={styles.topbar}>
-        <Button type="primary" onClick={() => setModalType('add')}>
-          新增
-        </Button>
-      </div>
-      <Table
-        rowKey="id"
-        columns={columns}
-        dataSource={tableData}
-        loading={loading}
-        size="small"
-        bordered
-        pagination={false}
-      />
+    <div className={styles.categoryContainer} style={style}>
+      <span onClick={() => setShowCategorySetModal(true)}>分类：</span>
+      <span onClick={() => setShowCategoryChooseModal(true)}>
+        {category || '-'}
+      </span>
+
       <Modal
-        title={modalType === 'add' ? '新增分类' : '编辑分类'}
-        open={modalType !== ''}
-        width={600}
+        title="分类设置"
+        open={showCategorySetModal}
+        width={750}
+        okText="确定"
+        cancelText="取消"
         onOk={() => {
-          if (modalType === 'add') {
-            addCategory();
-          } else {
-            updateCategory();
-          }
+          setShowCategorySetModal(false);
         }}
-        onCancel={() => {
-          setModalType('');
-          form.resetFields();
+        onCancel={() => setShowCategorySetModal(false)}
+      >
+        <div className={styles.topbar}>
+          <Button type="primary" onClick={() => setModalType('add')}>
+            新增
+          </Button>
+        </div>
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={tableData}
+          loading={loading}
+          size="small"
+          bordered
+          pagination={false}
+        />
+        <Modal
+          title={modalType === 'add' ? '新增分类' : '编辑分类'}
+          open={modalType !== ''}
+          width={600}
+          onOk={() => {
+            if (modalType === 'add') {
+              addCategory();
+            } else {
+              updateCategory();
+            }
+          }}
+          onCancel={() => {
+            setModalType('');
+            form.resetFields();
+          }}
+        >
+          <Form
+            name="add"
+            form={form}
+            labelCol={{
+              style: {
+                width: '80px',
+              },
+            }}
+            wrapperCol={{
+              style: {
+                width: '200px',
+              },
+            }}
+            style={{ maxWidth: 600 }}
+            autoComplete="off"
+          >
+            <Form.Item
+              label="名称"
+              name="name"
+              rules={[{ required: true, message: '请输入' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="备注"
+              name="remark"
+              rules={[{ required: true, message: '请输入' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="排序"
+              name="sort"
+              rules={[{ required: true, message: '请输入' }]}
+            >
+              <InputNumber />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </Modal>
+      <Modal
+        title="分类选择"
+        open={showCategoryChooseModal}
+        width={400}
+        onOk={() => {
+          const formVal = form.getFieldsValue();
+          changeCategory(formVal.name);
+          setShowCategoryChooseModal(false);
         }}
+        onCancel={() => setShowCategoryChooseModal(false)}
       >
         <Form
-          name="add"
+          name="choose"
           form={form}
+          style={{
+            margin: '20px 0',
+          }}
           labelCol={{
             style: {
               width: '80px',
@@ -203,7 +283,6 @@ export default function CategoryCom(props: Iprops) {
               width: '200px',
             },
           }}
-          style={{ maxWidth: 600 }}
           autoComplete="off"
         >
           <Form.Item
@@ -211,22 +290,7 @@ export default function CategoryCom(props: Iprops) {
             name="name"
             rules={[{ required: true, message: '请输入' }]}
           >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="备注"
-            name="remark"
-            rules={[{ required: true, message: '请输入' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="排序"
-            name="sort"
-            rules={[{ required: true, message: '请输入' }]}
-          >
-            <InputNumber />
+            <Select style={{ width: 120 }} options={categoryOption} />
           </Form.Item>
         </Form>
       </Modal>

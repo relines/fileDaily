@@ -5,9 +5,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-import { Form, Button, Modal, Select, message } from 'antd';
+import { Button, message } from 'antd';
 
 import FileListCom from '../../../../components/FileList';
+import CategorySetCom from '../../../../components/CategorySet';
 
 import styles from './index.module.less';
 
@@ -16,49 +17,19 @@ import styles from './index.module.less';
 
 type Iprops = {
   activeItem: any;
-  changeActiveItem: () => void;
+  changeActiveItem: (val: any) => void;
   changeDataSource: (type: 'more' | 'new' | 'save', data?: any) => void;
 };
 
 export default function MyEdit(props: Iprops) {
   const { activeItem, changeActiveItem, changeDataSource } = props;
-  console.log(333, activeItem);
 
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [fileList, setFileList] = useState<any[]>([]);
   const [category, setCategory] = useState<string>(activeItem.category);
-  const [categoryOption, setCategoryOption] = useState<any[]>([]);
-  const [showCategoryChooseModal, setShowCategoryChooseModal] = useState(false);
 
   const quillRef = useRef<any>();
-
-  const [form] = Form.useForm();
-
-  const getCategory = async () => {
-    const resp = await window.electron.ipcRenderer.invoke('get-category', {});
-    const opt = resp.data?.map((item: any) => {
-      return {
-        label: item.name,
-        value: item.name,
-      };
-    });
-    if (resp.data.length) {
-      const cur: any = resp.data.filter(
-        (item: any) => item.current === '1',
-      )?.[0];
-      const categoryCurrent = cur ? cur?.name : resp.data[0]?.name;
-      localStorage.setItem('category_current', categoryCurrent);
-      setCategoryOption(opt);
-      form.setFieldsValue({
-        name: cur?.name || resp.data[0]?.name,
-      });
-    }
-  };
-
-  useEffect(() => {
-    getCategory();
-  }, []);
 
   const updateData = async () => {
     if (!category) {
@@ -70,7 +41,7 @@ export default function MyEdit(props: Iprops) {
       code: activeItem.code,
       content: value,
       fileList,
-      currentCategory: localStorage.getItem('category_current'),
+      category,
       tag: 'default',
     });
     setLoading(false);
@@ -113,15 +84,6 @@ export default function MyEdit(props: Iprops) {
           }}
         >
           选择图片
-        </Button>
-        <Button
-          type="primary"
-          loading={loading}
-          onClick={() => {
-            // chooseFile();
-          }}
-        >
-          切换分类
         </Button>
         <Button
           type="default"
@@ -171,14 +133,12 @@ export default function MyEdit(props: Iprops) {
           onChange={setValue}
         />
       </div>
-      <div
-        style={{
-          fontSize: '12px',
-        }}
-        onClick={() => setShowCategoryChooseModal(true)}
-      >
-        分类：{category}
-      </div>
+
+      <CategorySetCom
+        style={{ fontSize: '12px' }}
+        category={category}
+        changeCategory={(val) => setCategory(val)}
+      />
 
       <FileListCom
         dataSource={fileList}
@@ -187,43 +147,6 @@ export default function MyEdit(props: Iprops) {
         }}
         activeItem={activeItem}
       />
-      <Modal
-        title="分类选择"
-        open={showCategoryChooseModal}
-        width={400}
-        onOk={() => {
-          // changeCurrentCategory();
-          // setCategory()
-        }}
-        onCancel={() => setShowCategoryChooseModal(false)}
-      >
-        <Form
-          name="choose"
-          form={form}
-          style={{
-            margin: '20px 0',
-          }}
-          labelCol={{
-            style: {
-              width: '80px',
-            },
-          }}
-          wrapperCol={{
-            style: {
-              width: '200px',
-            },
-          }}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="名称"
-            name="name"
-            rules={[{ required: true, message: '请输入' }]}
-          >
-            <Select style={{ width: 120 }} options={categoryOption} />
-          </Form.Item>
-        </Form>
-      </Modal>
     </div>
   );
 }
