@@ -102,10 +102,6 @@ const ipcFunc = () => {
     const result = categoryApi.delData(message);
     return result;
   });
-  ipcMain.handle('set-category-current', async (event, message) => {
-    const result = categoryApi.setCurrent(message);
-    return result;
-  });
 
   // 文件操作
   ipcMain.handle('choose-folder', async () => {

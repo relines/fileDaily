@@ -107,29 +107,57 @@ export default {
     });
   },
   copyFileList(val: any) {
-    const { category, fileList } = val;
+    const { category, code, fileList } = val;
     const workSpace = store.get('workSpace');
     if (!fs.existsSync(`${workSpace}/file/${category}`)) {
       //  先判断目标文件夹是否存在，不存在则创建
       fs.mkdirSync(`${workSpace}/file/${category}`);
     }
-    const newFileList = fileList.map((item: any) => {
-      const formatTime = dayjs(new Date()).format('YYYYMMDDHHmmss');
-      const random4 = Math.floor(1000 + Math.random() * 9000);
-      const destUrl = `${workSpace}/file/${category}/${
-        item.name.split('.')[0]
-      }-${formatTime}-${random4}.${item.name.split('.')[1]}`;
-
-      fs.createReadStream(item.url).pipe(fs.createWriteStream(destUrl));
-      return {
-        ...item,
-        url: destUrl,
-      };
+    console.log(111, fileList);
+    const oriList = fileList.map((item: any) => {
+      // item.url?.slice(`${workSpace}/file/${category}/`.length
+      if (item.url?.indexOf(`${workSpace}/file/${category}/`) !== -1) {
+        return item.url?.slice(`${workSpace}/file/${category}/`.length);
+      }
+      return item.name;
     });
-    return {
-      ...val,
-      fileList: newFileList,
-    };
+    const destList = fs.readdirSync(`${workSpace}/file/${category}`);
+    console.log(333, oriList);
+    console.log(666, destList);
+    // fileList和destList对比，文件分为三类：
+    // 一类是已经存在的，不需要操作，跳过即可；
+    const oriList1 = oriList.filter((item: any) => !destList.includes(item));
+    console.log(332, oriList1);
+
+    // 第二类是多余的，需要删除
+    const destList1 = destList.filter((item: any) => item.indexOf(code) !== -1);
+    console.log(334, destList1);
+    const delList = destList1.filter((item: any) => !oriList.includes(item));
+    console.log(335, delList);
+    delList.forEach((item: any) => {
+      fs.unlinkSync(`${workSpace}/file/${category}/${item}`);
+    });
+
+    // 第三类是没有的，需要复制
+    const newFileList = fileList
+      .filter((item: any) => oriList1.includes(item.url))
+      .map((item: any) => {
+        const random4 = Math.floor(1000 + Math.random() * 9000);
+        const destUrl = `${workSpace}/file/${category}/${
+          item.name.split('.')[0]
+        }-${code}-${random4}.${item.name.split('.')[1]}`;
+
+        fs.createReadStream(item.url).pipe(fs.createWriteStream(destUrl));
+        return {
+          ...item,
+          url: destUrl,
+        };
+      });
+
+    // return {
+    //   ...val,
+    //   fileList: newFileList,
+    // };
   },
   delFile(val: any) {
     const workSpace = store.get('workSpace');

@@ -80,6 +80,11 @@ export default function Index(props: Iprops) {
                         }}
                         onClick={() => {
                           console.log(1243, item, activeItem);
+                          console.log(334, dataSource);
+                          const list = dataSource.filter(
+                            (item2: any) => item2.name !== item.name,
+                          );
+                          changeDataSource(list);
                           // window.electron.ipcRenderer.send(
                           //   'delete-file',
                           //   item.url,
