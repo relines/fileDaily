@@ -35,7 +35,8 @@ export default function HeaderCom(props: Iprops) {
   const [editRecord, setEditRecord] = useState<any>({});
   const [tableData, setTableData] = useState<any[]>([]);
 
-  const [form] = Form.useForm();
+  const [addForm] = Form.useForm();
+  const [chooseForm] = Form.useForm();
 
   const getCategory = async () => {
     setLoading(true);
@@ -52,7 +53,7 @@ export default function HeaderCom(props: Iprops) {
   };
 
   const addCategory = async () => {
-    const values = form.getFieldsValue();
+    const values = addForm.getFieldsValue();
     const resp = await window.electron.ipcRenderer.invoke('add-category', {
       ...values,
     });
@@ -60,14 +61,14 @@ export default function HeaderCom(props: Iprops) {
       message.success('新增成功');
       getCategory();
       setModalType('');
-      form.resetFields();
+      addForm.resetFields();
     } else {
       message.error(resp.msg);
     }
   };
 
   const updateCategory = async () => {
-    const values = form.getFieldsValue();
+    const values = addForm.getFieldsValue();
     const resp = await window.electron.ipcRenderer.invoke('update-category', {
       ...values,
       id: editRecord.id,
@@ -76,7 +77,7 @@ export default function HeaderCom(props: Iprops) {
       message.success('更新成功');
       getCategory();
       setModalType('');
-      form.resetFields();
+      addForm.resetFields();
     } else {
       message.error(resp.msg);
     }
@@ -212,12 +213,12 @@ export default function HeaderCom(props: Iprops) {
           }}
           onCancel={() => {
             setModalType('');
-            form.resetFields();
+            addForm.resetFields();
           }}
         >
           <Form
             name="add"
-            form={form}
+            form={addForm}
             labelCol={{
               style: {
                 width: '80px',
@@ -261,7 +262,7 @@ export default function HeaderCom(props: Iprops) {
         open={showCategoryChooseModal}
         width={400}
         onOk={() => {
-          const formVal = form.getFieldsValue();
+          const formVal = chooseForm.getFieldsValue();
           changeCategory(formVal.name);
           setShowCategoryChooseModal(false);
         }}
@@ -269,7 +270,7 @@ export default function HeaderCom(props: Iprops) {
       >
         <Form
           name="choose"
-          form={form}
+          form={chooseForm}
           style={{
             margin: '20px 0',
           }}

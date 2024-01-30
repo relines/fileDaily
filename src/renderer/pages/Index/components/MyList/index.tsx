@@ -32,7 +32,7 @@ type Iprops = {
   changeDataSource: (type: 'more' | 'new' | 'save', data?: any) => void;
 };
 
-export default function Index(props: Iprops) {
+export default function MyList(props: Iprops) {
   const {
     dataSource,
     total,
@@ -166,6 +166,7 @@ export default function Index(props: Iprops) {
                     ],
                   }}
                   trigger={['contextMenu']}
+                  key={item.code}
                 >
                   <div
                     className={styles.text}

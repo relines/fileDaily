@@ -93,6 +93,7 @@ export default function Index(props: Iprops) {
                 ],
               }}
               trigger={['contextMenu']}
+              key={item.name}
             >
               <div
                 key={`${item.name}_${index}`}
@@ -147,11 +148,12 @@ export default function Index(props: Iprops) {
                       删除
                     </div>
                   ),
-                  key: 'edit',
+                  key: 'delete',
                 },
               ],
             }}
             trigger={['contextMenu']}
+            key={item.name}
           >
             <div
               key={`${item.name}_${index}`}

@@ -87,11 +87,12 @@ export default function Index(props: Iprops) {
                         打开文件目录
                       </div>
                     ),
-                    key: 'edit',
+                    key: 'open',
                   },
                 ],
               }}
               trigger={['contextMenu']}
+              key={item.name}
             >
               <div
                 key={`${item.name}_${index}`}
@@ -149,11 +150,12 @@ export default function Index(props: Iprops) {
                       打开文件目录
                     </div>
                   ),
-                  key: 'edit',
+                  key: 'open',
                 },
               ],
             }}
             trigger={['contextMenu']}
+            key={item.name}
           >
             <div
               key={`${item.name}_${index}`}
