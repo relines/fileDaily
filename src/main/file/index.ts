@@ -106,27 +106,113 @@ export default {
       });
     });
   },
-  copyFileList(val: any) {
-    const { category, code, fileList } = val;
+  async copyAllFileList(val: any) {
+    // 复制所有文件到新目录，然后删除原目录中的所有文件
+
+    const { category, code, fileList } = val.data;
+    const { oriCategory } = val;
+
     const workSpace = store.get('workSpace');
-    if (!fs.existsSync(`${workSpace}/file/${category}`)) {
-      //  先判断目标文件夹是否存在，不存在则创建
-      fs.mkdirSync(`${workSpace}/file/${category}`);
+    const oriDir = `${workSpace}/file/${oriCategory}`; // 原目录
+    const destDir = `${workSpace}/file/${category}`; // 新目录
+
+    const et3Arr = ['png', 'jpg', 'gif', 'mp4'];
+    const et4Arr = ['jpeg'];
+
+    if (!fs.existsSync(destDir)) {
+      //  先判断新目录是否存在，不存在则创建
+      fs.mkdirSync(destDir);
     }
+
     const oriList = fileList.map((item: any) => {
-      if (item.url?.indexOf(`${workSpace}/file/${category}/`) !== -1) {
-        return item.url?.slice(`${workSpace}/file/${category}/`.length);
+      if (item.url?.indexOf(`${oriDir}/`) !== -1) {
+        return item.url?.slice(`${oriDir}/`.length);
       }
       return item.name;
     });
-    const destList = fs.readdirSync(`${workSpace}/file/${category}`);
+
+    console.log(333, fileList);
+    console.log(331, oriList);
+
+    const promises = fileList.map((item: any) => {
+      return new Promise((resolve) => {
+        const random4 = Math.floor(1000 + Math.random() * 9000);
+        let newName = '';
+        let etName = '';
+        if (et3Arr.includes(item.name.slice(-3))) {
+          newName = item.name.slice(0, -22);
+          etName = item.name.slice(-3);
+        }
+        if (et4Arr.includes(item.name.slice(-4))) {
+          newName = item.name.slice(0, -23);
+          etName = item.name.slice(-4);
+        }
+
+        const destUrl = `${destDir}/${newName}-${code}-${random4}.${etName}`;
+
+        fs.createReadStream(item.url).pipe(fs.createWriteStream(destUrl));
+
+        resolve({
+          ...item,
+          name: `${newName}-${code}-${random4}.${etName}`,
+          url: destUrl,
+        });
+      });
+    });
+
+    const newFileList = await Promise.all(promises);
+
+    // 复制文件到新目录，并返回文件地址
+    // const newFileList = fileList.map((item: any) => {
+    //   const random4 = Math.floor(1000 + Math.random() * 9000);
+    //   const destUrl = `${destDir}/${
+    //     item.name.split('.')[0]
+    //   }-${code}-${random4}.${item.name.split('.')[1]}`;
+
+    //   fs.createReadStream(item.url).pipe(fs.createWriteStream(destUrl));
+
+    //   return {
+    //     ...item,
+    //     name: `${item.name.split('.')[0]}-${code}-${random4}.${
+    //       item.name.split('.')[1]
+    //     }`,
+    //     url: destUrl,
+    //   };
+    // });
+
+    // 删除原目录中的文件
+    oriList?.forEach((item: any) => {
+      fs.unlinkSync(`${oriDir}/${item}`);
+    });
+
+    return {
+      ...val,
+      fileList: newFileList,
+    };
+  },
+  copyFileList(val: any) {
+    const { category, code, fileList } = val;
+    const workSpace = store.get('workSpace');
+    const destDir = `${workSpace}/file/${category}`; // 新目录
+
+    if (!fs.existsSync(destDir)) {
+      //  先判断目标文件夹是否存在，不存在则创建
+      fs.mkdirSync(destDir);
+    }
+    const oriList = fileList.map((item: any) => {
+      if (item.url?.indexOf(`${destDir}/`) !== -1) {
+        return item.url?.slice(`${destDir}/`.length);
+      }
+      return item.name;
+    });
+    const destList = fs.readdirSync(destDir);
     // fileList和destList对比，文件分为三类：
 
     // 第一类是多余的，需要删除
     const destList1 = destList.filter((item: any) => item.indexOf(code) !== -1);
     const delList = destList1.filter((item: any) => !oriList.includes(item));
     delList?.forEach((item: any) => {
-      fs.unlinkSync(`${workSpace}/file/${category}/${item}`);
+      fs.unlinkSync(`${destDir}/${item}`);
     });
 
     // 第二类是已经存在的，不需要操作，跳过即可；
@@ -137,7 +223,7 @@ export default {
       .filter((item: any) => !oriList1.includes(item.name))
       .map((item: any) => {
         const random4 = Math.floor(1000 + Math.random() * 9000);
-        const destUrl = `${workSpace}/file/${category}/${
+        const destUrl = `${destDir}/${
           item.name.split('.')[0]
         }-${code}-${random4}.${item.name.split('.')[1]}`;
 

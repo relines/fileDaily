@@ -70,7 +70,13 @@ const ipcFunc = () => {
   });
 
   ipcMain.handle('update-data', async (event, message) => {
-    const copyResult = fileApi.copyFileList(message);
+    let copyResult = { ...message.data };
+
+    if (message.categoryChanged) {
+      copyResult = fileApi.copyAllFileList(message);
+    }
+    copyResult = fileApi.copyFileList(message.data);
+
     const result = listApi.updateList(copyResult);
     return result;
   });

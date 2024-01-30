@@ -37,12 +37,17 @@ export default function MyEdit(props: Iprops) {
       return;
     }
     setLoading(true);
+    console.log(331, category, activeItem);
     const result = await window.electron.ipcRenderer.invoke('update-data', {
-      code: activeItem.code,
-      content: value,
-      fileList,
-      category,
-      tag: 'default',
+      data: {
+        code: activeItem.code,
+        content: value,
+        fileList,
+        category,
+        tag: 'default',
+      },
+      categoryChanged: activeItem.category && category !== activeItem.category,
+      oriCategory: activeItem.category,
     });
     setLoading(false);
     message.success('保存成功');
