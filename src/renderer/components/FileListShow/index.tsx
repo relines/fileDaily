@@ -101,6 +101,8 @@ export default function Index(props: Iprops) {
                 )}
                 onClick={() => {
                   window.electron.ipcRenderer.send('open-view-window');
+                  localStorage.setItem('activeOrder', item.order);
+                  localStorage.setItem('fileList', JSON.stringify(dataSource));
                 }}
               >
                 <img
@@ -162,6 +164,8 @@ export default function Index(props: Iprops) {
               className={[styles.imgItem, styles[`imgItem${imgCol}`]].join(' ')}
               onClick={() => {
                 window.electron.ipcRenderer.send('open-view-window');
+                localStorage.setItem('activeOrder', item.order);
+                localStorage.setItem('fileList', JSON.stringify(dataSource));
               }}
             >
               <RightCircleOutlined
