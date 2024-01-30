@@ -65,12 +65,12 @@ export default {
       `select * from list_table where code = @code`,
     );
     const stmUpdate = db.prepare(
-      `UPDATE list_table SET content = @content, fileList = @fileListStr, category=@category, tag = @tag WHERE code = @code`,
+      `UPDATE list_table SET content = @content, fileList = @fileListJson, category= @category, tag = @tag WHERE code = @code`,
     );
-    const fileListStr = JSON.stringify(fileList);
+    const fileListJson = JSON.stringify(fileList);
 
     try {
-      stmUpdate.run({ content, category, tag, fileListStr, code });
+      stmUpdate.run({ content, category, tag, fileListJson, code });
       const item = stmInquire.get({ code });
       if (!item) {
         return { code: 201, msg: '没有查到code', data: item };

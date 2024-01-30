@@ -37,7 +37,6 @@ export default function MyEdit(props: Iprops) {
       return;
     }
     setLoading(true);
-    console.log(331, category, activeItem);
     const result = await window.electron.ipcRenderer.invoke('update-data', {
       data: {
         code: activeItem.code,

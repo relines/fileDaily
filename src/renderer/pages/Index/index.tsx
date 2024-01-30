@@ -48,21 +48,23 @@ export default function IndexCom() {
     if (type === 'new') {
       pageIndexRef.current = 0;
       const result = await getData();
+      setTableData(result.data);
       if (result.data?.length) {
-        setTableData(result.data);
         message.success('获取到前10条数据');
       } else {
+        setTableData(result.data);
         message.warning('暂无数据');
       }
     }
     if (type === 'save') {
       const newData = tableData.map((item: any) => {
-        if (item.code === data.code) {
+        if (item.code === data?.code) {
           return data;
         }
         return item;
       });
       setTableData(newData);
+      setActiveItem(newData);
     }
   };
 
@@ -85,7 +87,7 @@ export default function IndexCom() {
           changeDataSource={changeDataSource}
         />
       </div>
-      {activeItem.code && (
+      {activeItem?.code && (
         <div className={`${styles.content} ${styles.editContainer}`}>
           <MyEdit
             activeItem={activeItem}

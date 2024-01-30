@@ -3,9 +3,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-restricted-syntax */
 import path from 'path';
-import dayjs from 'dayjs';
 // import exif from 'exif';
-const ffmpeg = require('fluent-ffmpeg');
+// const ffmpeg = require('fluent-ffmpeg');
 const exec = require('child_process')?.exec;
 
 const fs = require('fs');
@@ -131,9 +130,6 @@ export default {
       return item.name;
     });
 
-    console.log(333, fileList);
-    console.log(331, oriList);
-
     const promises = fileList.map((item: any) => {
       return new Promise((resolve) => {
         const random4 = Math.floor(1000 + Math.random() * 9000);
@@ -162,31 +158,13 @@ export default {
 
     const newFileList = await Promise.all(promises);
 
-    // 复制文件到新目录，并返回文件地址
-    // const newFileList = fileList.map((item: any) => {
-    //   const random4 = Math.floor(1000 + Math.random() * 9000);
-    //   const destUrl = `${destDir}/${
-    //     item.name.split('.')[0]
-    //   }-${code}-${random4}.${item.name.split('.')[1]}`;
-
-    //   fs.createReadStream(item.url).pipe(fs.createWriteStream(destUrl));
-
-    //   return {
-    //     ...item,
-    //     name: `${item.name.split('.')[0]}-${code}-${random4}.${
-    //       item.name.split('.')[1]
-    //     }`,
-    //     url: destUrl,
-    //   };
-    // });
-
     // 删除原目录中的文件
     oriList?.forEach((item: any) => {
       fs.unlinkSync(`${oriDir}/${item}`);
     });
 
     return {
-      ...val,
+      ...val.data,
       fileList: newFileList,
     };
   },
@@ -244,16 +222,5 @@ export default {
       ...val,
       fileList: [...existFileList, ...newFileList],
     };
-  },
-  delFile(val: any) {
-    const workSpace = store.get('workSpace');
-    const fileUrl = `${workSpace}/file/${currentCategory}`;
-    console.log(1234, val, fs.existsSync(val));
-    if (!fs.existsSync(`${workSpace}/file/${currentCategory}`)) {
-      //  先判断目标文件夹是否存在，不存在则创建
-      fs.mkdirSync(`${workSpace}/file/${currentCategory}`);
-    }
-    if (!fs.existsSync(val)) {
-    }
   },
 };

@@ -79,16 +79,10 @@ export default function Index(props: Iprops) {
                           textAlign: 'center',
                         }}
                         onClick={() => {
-                          console.log(1243, item, activeItem);
-                          console.log(334, dataSource);
                           const list = dataSource.filter(
                             (item2: any) => item2.name !== item.name,
                           );
                           changeDataSource(list);
-                          // window.electron.ipcRenderer.send(
-                          //   'delete-file',
-                          //   item.url,
-                          // );
                         }}
                       >
                         删除
@@ -144,10 +138,10 @@ export default function Index(props: Iprops) {
                         textAlign: 'center',
                       }}
                       onClick={() => {
-                        window.electron.ipcRenderer.send(
-                          'delete-file',
-                          item.url,
+                        const list = dataSource.filter(
+                          (item2: any) => item2.name !== item.name,
                         );
+                        changeDataSource(list);
                       }}
                     >
                       删除

@@ -61,6 +61,9 @@ export default function Index(props: Iprops) {
     await window.electron.ipcRenderer.invoke('delete-data', {
       code: val.code,
     });
+    if (activeItem.code === val.code) {
+      changeActiveItem({});
+    }
     message.success('删除成功');
     changeDataSource('new');
   };

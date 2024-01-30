@@ -73,9 +73,10 @@ const ipcFunc = () => {
     let copyResult = { ...message.data };
 
     if (message.categoryChanged) {
-      copyResult = fileApi.copyAllFileList(message);
+      copyResult = await fileApi.copyAllFileList(message);
+    } else {
+      copyResult = fileApi.copyFileList(message.data);
     }
-    copyResult = fileApi.copyFileList(message.data);
 
     const result = listApi.updateList(copyResult);
     return result;
@@ -122,9 +123,6 @@ const ipcFunc = () => {
   });
   ipcMain.on('open-folder', (event, message) => {
     fileApi.openFolder(message);
-  });
-  ipcMain.on('delete-file', (event, message) => {
-    fileApi.delFile(message);
   });
   ipcMain.handle('choose-file', async () => {
     const result = await fileApi.chooseFile();
