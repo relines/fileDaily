@@ -113,34 +113,28 @@ export default {
       //  先判断目标文件夹是否存在，不存在则创建
       fs.mkdirSync(`${workSpace}/file/${category}`);
     }
-    console.log(111, fileList);
     const oriList = fileList.map((item: any) => {
-      // item.url?.slice(`${workSpace}/file/${category}/`.length
       if (item.url?.indexOf(`${workSpace}/file/${category}/`) !== -1) {
         return item.url?.slice(`${workSpace}/file/${category}/`.length);
       }
       return item.name;
     });
     const destList = fs.readdirSync(`${workSpace}/file/${category}`);
-    console.log(333, oriList);
-    console.log(666, destList);
     // fileList和destList对比，文件分为三类：
-    // 一类是已经存在的，不需要操作，跳过即可；
-    const oriList1 = oriList.filter((item: any) => !destList.includes(item));
-    console.log(332, oriList1);
 
-    // 第二类是多余的，需要删除
+    // 第一类是多余的，需要删除
     const destList1 = destList.filter((item: any) => item.indexOf(code) !== -1);
-    console.log(334, destList1);
     const delList = destList1.filter((item: any) => !oriList.includes(item));
-    console.log(335, delList);
-    delList.forEach((item: any) => {
+    delList?.forEach((item: any) => {
       fs.unlinkSync(`${workSpace}/file/${category}/${item}`);
     });
 
+    // 第二类是已经存在的，不需要操作，跳过即可；
+    const oriList1 = oriList.filter((item: any) => destList.includes(item));
+
     // 第三类是没有的，需要复制
     const newFileList = fileList
-      .filter((item: any) => oriList1.includes(item.url))
+      .filter((item: any) => !oriList1.includes(item.name))
       .map((item: any) => {
         const random4 = Math.floor(1000 + Math.random() * 9000);
         const destUrl = `${workSpace}/file/${category}/${
@@ -150,14 +144,20 @@ export default {
         fs.createReadStream(item.url).pipe(fs.createWriteStream(destUrl));
         return {
           ...item,
+          name: `${item.name.split('.')[0]}-${code}-${random4}.${
+            item.name.split('.')[1]
+          }`,
           url: destUrl,
         };
       });
+    const existFileList = fileList.filter((item: any) =>
+      oriList1.includes(item.name),
+    );
 
-    // return {
-    //   ...val,
-    //   fileList: newFileList,
-    // };
+    return {
+      ...val,
+      fileList: [...existFileList, ...newFileList],
+    };
   },
   delFile(val: any) {
     const workSpace = store.get('workSpace');
