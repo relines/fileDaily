@@ -1,103 +1,147 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useState, useEffect, useRef } from 'react';
 
+import Minimap from 'react-minimap';
+import 'react-minimap/dist/react-minimap.css';
+
 import styles from './index.module.less';
 
-export default function IndexCom() {
-  const [testUrl, setTestUrl] = useState<string>();
-  const data = [
-    {
-      name: 'pic2',
-      type: 'img',
-      url: 'atom://Users/jianghuayu/Documents/p2.jpg',
-    },
-    {
-      name: 'video1',
-      type: 'video',
-      url: 'atom://Users/jianghuayu/Documents/想某人.mp4',
-    },
-    {
-      name: 'video3',
-      type: 'video',
-      url: 'atom://Users/jianghuayu/Documents/HHTJ.mp4',
-    },
-    {
-      name: 'pic3',
-      type: 'img',
-      url: 'atom://Users/jianghuayu/Documents/p3.jpg',
-    },
-    {
-      name: 'pic4',
-      type: 'img',
-      url: 'atom://Users/jianghuayu/Documents/p4.jpg',
-    },
-    // {
-    //   name: 'pic1',
-    //   type: 'img',
-    //   url: 'atom://Users/popmart/Documents/fileDaily/file/test.png',
-    // },
-    // {
-    //   name: 'pic2',
-    //   type: 'img',
-    //   url: 'atom:///file://Users/popmart/Documents/fileDaily/file/test.png',
-    // },
-    // {
-    //   name: 'video2',
-    //   type: 'video',
-    //   url: 'atom://Users/popmart/Documents/fileDaily/file/oceans.mp4',
-    // },
-  ];
-  const getVideoPath = async () => {
-    const resp = await window.electron.ipcRenderer.invoke('get-video-path', {});
-    const uint8Buffer = Uint8Array.from(resp.data);
-    const bolb = new Blob([uint8Buffer]);
-    const objUrl = window.URL.createObjectURL(bolb);
-    setTestUrl(objUrl);
+export default function ViewCom() {
+  const [cur, setCur] = useState<number>(0);
+  const [fileList, setFileList] = useState<any[]>([]);
+
+  const fileRef = useRef<any>({});
+  const zoomCount = useRef<number>(1);
+
+  const getDataSource = () => {
+    setFileList(JSON.parse(localStorage.getItem('fileList') || '[]'));
+    setCur(Number(localStorage.getItem('activeOrder')) - 1);
   };
+
+  useEffect(() => {
+    getDataSource();
+  }, []);
+
+  // 键盘事件函数
+  const PopupKeyUp = (e: any) => {
+    if (e.code === 'ArrowRight') {
+      let x = cur + 1;
+      if (x === fileList.length) {
+        x = fileList.length - 1;
+      }
+      setCur(x);
+    }
+
+    if (e.code === 'ArrowLeft') {
+      let x = cur - 1;
+      if (x <= 0) {
+        x = 0;
+      }
+      setCur(x);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keyup', PopupKeyUp, false);
+    return () => {
+      document.removeEventListener('keyup', PopupKeyUp, false);
+    };
+  });
+
+  console.log(333, fileList);
 
   return (
     <div className={styles.viewContainer}>
-      <button
-        type="button"
-        onClick={() => {
-          getVideoPath();
-        }}
-      >
-        getVideoPath
-      </button>
-      {testUrl && (
-        <div>
-          <video controls muted loop width="300">
-            <source
-              // src="http://vjs.zencdn.net/v/oceans.mp4"
-              src={testUrl}
-              type="video/mp4"
-            />
-          </video>
-        </div>
-      )}
-      {data.map((item: any, index: number) => {
-        if (item.type === 'img') {
-          return (
-            <div key={item.name}>
-              <img src={item.url} alt="" />
-            </div>
-          );
-        }
-        if (item.type === 'video') {
-          return (
-            <div key={item.name}>
-              <video controls muted loop width="100%">
-                <source
-                  // src="http://vjs.zencdn.net/v/oceans.mp4"
-                  src={item.url}
-                  type="video/mp4"
-                />
-              </video>
-            </div>
-          );
-        }
-      })}
+      <div className={styles.header}>123</div>
+      {/* <Minimap selector=".card"> */}
+      <div className={styles.viewItem}>
+        {fileList?.map((item: any, index: number) => {
+          if (item.type === 'img' && index === cur) {
+            return (
+              <div
+                className={styles.itemContainer}
+                onWheel={(e: any) => {
+                  zoomCount.current += e.deltaY * 0.0001;
+                  if (zoomCount.current < 0.1) {
+                    zoomCount.current = 0.1;
+                  }
+                  if (zoomCount.current > 10) {
+                    zoomCount.current = 10;
+                  }
+                  // fileRef.current[
+                  //   `${item.order}`
+                  // ].style.transform = `scale(${zoomCount.current})`;
+                  fileRef.current[`${item.order}`].style.height = `${
+                    100 * zoomCount.current
+                  }%`;
+                }}
+              >
+                <div
+                  className={styles.item}
+                  key={item.order}
+                  ref={(r: any) => {
+                    fileRef.current[`${item.order}`] = r;
+                  }}
+                  onDrag={(e: any) => {
+                    console.log(333, e);
+                  }}
+                >
+                  <img
+                    src={`atom://${item.url}`}
+                    alt=""
+                    // className={styles.content}
+                    className={`${styles.content} card`}
+                  />
+                </div>
+              </div>
+            );
+          }
+          if (item.type === 'video' && index === cur) {
+            return (
+              <div
+                className={styles.itemContainer}
+                onWheel={(e: any) => {
+                  zoomCount.current += e.deltaY * 0.0001;
+                  if (zoomCount.current < 0.1) {
+                    zoomCount.current = 0.1;
+                  }
+                  if (zoomCount.current > 10) {
+                    zoomCount.current = 10;
+                  }
+                  fileRef.current[
+                    `${item.order}`
+                  ].style.transform = `scale(${zoomCount.current})`;
+                }}
+              >
+                <div
+                  key={item.name}
+                  ref={(r: any) => {
+                    fileRef.current[`${item.order}`] = r;
+                  }}
+                  className={styles.item}
+                >
+                  <video
+                    controls
+                    muted
+                    loop
+                    width="100%"
+                    // className={styles.content}
+                    className={`${styles.content} card`}
+                  >
+                    <source
+                      // src="http://vjs.zencdn.net/v/oceans.mp4"
+                      src={`atom://${item.url}`}
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+              </div>
+            );
+          }
+          return null;
+        })}
+      </div>
+      {/* </Minimap> */}
     </div>
   );
 }

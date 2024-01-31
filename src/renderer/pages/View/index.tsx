@@ -4,11 +4,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import Minimap from 'react-minimap';
 import 'react-minimap/dist/react-minimap.css';
 
+import FileViewCom from './components/FileViewer';
+
+import useWindowSize from '../../hooks/useWindowSize';
+
 import styles from './index.module.less';
 
 export default function ViewCom() {
   const [cur, setCur] = useState<number>(0);
   const [fileList, setFileList] = useState<any[]>([]);
+
+  const { width, height } = useWindowSize();
+
+  console.log(333, width, height);
 
   const fileRef = useRef<any>({});
   const zoomCount = useRef<number>(1);
