@@ -6,7 +6,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { init } from './database/index';
+import { initDatabase } from './database/index';
 import listApi from './database/listApi';
 import categoryApi from './database/categoryApi';
 import fileApi from './file/index';
@@ -116,7 +116,7 @@ const ipcFunc = () => {
     if (result) {
       store.set('workSpace', result);
       fileApi.initFolder();
-      init();
+      initDatabase();
       return result;
     }
     return null;
@@ -269,7 +269,7 @@ app
     });
     initWorkSpace();
     fileApi.initFolder();
-    init();
+    initDatabase();
     ipcFunc();
     createWindow();
     app.on('activate', () => {

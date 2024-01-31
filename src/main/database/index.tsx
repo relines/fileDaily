@@ -14,7 +14,7 @@ export default function connect() {
   return sqlite(path.join(workSpaceUrl, '/daily.db'), {});
 }
 
-export function init() {
+export function initDatabase() {
   db = connect();
 
   const stmAllTable = db.prepare(
