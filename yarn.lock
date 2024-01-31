@@ -9084,6 +9084,13 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-minimap@^0.7.4:
+  version "0.7.4"
+  resolved "https://npm.paquapp.com/react-minimap/-/react-minimap-0.7.4.tgz#8ba3b21629fd4c954adcd91570e3c798d835126f"
+  integrity sha512-U/qHs0QKc6oyuPlroRQ9ymM8HvM2N2hmmv59Y2nyQ2+obqZlTPhB/t/FBfxn4B2lv2f28MoC5NBXEVDjw/cilw==
+  dependencies:
+    lodash "^4.17.4"
+
 react-quill@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-quill/-/react-quill-2.0.0.tgz#67a0100f58f96a246af240c9fa6841b363b3e017"

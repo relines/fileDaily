@@ -1,6 +1,9 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useState, useEffect, useRef } from 'react';
 
+import Minimap from 'react-minimap';
+import 'react-minimap/dist/react-minimap.css';
+
 import styles from './index.module.less';
 
 export default function ViewCom() {
@@ -40,6 +43,7 @@ export default function ViewCom() {
         reset
       </button> */}
       <div className={styles.header}>123</div>
+      {/* <Minimap selector=".card"> */}
       <div className={styles.viewItem}>
         {fileList?.map((item: any, index: number) => {
           if (item.type === 'img' && index === cur) {
@@ -54,9 +58,12 @@ export default function ViewCom() {
                   if (zoomCount.current > 10) {
                     zoomCount.current = 10;
                   }
-                  fileRef.current[
-                    `${item.order}`
-                  ].style.transform = `scale(${zoomCount.current})`;
+                  // fileRef.current[
+                  //   `${item.order}`
+                  // ].style.transform = `scale(${zoomCount.current})`;
+                  fileRef.current[`${item.order}`].style.height = `${
+                    100 * zoomCount.current
+                  }%`;
                 }}
               >
                 <div
@@ -65,11 +72,15 @@ export default function ViewCom() {
                   ref={(r: any) => {
                     fileRef.current[`${item.order}`] = r;
                   }}
+                  onDrag={(e: any) => {
+                    console.log(333, e);
+                  }}
                 >
                   <img
                     src={`atom://${item.url}`}
                     alt=""
-                    className={styles.content}
+                    // className={styles.content}
+                    className={`${styles.content} card`}
                   />
                 </div>
               </div>
@@ -104,7 +115,8 @@ export default function ViewCom() {
                     muted
                     loop
                     width="100%"
-                    className={styles.content}
+                    // className={styles.content}
+                    className={`${styles.content} card`}
                   >
                     <source
                       // src="http://vjs.zencdn.net/v/oceans.mp4"
@@ -119,6 +131,7 @@ export default function ViewCom() {
           return null;
         })}
       </div>
+      {/* </Minimap> */}
     </div>
   );
 }
