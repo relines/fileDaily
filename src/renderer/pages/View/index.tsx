@@ -1,11 +1,6 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useState, useEffect, useRef } from 'react';
 
-import Minimap from 'react-minimap';
-import 'react-minimap/dist/react-minimap.css';
-
-import FileViewCom from './components/FileViewer';
-
 import useWindowSize from '../../hooks/useWindowSize';
 
 import styles from './index.module.less';
@@ -16,9 +11,8 @@ export default function ViewCom() {
 
   const { width, height } = useWindowSize();
 
-  console.log(333, width, height);
-
   const fileRef = useRef<any>({});
+  const contentRef = useRef<any>({});
   const zoomCount = useRef<number>(1);
 
   const getDataSource = () => {
@@ -29,6 +23,47 @@ export default function ViewCom() {
   useEffect(() => {
     getDataSource();
   }, []);
+
+  const resetFileSize = (file: any) => {
+    let fileWidth = 0;
+    let fileHeight = 0;
+
+    if (fileList[cur].type === 'img') {
+      fileWidth = file?.width;
+      fileHeight = file?.height;
+      if (width / height > fileWidth / fileHeight) {
+        setTimeout(() => {
+          file.style.width = 'auto';
+          file.style.height = '100%';
+        }, 100);
+      } else {
+        setTimeout(() => {
+          file.style.width = '100%';
+          file.style.height = 'auto';
+        }, 100);
+      }
+    } else {
+      fileWidth = file?.clientWidth;
+      fileHeight = file?.clientHeight;
+      if (width / height > fileWidth / fileHeight) {
+        setTimeout(() => {
+          file.style.maxWidth = 'none';
+          file.style.maxHeight = '100%';
+        }, 100);
+      } else {
+        setTimeout(() => {
+          file.style.maxWidth = '100%';
+          file.style.maxHeight = 'none';
+        }, 100);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const file = fileRef.current[cur + 1];
+    if (!file) return;
+    resetFileSize(file);
+  }, [width, height, cur]);
 
   // 键盘事件函数
   const PopupKeyUp = (e: any) => {
@@ -61,34 +96,31 @@ export default function ViewCom() {
   return (
     <div className={styles.viewContainer}>
       <div className={styles.header}>123</div>
-      {/* <Minimap selector=".card"> */}
       <div className={styles.viewItem}>
         {fileList?.map((item: any, index: number) => {
           if (item.type === 'img' && index === cur) {
             return (
               <div
+                key={item.order}
                 className={styles.itemContainer}
                 onWheel={(e: any) => {
-                  zoomCount.current += e.deltaY * 0.0001;
+                  zoomCount.current -= e.deltaY * 0.0001;
                   if (zoomCount.current < 0.1) {
                     zoomCount.current = 0.1;
                   }
                   if (zoomCount.current > 10) {
                     zoomCount.current = 10;
                   }
-                  // fileRef.current[
-                  //   `${item.order}`
-                  // ].style.transform = `scale(${zoomCount.current})`;
-                  fileRef.current[`${item.order}`].style.height = `${
-                    100 * zoomCount.current
-                  }%`;
+                  contentRef.current[
+                    `${item.order}`
+                  ].style.transform = `scale(${zoomCount.current})`;
                 }}
               >
                 <div
                   className={styles.item}
                   key={item.order}
                   ref={(r: any) => {
-                    fileRef.current[`${item.order}`] = r;
+                    contentRef.current[`${item.order}`] = r;
                   }}
                   onDrag={(e: any) => {
                     console.log(333, e);
@@ -97,8 +129,19 @@ export default function ViewCom() {
                   <img
                     src={`atom://${item.url}`}
                     alt=""
-                    // className={styles.content}
-                    className={`${styles.content} card`}
+                    ref={(r: any) => {
+                      fileRef.current[`${item.order}`] = r;
+                    }}
+                    className={styles.content}
+                    onLoad={(e: any) => {
+                      if (e.target.width > e.target.height) {
+                        fileRef.current[`${item.order}`].style.width = 'auto';
+                        fileRef.current[`${item.order}`].style.height = '100%';
+                      } else {
+                        fileRef.current[`${item.order}`].style.width = '100%';
+                        fileRef.current[`${item.order}`].style.height = 'auto';
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -107,16 +150,17 @@ export default function ViewCom() {
           if (item.type === 'video' && index === cur) {
             return (
               <div
+                key={item.order}
                 className={styles.itemContainer}
                 onWheel={(e: any) => {
-                  zoomCount.current += e.deltaY * 0.0001;
+                  zoomCount.current -= e.deltaY * 0.0001;
                   if (zoomCount.current < 0.1) {
                     zoomCount.current = 0.1;
                   }
                   if (zoomCount.current > 10) {
                     zoomCount.current = 10;
                   }
-                  fileRef.current[
+                  contentRef.current[
                     `${item.order}`
                   ].style.transform = `scale(${zoomCount.current})`;
                 }}
@@ -124,7 +168,7 @@ export default function ViewCom() {
                 <div
                   key={item.name}
                   ref={(r: any) => {
-                    fileRef.current[`${item.order}`] = r;
+                    contentRef.current[`${item.order}`] = r;
                   }}
                   className={styles.item}
                 >
@@ -133,8 +177,10 @@ export default function ViewCom() {
                     muted
                     loop
                     width="100%"
-                    // className={styles.content}
-                    className={`${styles.content} card`}
+                    className={styles.content}
+                    ref={(r: any) => {
+                      fileRef.current[`${item.order}`] = r;
+                    }}
                   >
                     <source
                       // src="http://vjs.zencdn.net/v/oceans.mp4"
@@ -149,7 +195,6 @@ export default function ViewCom() {
           return null;
         })}
       </div>
-      {/* </Minimap> */}
     </div>
   );
 }
