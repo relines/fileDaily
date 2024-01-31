@@ -9,7 +9,7 @@ export default function ViewCom() {
   const [cur, setCur] = useState<number>(0);
   const [fileList, setFileList] = useState<any[]>([]);
 
-  const { width, height } = useWindowSize();
+  const { windowWidth, windowHeight } = useWindowSize();
 
   const fileRef = useRef<any>({});
   const contentRef = useRef<any>({});
@@ -34,7 +34,7 @@ export default function ViewCom() {
     if (fileList[cur].type === 'img') {
       fileWidth = file?.width;
       fileHeight = file?.height;
-      if (width / height > fileWidth / fileHeight) {
+      if (windowWidth / windowHeight > fileWidth / fileHeight) {
         setTimeout(() => {
           file.style.width = 'auto';
           file.style.height = '100%';
@@ -48,7 +48,7 @@ export default function ViewCom() {
     } else {
       fileWidth = file?.clientWidth;
       fileHeight = file?.clientHeight;
-      if (width / height > fileWidth / fileHeight) {
+      if (windowWidth / windowHeight > fileWidth / fileHeight) {
         setTimeout(() => {
           file.style.maxWidth = 'none';
           file.style.maxHeight = '100%';
@@ -64,7 +64,7 @@ export default function ViewCom() {
 
   useEffect(() => {
     resetFileSize();
-  }, [width, height, cur]);
+  }, [windowWidth, windowHeight, cur]);
 
   // 键盘事件函数
   const PopupKeyUp = (e: any) => {

@@ -2,21 +2,21 @@
 import { useEffect, useState } from 'react';
 
 interface WindowSize {
-  width: number;
-  height: number;
+  windowWidth: number;
+  windowHeight: number;
 }
 
 function useWindowSize(): WindowSize {
   const [windowSize, setWindowSize] = useState<WindowSize>({
-    width: 0,
-    height: 0,
+    windowWidth: 0,
+    windowHeight: 0,
   });
 
   useEffect(() => {
     const handler = () => {
       setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
+        windowWidth: window.innerWidth,
+        windowHeight: window.innerHeight,
       });
     };
 

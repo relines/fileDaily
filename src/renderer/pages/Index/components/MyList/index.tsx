@@ -16,12 +16,11 @@ import 'react-quill/dist/quill.snow.css';
 import dayjs from 'dayjs';
 
 import FileListShowCom from '../../../../components/FileListShow';
+import useWindowSize from '../../../../hooks/useWindowSize';
 
 import styles from './index.module.less';
 
 require('dayjs/locale/zh-cn');
-
-const ContainerHeight = 500;
 
 type Iprops = {
   dataSource: any[];
@@ -44,6 +43,10 @@ export default function MyList(props: Iprops) {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isBottom, setIsBottom] = useState<boolean>(false);
+
+  const { windowHeight } = useWindowSize();
+
+  const ContainerHeight = windowHeight - 100;
 
   const addData = async () => {
     setLoading(true);
