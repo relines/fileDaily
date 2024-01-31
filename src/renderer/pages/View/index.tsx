@@ -24,7 +24,10 @@ export default function ViewCom() {
     getDataSource();
   }, []);
 
-  const resetFileSize = (file: any) => {
+  const resetFileSize = () => {
+    const file = fileRef.current[cur + 1];
+    if (!file) return;
+
     let fileWidth = 0;
     let fileHeight = 0;
 
@@ -60,9 +63,7 @@ export default function ViewCom() {
   };
 
   useEffect(() => {
-    const file = fileRef.current[cur + 1];
-    if (!file) return;
-    resetFileSize(file);
+    resetFileSize();
   }, [width, height, cur]);
 
   // 键盘事件函数
@@ -122,9 +123,6 @@ export default function ViewCom() {
                   ref={(r: any) => {
                     contentRef.current[`${item.order}`] = r;
                   }}
-                  onDrag={(e: any) => {
-                    console.log(333, e);
-                  }}
                 >
                   <img
                     src={`atom://${item.url}`}
@@ -133,15 +131,6 @@ export default function ViewCom() {
                       fileRef.current[`${item.order}`] = r;
                     }}
                     className={styles.content}
-                    onLoad={(e: any) => {
-                      if (e.target.width > e.target.height) {
-                        fileRef.current[`${item.order}`].style.width = 'auto';
-                        fileRef.current[`${item.order}`].style.height = '100%';
-                      } else {
-                        fileRef.current[`${item.order}`].style.width = '100%';
-                        fileRef.current[`${item.order}`].style.height = 'auto';
-                      }
-                    }}
                   />
                 </div>
               </div>
