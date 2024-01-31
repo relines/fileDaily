@@ -22,6 +22,32 @@ export default function ViewCom() {
     getDataSource();
   }, []);
 
+  // 键盘事件函数
+  const PopupKeyUp = (e: any) => {
+    if (e.code === 'ArrowRight') {
+      let x = cur + 1;
+      if (x === fileList.length) {
+        x = fileList.length - 1;
+      }
+      setCur(x);
+    }
+
+    if (e.code === 'ArrowLeft') {
+      let x = cur - 1;
+      if (x <= 0) {
+        x = 0;
+      }
+      setCur(x);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keyup', PopupKeyUp, false);
+    return () => {
+      document.removeEventListener('keyup', PopupKeyUp, false);
+    };
+  });
+
   console.log(333, fileList);
 
   return (
