@@ -52,22 +52,6 @@ export default function ViewCom() {
 
   return (
     <div className={styles.viewContainer}>
-      {/* <button
-        type="button"
-        onClick={() => {
-          setCur((x) => x + 1);
-        }}
-      >
-        next
-      </button>
-      <button
-        type="button"
-        onClick={() => {
-          setCur(0);
-        }}
-      >
-        reset
-      </button> */}
       <div className={styles.header}>123</div>
       {/* <Minimap selector=".card"> */}
       <div className={styles.viewItem}>
