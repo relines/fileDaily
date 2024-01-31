@@ -7,6 +7,9 @@ export default function ViewCom() {
   const [cur, setCur] = useState<number>(0);
   const [fileList, setFileList] = useState<any[]>([]);
 
+  const fileRef = useRef<any>({});
+  const zoomCount = useRef<number>(1);
+
   const getDataSource = () => {
     setFileList(JSON.parse(localStorage.getItem('fileList') || '[]'));
     setCur(Number(localStorage.getItem('activeOrder')) - 1);
@@ -37,35 +40,79 @@ export default function ViewCom() {
         reset
       </button> */}
       <div className={styles.header}>123</div>
-      <div className={styles.vieItem}>
+      <div className={styles.viewItem}>
         {fileList?.map((item: any, index: number) => {
           if (item.type === 'img' && index === cur) {
             return (
-              <div className={styles.item} key={item.name}>
-                <img
-                  src={`atom://${item.url}`}
-                  alt=""
-                  className={styles.content}
-                />
+              <div
+                className={styles.itemContainer}
+                onWheel={(e: any) => {
+                  zoomCount.current += e.deltaY * 0.0001;
+                  if (zoomCount.current < 0.1) {
+                    zoomCount.current = 0.1;
+                  }
+                  if (zoomCount.current > 10) {
+                    zoomCount.current = 10;
+                  }
+                  fileRef.current[
+                    `${item.order}`
+                  ].style.transform = `scale(${zoomCount.current})`;
+                }}
+              >
+                <div
+                  className={styles.item}
+                  key={item.order}
+                  ref={(r: any) => {
+                    fileRef.current[`${item.order}`] = r;
+                  }}
+                >
+                  <img
+                    src={`atom://${item.url}`}
+                    alt=""
+                    className={styles.content}
+                  />
+                </div>
               </div>
             );
           }
           if (item.type === 'video' && index === cur) {
             return (
-              <div key={item.name} className={styles.item}>
-                <video
-                  controls
-                  muted
-                  loop
-                  width="100%"
-                  className={styles.content}
+              <div
+                className={styles.itemContainer}
+                onWheel={(e: any) => {
+                  zoomCount.current += e.deltaY * 0.0001;
+                  if (zoomCount.current < 0.1) {
+                    zoomCount.current = 0.1;
+                  }
+                  if (zoomCount.current > 10) {
+                    zoomCount.current = 10;
+                  }
+                  fileRef.current[
+                    `${item.order}`
+                  ].style.transform = `scale(${zoomCount.current})`;
+                }}
+              >
+                <div
+                  key={item.name}
+                  ref={(r: any) => {
+                    fileRef.current[`${item.order}`] = r;
+                  }}
+                  className={styles.item}
                 >
-                  <source
-                    // src="http://vjs.zencdn.net/v/oceans.mp4"
-                    src={`atom://${item.url}`}
-                    type="video/mp4"
-                  />
-                </video>
+                  <video
+                    controls
+                    muted
+                    loop
+                    width="100%"
+                    className={styles.content}
+                  >
+                    <source
+                      // src="http://vjs.zencdn.net/v/oceans.mp4"
+                      src={`atom://${item.url}`}
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
               </div>
             );
           }
