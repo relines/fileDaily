@@ -11,7 +11,6 @@ import listApi from './database/listApi';
 import categoryApi from './database/categoryApi';
 import fileApi from './file/index';
 
-const fs = require('fs');
 const Store = require('electron-store');
 
 const store = new Store();
@@ -141,6 +140,8 @@ const ipcFunc = () => {
   // 窗口操作
   ipcMain.on('main-window-reload', () => {
     mainWindow?.reload();
+    // app.relaunch();
+    // app.exit();
   });
   ipcMain.on('open-view-window', () => {
     openViewWindow();
@@ -263,10 +264,10 @@ app
       const url = request.url.slice(7);
       callback(decodeURI(path.normalize(url)));
     });
-    protocol.handle('atom2', (request) => {
-      const url = request.url.slice(6);
-      return net.fetch(decodeURIComponent(`file://${url}`), {});
-    });
+    // protocol.handle('atom2', (request) => {
+    //   const url = request.url.slice(6);
+    //   return net.fetch(decodeURIComponent(`file://${url}`), {});
+    // });
     initWorkSpace();
     fileApi.initFolder();
     initDatabase();

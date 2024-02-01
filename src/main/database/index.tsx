@@ -6,11 +6,10 @@ import path from 'path';
 const Store = require('electron-store');
 
 const store = new Store();
-
-const workSpaceUrl = store.get('workSpace') || '';
 let db: any;
 
 export default function connect() {
+  const workSpaceUrl = store.get('workSpace') || '';
   return sqlite(path.join(workSpaceUrl, '/daily.db'), {});
 }
 
