@@ -7,11 +7,10 @@ import 'react-quill/dist/quill.snow.css';
 
 import { Button, message } from 'antd';
 
-import dayjs from 'dayjs';
-
 import FileListCom from '../../../../components/FileList';
 import CategorySetCom from '../../../../components/CategorySet';
 import AddressSetCom from '../../../../components/AddressSet';
+import TimeSetCom from '../../../../components/TimeSet';
 
 import styles from './index.module.less';
 
@@ -32,6 +31,9 @@ export default function MyEdit(props: Iprops) {
   const [fileList, setFileList] = useState<any[]>([]);
   const [category, setCategory] = useState<string>(activeItem.category);
   const [address, setAddress] = useState<string>(activeItem.address);
+  const [time, setTime] = useState<string>(activeItem.createTime);
+
+  console.log(333, activeItem);
 
   const quillRef = useRef<any>();
 
@@ -48,6 +50,7 @@ export default function MyEdit(props: Iprops) {
         fileList,
         category,
         address,
+        createTime: time,
         tag: 'default',
       },
       categoryChanged: activeItem.category && category !== activeItem.category,
@@ -77,6 +80,7 @@ export default function MyEdit(props: Iprops) {
     setFileList(activeItem?.fileList ? JSON.parse(activeItem?.fileList) : []);
     setAddress(activeItem?.address);
     setCategory(activeItem?.category);
+    setTime(activeItem?.createTime);
   }, [activeItem]);
 
   return (
@@ -155,16 +159,11 @@ export default function MyEdit(props: Iprops) {
         address={address}
         changeAddress={(val) => setAddress(val)}
       />
-      <div
-        style={{
-          fontSize: '12px',
-        }}
-      >
-        <span>时间：</span>
-        <span>
-          {dayjs(activeItem.createTime).format('YYYY-MM-DD HH:mm:ss') || '-'}
-        </span>
-      </div>
+      <TimeSetCom
+        style={{ fontSize: '12px' }}
+        time={time}
+        changeTime={(val) => setTime(val)}
+      />
       <FileListCom
         dataSource={fileList}
         changeDataSource={(val: any) => {
