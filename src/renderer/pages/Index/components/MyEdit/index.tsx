@@ -9,6 +9,7 @@ import { Button, message } from 'antd';
 
 import FileListCom from '../../../../components/FileList';
 import CategorySetCom from '../../../../components/CategorySet';
+import AddressSetCom from '../../../../components/AddressSet';
 
 import styles from './index.module.less';
 
@@ -28,6 +29,7 @@ export default function MyEdit(props: Iprops) {
   const [loading, setLoading] = useState<boolean>(false);
   const [fileList, setFileList] = useState<any[]>([]);
   const [category, setCategory] = useState<string>(activeItem.category);
+  const [address, setAddress] = useState<string>(activeItem.address);
 
   const quillRef = useRef<any>();
 
@@ -117,7 +119,6 @@ export default function MyEdit(props: Iprops) {
           保存
         </Button>
       </div>
-
       <div className={styles.editor}>
         <ReactQuill
           theme="snow"
@@ -139,13 +140,16 @@ export default function MyEdit(props: Iprops) {
           onChange={setValue}
         />
       </div>
-
       <CategorySetCom
         style={{ fontSize: '12px' }}
         category={category}
         changeCategory={(val) => setCategory(val)}
       />
-
+      <AddressSetCom
+        style={{ fontSize: '12px' }}
+        category={address}
+        changeCategory={(val) => setAddress(val)}
+      />
       <FileListCom
         dataSource={fileList}
         changeDataSource={(val: any) => {
