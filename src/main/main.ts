@@ -140,8 +140,6 @@ const ipcFunc = () => {
   // 窗口操作
   ipcMain.on('main-window-reload', () => {
     mainWindow?.reload();
-    // app.relaunch();
-    // app.exit();
   });
   ipcMain.on('open-view-window', () => {
     openViewWindow();

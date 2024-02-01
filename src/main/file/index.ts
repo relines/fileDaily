@@ -51,7 +51,9 @@ const getFileCreateTime = (url: string) => {
 
 export default {
   async chooseFolder() {
-    const resp = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+    const resp = await dialog.showOpenDialog({
+      properties: ['openDirectory', 'createDirectory'],
+    });
     if (resp.canceled) {
       return '';
     }

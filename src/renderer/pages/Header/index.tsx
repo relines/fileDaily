@@ -20,6 +20,14 @@ export default function HeaderCom() {
     setIsFullScreen(arg);
   });
 
+  const chooseWorkSpace = async () => {
+    const resp = await window.electron.ipcRenderer.invoke('choose-folder', {});
+    if (resp) {
+      localStorage.setItem('workSpace', resp);
+      window.electron.ipcRenderer.send('main-window-reload');
+    }
+  };
+
   return (
     <div
       className={styles.container}
@@ -35,25 +43,6 @@ export default function HeaderCom() {
         trigger={['click']}
         menu={{
           items: [
-            {
-              key: '1',
-              label: (
-                <div
-                  onClick={async () => {
-                    const resp = await window.electron.ipcRenderer.invoke(
-                      'choose-folder',
-                      {},
-                    );
-                    if (resp) {
-                      localStorage.setItem('workSpace', resp);
-                      window.electron.ipcRenderer.send('main-window-reload');
-                    }
-                  }}
-                >
-                  工作空间选择
-                </div>
-              ),
-            },
             {
               key: '3',
               label: '标签',
@@ -78,10 +67,20 @@ export default function HeaderCom() {
 
       <span
         style={{
+          fontSize: '14px',
+          cursor: 'pointer',
+        }}
+        onClick={chooseWorkSpace}
+      >
+        工作空间目录：
+      </span>
+      <span
+        style={{
           marginRight: '10px',
+          fontSize: '12px',
         }}
       >
-        工作空间目录：{workSpace}
+        {workSpace}
       </span>
 
       <CategorySetCom
