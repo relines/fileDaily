@@ -10,7 +10,7 @@ export default {
     const stmTotal = db.prepare('select count(*) total from list_table');
     // 实现分页语法
     const stmList = db.prepare(
-      `select * from list_table ORDER BY code DESC LIMIT 10 OFFSET ${
+      `select * from list_table ORDER BY createTime DESC LIMIT 10 OFFSET ${
         10 * pageIndex
       }`,
     );
