@@ -40,8 +40,14 @@ export function initDatabase() {
       remark varchar(500),
       count int,
       createTime int,
-      current varchar(10),
       sort int
+    )`);
+  }
+  if (!tables.includes('address_table')) {
+    db.exec(`create table if not exists address_table (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      content varchar(2000),
+      createTime int
     )`);
   }
 

@@ -4,32 +4,23 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useState, useEffect } from 'react';
 
-import {
-  Form,
-  Table,
-  Modal,
-  Button,
-  Select,
-  Input,
-  InputNumber,
-  message,
-} from 'antd';
+import { Form, Table, Modal, Button, Select, Input, message } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 
 import styles from './index.module.less';
 
 type Iprops = {
-  category: string;
-  changeCategory: (val: string) => void;
+  address: string;
+  changeAddress: (val: string) => void;
   style: any;
 };
 
 export default function HeaderCom(props: Iprops) {
-  const { style, category, changeCategory } = props;
+  const { style, address, changeAddress } = props;
 
-  const [showCategorySetModal, setShowCategorySetModal] = useState(false);
-  const [showCategoryChooseModal, setShowCategoryChooseModal] = useState(false);
-  const [categoryOption, setCategoryOption] = useState<any[]>([]);
+  const [showAddressSetModal, setShowAddressSetModal] = useState(false);
+  const [showAddressChooseModal, setShowAddressChooseModal] = useState(false);
+  const [addressOption, setAddressOption] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [modalType, setModalType] = useState<string>('');
   const [editRecord, setEditRecord] = useState<any>({});
@@ -38,28 +29,28 @@ export default function HeaderCom(props: Iprops) {
   const [addForm] = Form.useForm();
   const [chooseForm] = Form.useForm();
 
-  const getCategory = async () => {
+  const getAddress = async () => {
     setLoading(true);
-    const resp = await window.electron.ipcRenderer.invoke('get-category', {});
+    const resp = await window.electron.ipcRenderer.invoke('get-address', {});
     const opt = resp.data?.map((item: any) => {
       return {
-        label: item.name,
-        value: item.name,
+        label: item.content,
+        value: item.content,
       };
     });
-    setCategoryOption(opt);
+    setAddressOption(opt);
     setTableData(resp.data);
     setLoading(false);
   };
 
-  const addCategory = async () => {
+  const addAddress = async () => {
     const values = addForm.getFieldsValue();
-    const resp = await window.electron.ipcRenderer.invoke('add-category', {
+    const resp = await window.electron.ipcRenderer.invoke('add-address', {
       ...values,
     });
     if (resp.code === 200) {
       message.success('新增成功');
-      getCategory();
+      getAddress();
       setModalType('');
       addForm.resetFields();
     } else {
@@ -67,15 +58,15 @@ export default function HeaderCom(props: Iprops) {
     }
   };
 
-  const updateCategory = async () => {
+  const updateAddress = async () => {
     const values = addForm.getFieldsValue();
-    const resp = await window.electron.ipcRenderer.invoke('update-category', {
+    const resp = await window.electron.ipcRenderer.invoke('update-address', {
       ...values,
       id: editRecord.id,
     });
     if (resp.code === 200) {
       message.success('更新成功');
-      getCategory();
+      getAddress();
       setModalType('');
       addForm.resetFields();
     } else {
@@ -83,28 +74,28 @@ export default function HeaderCom(props: Iprops) {
     }
   };
 
-  const deleteCategory = async (id: number) => {
-    const resp = await window.electron.ipcRenderer.invoke('delete-category', {
+  const deleteAddress = async (id: number) => {
+    const resp = await window.electron.ipcRenderer.invoke('delete-address', {
       id,
     });
     if (resp.code === 200) {
       message.success('删除成功');
-      getCategory();
+      getAddress();
     } else {
       message.error(resp.msg);
     }
   };
 
   useEffect(() => {
-    getCategory();
+    getAddress();
   }, []);
 
   const columns: any[] = [
     {
-      title: '名称',
-      dataIndex: 'name',
-      key: 'name',
-      width: 100,
+      title: '地址',
+      dataIndex: 'content',
+      key: 'content',
+      width: 200,
       align: 'center',
     },
     {
@@ -115,16 +106,9 @@ export default function HeaderCom(props: Iprops) {
       align: 'center',
     },
     {
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
-      width: 200,
-      align: 'center',
-    },
-    {
       title: '操作',
       key: 'operate',
-      width: 100,
+      width: 150,
       align: 'center',
       render: (_: any, record: any) => (
         <div
@@ -146,7 +130,7 @@ export default function HeaderCom(props: Iprops) {
             danger
             onClick={() => {
               Modal.confirm({
-                title: '确定要删除这个分类么？',
+                title: '确定要删除这个地址么？',
                 icon: <ExclamationCircleFilled />,
                 content: '请注意，这是危险操作！',
                 okText: '确认',
@@ -156,7 +140,7 @@ export default function HeaderCom(props: Iprops) {
                 },
                 cancelText: '取消',
                 onOk() {
-                  deleteCategory(record.id);
+                  deleteAddress(record.id);
                 },
               });
             }}
@@ -170,25 +154,31 @@ export default function HeaderCom(props: Iprops) {
 
   return (
     <div className={styles.addressContainer} style={style}>
-      <span onClick={() => setShowCategorySetModal(true)}>地址：</span>
-      <span onClick={() => setShowCategoryChooseModal(true)}>
-        {category || '-'}
+      <span onClick={() => setShowAddressSetModal(true)}>地址：</span>
+      <span onClick={() => setShowAddressChooseModal(true)}>
+        {address || '-'}
       </span>
       <span>icon（使用常用地址）</span>
 
       <Modal
-        title="分类设置"
-        open={showCategorySetModal}
+        title="常用地址设置"
+        open={showAddressSetModal}
         width={750}
         okText="确定"
         cancelText="取消"
         onOk={() => {
-          setShowCategorySetModal(false);
+          setShowAddressSetModal(false);
         }}
-        onCancel={() => setShowCategorySetModal(false)}
+        onCancel={() => setShowAddressSetModal(false)}
       >
         <div className={styles.topbar}>
-          <Button type="primary" onClick={() => setModalType('add')}>
+          <Button
+            type="primary"
+            style={{
+              marginBottom: '10px',
+            }}
+            onClick={() => setModalType('add')}
+          >
             新增
           </Button>
         </div>
@@ -202,14 +192,14 @@ export default function HeaderCom(props: Iprops) {
           pagination={false}
         />
         <Modal
-          title={modalType === 'add' ? '新增分类' : '编辑分类'}
+          title={modalType === 'add' ? '新增地址' : '编辑地址'}
           open={modalType !== ''}
           width={600}
           onOk={() => {
             if (modalType === 'add') {
-              addCategory();
+              addAddress();
             } else {
-              updateCategory();
+              updateAddress();
             }
           }}
           onCancel={() => {
@@ -234,40 +224,25 @@ export default function HeaderCom(props: Iprops) {
             autoComplete="off"
           >
             <Form.Item
-              label="名称"
-              name="name"
+              label="地址"
+              name="content"
               rules={[{ required: true, message: '请输入' }]}
             >
               <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="备注"
-              name="remark"
-              rules={[{ required: true, message: '请输入' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="排序"
-              name="sort"
-              rules={[{ required: true, message: '请输入' }]}
-            >
-              <InputNumber />
             </Form.Item>
           </Form>
         </Modal>
       </Modal>
       <Modal
         title="分类选择"
-        open={showCategoryChooseModal}
+        open={showAddressChooseModal}
         width={400}
         onOk={() => {
           const formVal = chooseForm.getFieldsValue();
-          changeCategory(formVal.name);
-          setShowCategoryChooseModal(false);
+          changeAddress(formVal.name);
+          setShowAddressChooseModal(false);
         }}
-        onCancel={() => setShowCategoryChooseModal(false)}
+        onCancel={() => setShowAddressChooseModal(false)}
       >
         <Form
           name="choose"
@@ -292,7 +267,7 @@ export default function HeaderCom(props: Iprops) {
             name="name"
             rules={[{ required: true, message: '请输入' }]}
           >
-            <Select style={{ width: 120 }} options={categoryOption} />
+            <Select style={{ width: 120 }} options={addressOption} />
           </Form.Item>
         </Form>
       </Modal>

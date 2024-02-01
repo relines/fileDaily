@@ -1,7 +1,7 @@
 import connect from './index';
 
 export default {
-  getData() {
+  getCategory() {
     const db = connect();
 
     // 获取total语法
@@ -19,7 +19,7 @@ export default {
       return { code: 400, msg: error };
     }
   },
-  addData({ name, remark, sort }: any) {
+  addCategory({ name, remark, sort }: any) {
     const db = connect();
     const createTime = new Date().getTime();
 
@@ -46,7 +46,7 @@ export default {
       return { code: 400, msg: error };
     }
   },
-  updateData(params: any) {
+  updateCategory(params: any) {
     const { id, name, remark, sort } = params;
     const db = connect();
 
@@ -73,7 +73,7 @@ export default {
       return { code: 400, msg: error };
     }
   },
-  delData({ id }: any) {
+  delCategory({ id }: any) {
     const db = connect();
 
     const stmQueryById = db.prepare(

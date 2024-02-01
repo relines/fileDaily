@@ -95,6 +95,10 @@ export default function HeaderCom(props: Iprops) {
     }
   };
 
+  window.electron.ipcRenderer.on('updateCategory', () => {
+    getCategory();
+  });
+
   useEffect(() => {
     getCategory();
   }, []);
@@ -187,7 +191,13 @@ export default function HeaderCom(props: Iprops) {
         onCancel={() => setShowCategorySetModal(false)}
       >
         <div className={styles.topbar}>
-          <Button type="primary" onClick={() => setModalType('add')}>
+          <Button
+            type="primary"
+            style={{
+              marginBottom: '10px',
+            }}
+            onClick={() => setModalType('add')}
+          >
             新增
           </Button>
         </div>

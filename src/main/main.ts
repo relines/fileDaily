@@ -9,6 +9,7 @@ import { resolveHtmlPath } from './util';
 import { initDatabase } from './database/index';
 import listApi from './database/listApi';
 import categoryApi from './database/categoryApi';
+import addressApi from './database/addressApi';
 import fileApi from './file/index';
 
 const Store = require('electron-store');
@@ -93,19 +94,40 @@ const ipcFunc = () => {
 
   // 分类操作
   ipcMain.handle('add-category', async (event, message) => {
-    const result = categoryApi.addData(message);
+    const result = categoryApi.addCategory(message);
+    mainWindow?.webContents.send('updateCategory');
     return result;
   });
   ipcMain.handle('get-category', async () => {
-    const result = categoryApi.getData();
+    const result = categoryApi.getCategory();
     return result;
   });
   ipcMain.handle('update-category', async (event, message) => {
-    const result = categoryApi.updateData(message);
+    const result = categoryApi.updateCategory(message);
+    mainWindow?.webContents.send('updateCategory');
     return result;
   });
   ipcMain.handle('delete-category', async (event, message) => {
-    const result = categoryApi.delData(message);
+    const result = categoryApi.delCategory(message);
+    mainWindow?.webContents.send('updateCategory');
+    return result;
+  });
+
+  // 地址操作
+  ipcMain.handle('add-address', async (event, message) => {
+    const result = addressApi.addAddress(message);
+    return result;
+  });
+  ipcMain.handle('get-address', async () => {
+    const result = addressApi.getAddress();
+    return result;
+  });
+  ipcMain.handle('update-address', async (event, message) => {
+    const result = addressApi.updateAddress(message);
+    return result;
+  });
+  ipcMain.handle('delete-address', async (event, message) => {
+    const result = addressApi.delAddress(message);
     return result;
   });
 

@@ -147,8 +147,8 @@ export default function MyEdit(props: Iprops) {
       />
       <AddressSetCom
         style={{ fontSize: '12px' }}
-        category={address}
-        changeCategory={(val) => setAddress(val)}
+        address={address}
+        changeAddress={(val) => setAddress(val)}
       />
       <FileListCom
         dataSource={fileList}
