@@ -29,6 +29,7 @@ export function initDatabase() {
       createTime int,
       updateTime int,
       category varchar(500),
+      address varchar(2000),
       fileList TEXT,
       tag varchar(2000)
     )`);

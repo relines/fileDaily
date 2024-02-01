@@ -7,6 +7,8 @@ import 'react-quill/dist/quill.snow.css';
 
 import { Button, message } from 'antd';
 
+import dayjs from 'dayjs';
+
 import FileListCom from '../../../../components/FileList';
 import CategorySetCom from '../../../../components/CategorySet';
 import AddressSetCom from '../../../../components/AddressSet';
@@ -45,6 +47,7 @@ export default function MyEdit(props: Iprops) {
         content: value,
         fileList,
         category,
+        address,
         tag: 'default',
       },
       categoryChanged: activeItem.category && category !== activeItem.category,
@@ -72,6 +75,8 @@ export default function MyEdit(props: Iprops) {
   useEffect(() => {
     setValue(activeItem?.content);
     setFileList(activeItem?.fileList ? JSON.parse(activeItem?.fileList) : []);
+    setAddress(activeItem?.address);
+    setCategory(activeItem?.category);
   }, [activeItem]);
 
   return (
@@ -150,6 +155,16 @@ export default function MyEdit(props: Iprops) {
         address={address}
         changeAddress={(val) => setAddress(val)}
       />
+      <div
+        style={{
+          fontSize: '12px',
+        }}
+      >
+        <span>时间：</span>
+        <span>
+          {dayjs(activeItem.createTime).format('YYYY-MM-DD HH:mm:ss') || '-'}
+        </span>
+      </div>
       <FileListCom
         dataSource={fileList}
         changeDataSource={(val: any) => {

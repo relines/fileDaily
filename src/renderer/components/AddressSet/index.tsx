@@ -5,7 +5,10 @@
 import React, { useState, useEffect } from 'react';
 
 import { Form, Table, Modal, Button, Select, Input, message } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import {
+  ExclamationCircleFilled,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
 
 import styles from './index.module.less';
 
@@ -155,10 +158,27 @@ export default function HeaderCom(props: Iprops) {
   return (
     <div className={styles.addressContainer} style={style}>
       <span onClick={() => setShowAddressSetModal(true)}>地址：</span>
-      <span onClick={() => setShowAddressChooseModal(true)}>
-        {address || '-'}
-      </span>
-      <span>icon（使用常用地址）</span>
+      <div className={styles.input}>
+        <Input
+          placeholder="address"
+          variant="borderless"
+          value={address}
+          onChange={(e: any) => {
+            changeAddress(e.target.value);
+          }}
+        />
+      </div>
+
+      <ExclamationCircleOutlined
+        style={{
+          color: '#1e90ff',
+          position: 'relative',
+          top: '-1px',
+          marginLeft: '5px',
+          cursor: 'pointer',
+        }}
+        onClick={() => setShowAddressChooseModal(true)}
+      />
 
       <Modal
         title="常用地址设置"
@@ -239,7 +259,7 @@ export default function HeaderCom(props: Iprops) {
         width={400}
         onOk={() => {
           const formVal = chooseForm.getFieldsValue();
-          changeAddress(formVal.name);
+          changeAddress(formVal.content);
           setShowAddressChooseModal(false);
         }}
         onCancel={() => setShowAddressChooseModal(false)}
@@ -263,11 +283,11 @@ export default function HeaderCom(props: Iprops) {
           autoComplete="off"
         >
           <Form.Item
-            label="名称"
-            name="name"
+            label="地址"
+            name="content"
             rules={[{ required: true, message: '请输入' }]}
           >
-            <Select style={{ width: 120 }} options={addressOption} />
+            <Select style={{ width: 200 }} options={addressOption} />
           </Form.Item>
         </Form>
       </Modal>
