@@ -174,6 +174,7 @@ export default function HeaderCom(props: Iprops) {
       <span onClick={() => setShowCategoryChooseModal(true)}>
         {category || '-'}
       </span>
+      <span>icon（使用常用地址）</span>
 
       <Modal
         title="分类设置"
