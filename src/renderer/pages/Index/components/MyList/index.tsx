@@ -177,6 +177,7 @@ export default function MyList(props: Iprops) {
                       changeActiveItem(item);
                     }}
                   >
+                    {/* <div dangerouslySetInnerHTML={{ __html: item.content }} /> */}
                     <ReactQuill
                       theme="snow"
                       value={item.content}

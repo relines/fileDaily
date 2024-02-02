@@ -21,7 +21,7 @@ export default function IndexCom() {
     const result = await window.electron.ipcRenderer.invoke('get-list', {
       pageIndex: pageIndexRef.current,
     });
-    console.log(333, result);
+    console.log(666, result);
     setTotal(result?.total || total);
     return result;
   };
@@ -57,7 +57,7 @@ export default function IndexCom() {
       }
     }
     if (type === 'save') {
-      const newData = tableData.filter((item: any) => {
+      const newData = tableData.map((item: any) => {
         if (item.code === data?.code) {
           return data;
         }
