@@ -57,16 +57,14 @@ export default function IndexCom() {
       }
     }
     if (type === 'save') {
-      const result = await getData();
-      console.log(1234, result);
-      const newData = tableData.map((item: any) => {
+      const newData = tableData.filter((item: any) => {
         if (item.code === data?.code) {
           return data;
         }
         return item;
       });
       setTableData(newData);
-      setActiveItem(newData);
+      setActiveItem(data);
     }
   };
 

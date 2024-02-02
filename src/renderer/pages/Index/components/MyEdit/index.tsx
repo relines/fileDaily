@@ -58,6 +58,7 @@ export default function MyEdit(props: Iprops) {
     });
     setLoading(false);
     message.success('保存成功');
+    console.log(1234312, result?.data);
     changeDataSource('save', result?.data);
     changeActiveItem(result?.data);
   };
@@ -83,7 +84,7 @@ export default function MyEdit(props: Iprops) {
     setCategory(activeItem?.category);
     setTime(activeItem?.createTime);
     if (!activeItem?.category) {
-      console.log(333, localStorage.getItem('curCategory') || '')
+      console.log(333, localStorage.getItem('curCategory') || '');
       setCategory(localStorage.getItem('curCategory') || '');
     }
   }, [activeItem]);
