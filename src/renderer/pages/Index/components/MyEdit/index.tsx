@@ -5,7 +5,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-import { Button, message } from 'antd';
+import { Button, message, Modal, Radio, Space } from 'antd';
+
+import dayjs from 'dayjs';
 
 import FileListCom from '../../../../components/FileList';
 import CategorySetCom from '../../../../components/CategorySet';
@@ -31,7 +33,10 @@ export default function MyEdit(props: Iprops) {
   const [fileList, setFileList] = useState<any[]>([]);
   const [category, setCategory] = useState<string>(activeItem.category);
   const [address, setAddress] = useState<string>(activeItem.address);
-  const [time, setTime] = useState<string>(activeItem.createTime);
+  const [time, setTime] = useState<any>(activeItem.createTime);
+  const [fileTimeList, setFileTimeList] = useState<any[]>([]);
+  const [chooseFileTimeModal, setChooseFileTimeModal] =
+    useState<boolean>(false);
 
   console.log(333, activeItem);
 
@@ -58,13 +63,16 @@ export default function MyEdit(props: Iprops) {
     });
     setLoading(false);
     message.success('保存成功');
-    console.log(1234312, result?.data);
     changeDataSource('save', result?.data);
     changeActiveItem(result?.data);
   };
 
   const chooseFile = async () => {
     const resp = await window.electron.ipcRenderer.invoke('choose-file', {});
+    const fileTimeArr = resp?.map((item: any) =>
+      dayjs(item.createTime).valueOf(),
+    );
+
     const data =
       resp?.map((item: any, index: number) => {
         return {
@@ -74,6 +82,10 @@ export default function MyEdit(props: Iprops) {
           order: index + 1,
         };
       }) || [];
+    if (fileTimeArr.length !== 0) {
+      setChooseFileTimeModal(true);
+    }
+    setFileTimeList(fileTimeArr);
     setFileList([...fileList, ...data]);
   };
 
@@ -81,10 +93,10 @@ export default function MyEdit(props: Iprops) {
     setValue(activeItem?.content);
     setFileList(activeItem?.fileList ? JSON.parse(activeItem?.fileList) : []);
     setAddress(activeItem?.address);
-    setCategory(activeItem?.category);
     setTime(activeItem?.createTime);
-    if (!activeItem?.category) {
-      console.log(333, localStorage.getItem('curCategory') || '');
+    if (activeItem?.category) {
+      setCategory(activeItem?.category);
+    } else {
       setCategory(localStorage.getItem('curCategory') || '');
     }
   }, [activeItem]);
@@ -170,6 +182,7 @@ export default function MyEdit(props: Iprops) {
         time={time}
         changeTime={(val) => setTime(val)}
       />
+
       <FileListCom
         dataSource={fileList}
         changeDataSource={(val: any) => {
@@ -177,6 +190,33 @@ export default function MyEdit(props: Iprops) {
         }}
         activeItem={activeItem}
       />
+
+      <Modal
+        title="选择媒体文件的时间"
+        open={chooseFileTimeModal}
+        width={400}
+        onOk={() => {
+          setChooseFileTimeModal(false);
+        }}
+        onCancel={() => setChooseFileTimeModal(false)}
+      >
+        <Radio.Group
+          onChange={(e: any) => {
+            setTime(e.target.value);
+          }}
+          value={time}
+        >
+          <Space direction="vertical">
+            {fileTimeList?.map((item: any) => {
+              return (
+                <Radio value={item} key={item}>
+                  {dayjs(item).format('YYYY-MM-DD HH:mm:ss')}
+                </Radio>
+              );
+            })}
+          </Space>
+        </Radio.Group>
+      </Modal>
     </div>
   );
 }
