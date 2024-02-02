@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-no-constructed-context-values */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Form, Modal, DatePicker } from 'antd';
 
@@ -21,7 +22,13 @@ export default function HeaderCom(props: Iprops) {
 
   const [showTimeChooseModal, setShowTimeChooseModal] = useState(false);
 
-  const [chooseForm] = Form.useForm();
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue({
+      time: dayjs(time),
+    });
+  }, [time]);
 
   return (
     <div className={styles.categoryContainer} style={style}>
@@ -34,7 +41,7 @@ export default function HeaderCom(props: Iprops) {
         open={showTimeChooseModal}
         width={400}
         onOk={() => {
-          const formVal = chooseForm.getFieldsValue();
+          const formVal = form.getFieldsValue();
           changeTime(dayjs(formVal.time).valueOf());
           setShowTimeChooseModal(false);
         }}
@@ -42,7 +49,7 @@ export default function HeaderCom(props: Iprops) {
       >
         <Form
           name="choose"
-          form={chooseForm}
+          form={form}
           style={{
             margin: '20px 0',
           }}
