@@ -12,7 +12,7 @@ import styles from './index.module.less';
 
 export default function HeaderCom() {
   const [isFullScreen, setIsFullScreen] = useState<any>(false);
-  const [category, setCategory] = useState<any>(false);
+  const [category, setCategory] = useState<any>('');
 
   const workSpace = window.electron.ipcRenderer.getStoreValue('workSpace');
 
@@ -27,6 +27,10 @@ export default function HeaderCom() {
       window.electron.ipcRenderer.send('main-window-reload');
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem('curCategory', category);
+  }, [category]);
 
   return (
     <div

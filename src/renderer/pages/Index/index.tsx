@@ -57,6 +57,8 @@ export default function IndexCom() {
       }
     }
     if (type === 'save') {
+      const result = await getData();
+      console.log(1234, result);
       const newData = tableData.map((item: any) => {
         if (item.code === data?.code) {
           return data;
@@ -74,9 +76,9 @@ export default function IndexCom() {
 
   return (
     <div className={styles.container}>
-      <div className={`${styles.content} ${styles.calendarContainer}`}>
+      {/* <div className={`${styles.content} ${styles.calendarContainer}`}>
         <MyCalendar />
-      </div>
+      </div> */}
       <div className={`${styles.content} ${styles.listContainer}`}>
         <MyList
           dataSource={tableData}

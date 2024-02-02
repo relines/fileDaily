@@ -75,12 +75,17 @@ export default function MyEdit(props: Iprops) {
       }) || [];
     setFileList([...fileList, ...data]);
   };
+
   useEffect(() => {
     setValue(activeItem?.content);
     setFileList(activeItem?.fileList ? JSON.parse(activeItem?.fileList) : []);
     setAddress(activeItem?.address);
     setCategory(activeItem?.category);
     setTime(activeItem?.createTime);
+    if (!activeItem?.category) {
+      console.log(333, localStorage.getItem('curCategory') || '')
+      setCategory(localStorage.getItem('curCategory') || '');
+    }
   }, [activeItem]);
 
   return (
