@@ -177,7 +177,13 @@ export default function MyList(props: Iprops) {
                       changeActiveItem(item);
                     }}
                   >
-                    {/* <div dangerouslySetInnerHTML={{ __html: item.content }} /> */}
+                    <div
+                      style={{
+                        whiteSpace: 'pre-line',
+                      }}
+                    >
+                      {item.content}
+                    </div>
                     <ReactQuill
                       theme="snow"
                       value={item.content}
