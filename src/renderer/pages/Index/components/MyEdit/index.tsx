@@ -192,7 +192,6 @@ export default function MyEdit(props: Iprops) {
         time={time}
         changeTime={(val) => setTime(val)}
       />
-      <div>标签：</div>
 
       <FileListCom
         dataSource={fileList}
