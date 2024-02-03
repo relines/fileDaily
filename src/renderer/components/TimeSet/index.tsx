@@ -36,34 +36,34 @@ export default function HeaderCom(props: Iprops) {
       <span onClick={() => setShowTimeChooseModal(true)}>
         {dayjs(time).format('YYYY-MM-DD HH:mm:ss') || '-'}
       </span>
-      <Modal
-        title="时间设置"
-        open={showTimeChooseModal}
-        width={400}
-        onOk={() => {
-          const formVal = form.getFieldsValue();
-          changeTime(dayjs(formVal.time).valueOf());
-          setShowTimeChooseModal(false);
+      <Form
+        name="choose"
+        form={form}
+        style={{
+          margin: '20px 0',
         }}
-        onCancel={() => setShowTimeChooseModal(false)}
+        labelCol={{
+          style: {
+            width: '80px',
+          },
+        }}
+        wrapperCol={{
+          style: {
+            width: '200px',
+          },
+        }}
+        autoComplete="off"
       >
-        <Form
-          name="choose"
-          form={form}
-          style={{
-            margin: '20px 0',
+        <Modal
+          title="时间设置"
+          open={showTimeChooseModal}
+          width={400}
+          onOk={() => {
+            const formVal = form.getFieldsValue();
+            changeTime(dayjs(formVal.time).valueOf());
+            setShowTimeChooseModal(false);
           }}
-          labelCol={{
-            style: {
-              width: '80px',
-            },
-          }}
-          wrapperCol={{
-            style: {
-              width: '200px',
-            },
-          }}
-          autoComplete="off"
+          onCancel={() => setShowTimeChooseModal(false)}
         >
           <Form.Item
             label="时间"
@@ -72,8 +72,8 @@ export default function HeaderCom(props: Iprops) {
           >
             <DatePicker showTime />
           </Form.Item>
-        </Form>
-      </Modal>
+        </Modal>
+      </Form>
     </div>
   );
 }
