@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import { message } from 'antd';
 
+import HeaderCom from '../Header';
 import MyCalendar from './components/MyCalendar';
 import MyList from './components/MyList';
 import MyEdit from './components/MyEdit';
@@ -89,6 +90,9 @@ export default function IndexCom() {
 
   return (
     <div className={styles.container}>
+      <div className={styles.headerContainer}>
+        <HeaderCom />
+      </div>
       <div className={`${styles.content} ${styles.calendarContainer}`}>
         <MyCalendar />
       </div>

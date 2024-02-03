@@ -8,7 +8,7 @@ import ViewCom from './pages/View';
 function Hello() {
   return (
     <div>
-      <HeaderCom />
+      {/* <HeaderCom /> */}
       <IndexCom />
     </div>
   );
