@@ -10,7 +10,14 @@ import CategorySetCom from '../../../../components/CategorySet';
 
 import styles from './index.module.less';
 
-export default function HeaderCom() {
+type Iprops = {
+  showCalendar: boolean;
+  changeShowCalendar: (val: any) => void;
+};
+
+export default function HeaderCom(props: Iprops) {
+  const { showCalendar, changeShowCalendar } = props;
+
   const [isFullScreen, setIsFullScreen] = useState<any>(false);
   const [category, setCategory] = useState<any>('');
 
@@ -49,17 +56,15 @@ export default function HeaderCom() {
           items: [
             {
               key: '3',
-              label: '标签',
-              children: [
-                {
-                  key: '31',
-                  label: '新建标签',
-                },
-                {
-                  key: '32',
-                  label: '2nd menu item',
-                },
-              ],
+              label: (
+                <div
+                  onClick={() => {
+                    changeShowCalendar(!showCalendar);
+                  }}
+                >
+                  {showCalendar ? '隐藏日历' : '显示日历'}
+                </div>
+              ),
             },
           ],
         }}

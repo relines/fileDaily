@@ -17,6 +17,7 @@ export default function IndexCom() {
   const [tableData, setTableData] = useState<any[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [isLast, setIsLast] = useState<boolean>(false);
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
   const pageIndexRef = useRef<number>(0);
 
@@ -91,11 +92,16 @@ export default function IndexCom() {
   return (
     <div className={styles.container}>
       <div className={styles.headerContainer}>
-        <HeaderCom />
+        <HeaderCom
+          showCalendar={showCalendar}
+          changeShowCalendar={setShowCalendar}
+        />
       </div>
-      <div className={`${styles.content} ${styles.calendarContainer}`}>
-        <MyCalendar />
-      </div>
+      {showCalendar && (
+        <div className={`${styles.content} ${styles.calendarContainer}`}>
+          <MyCalendar />
+        </div>
+      )}
       <div className={`${styles.content} ${styles.listContainer}`}>
         <MyList
           dataSource={tableData}
