@@ -179,7 +179,6 @@ export default function MyEdit(props: Iprops) {
         style={{ fontSize: '12px' }}
         tag={tag}
         changeTag={(val) => {
-          console.log(2134, val);
           setTag(val);
         }}
       />

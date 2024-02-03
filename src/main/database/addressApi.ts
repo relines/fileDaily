@@ -43,19 +43,11 @@ export default {
     const { id, content } = params;
     const db = connect();
 
-    const stmQueryById = db.prepare(
-      `select * from address_table where id = @id`,
-    );
-
     const stmUpdate = db.prepare(
       `UPDATE address_table SET content = @content WHERE id = @id`,
     );
 
     try {
-      const listById = stmQueryById.all({ id });
-      if (listById.length !== 0) {
-        return { code: 400, msg: 'repeat' };
-      }
       stmUpdate.run({ content, id });
       return { code: 200, msg: '成功' };
     } catch (error) {

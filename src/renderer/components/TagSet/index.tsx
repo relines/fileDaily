@@ -13,6 +13,7 @@ import {
   Checkbox,
   InputNumber,
   Tag,
+  ColorPicker,
   message,
 } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
@@ -21,7 +22,7 @@ import styles from './index.module.less';
 
 type Iprops = {
   tag: any;
-  changeTag: (val: string) => void;
+  changeTag: (val: any) => void;
   style: any;
 };
 
@@ -45,6 +46,9 @@ export default function HeaderCom(props: Iprops) {
       return {
         label: item.name,
         value: item.name,
+        color: item.color,
+        id: item.id,
+        sort: item.sort,
       };
     });
     setTagOption(opt);
@@ -56,6 +60,7 @@ export default function HeaderCom(props: Iprops) {
     const values = addForm.getFieldsValue();
     const resp = await window.electron.ipcRenderer.invoke('add-tag', {
       ...values,
+      color: values.color.toHexString(),
     });
     if (resp.code === 200) {
       message.success('新增成功');
@@ -72,6 +77,7 @@ export default function HeaderCom(props: Iprops) {
     const resp = await window.electron.ipcRenderer.invoke('update-tag', {
       ...values,
       id: editRecord.id,
+      color: values.color.toHexString(),
     });
     if (resp.code === 200) {
       message.success('更新成功');
@@ -146,6 +152,9 @@ export default function HeaderCom(props: Iprops) {
           <a
             onClick={() => {
               setModalType('edit');
+              addForm.setFieldsValue({
+                ...record,
+              });
               setEditRecord(record);
             }}
           >
@@ -184,9 +193,19 @@ export default function HeaderCom(props: Iprops) {
       <span onClick={() => setShowTagSetModal(true)}>标签：</span>
       {typeof tag !== 'string' &&
         tag?.map((item: any) => {
-          return <Tag key={item}>{item}</Tag>;
+          return (
+            <Tag
+              key={item.id}
+              color={item.color}
+              onClick={() => setShowTagChooseModal(true)}
+            >
+              {item.value}
+            </Tag>
+          );
         })}
-      <span onClick={() => setShowTagChooseModal(true)}>123</span>
+      {tag.length === 0 && (
+        <span onClick={() => setShowTagChooseModal(true)}>-</span>
+      )}
 
       <Modal
         title="标签设置"
@@ -197,7 +216,9 @@ export default function HeaderCom(props: Iprops) {
         onOk={() => {
           setShowTagSetModal(false);
         }}
-        onCancel={() => setShowTagSetModal(false)}
+        onCancel={() => {
+          setShowTagSetModal(false);
+        }}
       >
         <div className={styles.topbar}>
           <Button
@@ -263,7 +284,7 @@ export default function HeaderCom(props: Iprops) {
               name="color"
               rules={[{ required: true, message: '请输入' }]}
             >
-              <Input />
+              <ColorPicker defaultValue="#1677ff" />
             </Form.Item>
 
             <Form.Item
@@ -285,14 +306,20 @@ export default function HeaderCom(props: Iprops) {
           // changeTag(formVal.name);
           setShowTagChooseModal(false);
         }}
-        onCancel={() => setShowTagChooseModal(false)}
+        onCancel={() => {
+          changeTag([]);
+          setShowTagChooseModal(false);
+        }}
       >
         <Checkbox.Group
           options={tagOption}
-          // defaultValue={['Apple']}
-          value={tag}
+          value={
+            typeof tag !== 'string' ? tag.map((item: any) => item.value) : []
+          }
           onChange={(val: any) => {
-            changeTag(val);
+            changeTag(
+              tagOption.filter((item: any) => val?.includes(item.value)),
+            );
           }}
         />
       </Modal>

@@ -47,6 +47,7 @@ export function initDatabase() {
     db.exec(`create table if not exists tag_table (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       name varchar(500),
+      color varchar(100),
       createTime int,
       sort int
     )`);

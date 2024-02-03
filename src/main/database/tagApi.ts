@@ -17,7 +17,7 @@ export default {
       return { code: 400, msg: error };
     }
   },
-  addTag({ name, sort }: any) {
+  addTag({ name, color, sort }: any) {
     const db = connect();
     const createTime = new Date().getTime();
 
@@ -29,7 +29,7 @@ export default {
       `SELECT * FROM tag_table WHERE sort LIKE @sort`,
     );
     const stmAdd = db.prepare(
-      `INSERT INTO tag_table (name, sort, createTime) values (@name, @sort, @createTime)`,
+      `INSERT INTO tag_table (name, color, sort, createTime) values (@name, @color, @sort, @createTime)`,
     );
 
     try {
@@ -38,32 +38,22 @@ export default {
       if (listByName.length !== 0 || listBySort.length !== 0) {
         return { code: 400, msg: 'repeat' };
       }
-      stmAdd.run({ name, sort, createTime });
+      stmAdd.run({ name, color, sort, createTime });
       return { code: 200, msg: '成功' };
     } catch (error) {
       return { code: 400, msg: error };
     }
   },
   updateTag(params: any) {
-    const { id, name, sort } = params;
+    const { id, name, color, sort } = params;
     const db = connect();
 
-    const stmQueryByName = db.prepare(
-      `SELECT * FROM tag_table WHERE name LIKE @name`,
-    );
-    const stmQueryById = db.prepare(`select * from tag_table where id = @id`);
-
     const stmUpdate = db.prepare(
-      `UPDATE tag_table SET name = @name, sort = @sort WHERE id = @id`,
+      `UPDATE tag_table SET name = @name, color = @color, sort = @sort WHERE id = @id`,
     );
 
     try {
-      const listByName = stmQueryByName.all({ name });
-      const listById = stmQueryById.all({ id });
-      if (listByName.length !== 0 || listById.length !== 0) {
-        return { code: 400, msg: 'repeat' };
-      }
-      stmUpdate.run({ name, sort, id });
+      stmUpdate.run({ name, color, sort, id });
       return { code: 200, msg: '成功' };
     } catch (error) {
       return { code: 400, msg: error };
