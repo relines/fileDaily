@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import { message } from 'antd';
 
-import HeaderCom from '../Header';
+import HeaderCom from './components/Header';
 import MyCalendar from './components/MyCalendar';
 import MyList from './components/MyList';
 import MyEdit from './components/MyEdit';

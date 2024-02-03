@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { Dropdown } from 'antd';
 import { MenuUnfoldOutlined } from '@ant-design/icons';
 
-import CategorySetCom from '../../components/CategorySet';
+import CategorySetCom from '../../../../components/CategorySet';
 
 import styles from './index.module.less';
 
