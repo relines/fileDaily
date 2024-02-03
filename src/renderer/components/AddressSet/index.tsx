@@ -254,7 +254,7 @@ export default function HeaderCom(props: Iprops) {
         </Modal>
       </Modal>
       <Modal
-        title="分类选择"
+        title="地址选择"
         open={showAddressChooseModal}
         width={400}
         onOk={() => {

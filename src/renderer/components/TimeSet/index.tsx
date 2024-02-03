@@ -31,7 +31,7 @@ export default function HeaderCom(props: Iprops) {
   }, [time]);
 
   return (
-    <div className={styles.categoryContainer} style={style}>
+    <div className={styles.timeContainer} style={style}>
       <span>时间：</span>
       <span onClick={() => setShowTimeChooseModal(true)}>
         {dayjs(time).format('YYYY-MM-DD HH:mm:ss') || '-'}

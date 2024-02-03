@@ -178,7 +178,7 @@ export default function MyEdit(props: Iprops) {
         changeAddress={(val) => setAddress(val)}
       />
       <TimeSetCom
-        style={{ fontSize: '12px' }}
+        style={{ fontSize: '12px', position: 'relative', top: '-5px' }}
         time={time}
         changeTime={(val) => setTime(val)}
       />
