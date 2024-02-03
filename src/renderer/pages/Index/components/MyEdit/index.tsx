@@ -158,8 +158,8 @@ export default function MyEdit(props: Iprops) {
           }
           // className="ql-editor"
           style={{
-            width: '404px',
-            height: '160px',
+            width: '500px',
+            height: '300px',
             resize: 'none',
             borderRadius: '5px',
             marginBottom: '5px',
