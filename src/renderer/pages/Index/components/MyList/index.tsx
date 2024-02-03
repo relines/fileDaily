@@ -177,13 +177,13 @@ export default function MyList(props: Iprops) {
                       changeActiveItem(item);
                     }}
                   >
-                    <div
+                    {/* <div
                       style={{
                         whiteSpace: 'pre-line',
                       }}
                     >
                       {item.content}
-                    </div>
+                    </div> */}
                     <ReactQuill
                       theme="snow"
                       value={item.content}

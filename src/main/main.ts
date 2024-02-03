@@ -163,6 +163,9 @@ const ipcFunc = () => {
   ipcMain.on('main-window-reload', () => {
     mainWindow?.reload();
   });
+  ipcMain.on('change-window-size', (event, message) => {
+    mainWindow?.setSize(message.width, message.height);
+  });
   ipcMain.on('open-view-window', () => {
     openViewWindow();
   });

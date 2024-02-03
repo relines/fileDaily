@@ -7,6 +7,8 @@ import MyCalendar from './components/MyCalendar';
 import MyList from './components/MyList';
 import MyEdit from './components/MyEdit';
 
+import useWindowSize from '../../hooks/useWindowSize';
+
 import styles from './index.module.less';
 
 export default function IndexCom() {
@@ -16,6 +18,19 @@ export default function IndexCom() {
   const [isLast, setIsLast] = useState<boolean>(false);
 
   const pageIndexRef = useRef<number>(0);
+
+  const { windowWidth, windowHeight } = useWindowSize();
+
+  useEffect(() => {
+    console.log(1234, activeItem, windowWidth, windowHeight);
+    if (!activeItem.code || windowWidth > 1000) {
+      return;
+    }
+    // window.electron.ipcRenderer.send('change-window-size', {
+    //   width: windowWidth + 500,
+    //   height: windowHeight,
+    // });
+  }, [activeItem]);
 
   const getData = async () => {
     const result = await window.electron.ipcRenderer.invoke('get-list', {
