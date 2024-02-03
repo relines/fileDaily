@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 
 import FileListCom from '../../../../components/FileList';
 import CategorySetCom from '../../../../components/CategorySet';
+import TagSetCom from '../../../../components/TagSet';
 import AddressSetCom from '../../../../components/AddressSet';
 import TimeSetCom from '../../../../components/TimeSet';
 
@@ -32,6 +33,7 @@ export default function MyEdit(props: Iprops) {
   const [loading, setLoading] = useState<boolean>(false);
   const [fileList, setFileList] = useState<any[]>([]);
   const [category, setCategory] = useState<string>(activeItem.category);
+  const [tag, setTag] = useState<string>(activeItem.tag);
   const [address, setAddress] = useState<string>(activeItem.address);
   const [time, setTime] = useState<any>(activeItem.createTime);
   const [fileTimeList, setFileTimeList] = useState<any[]>([]);
@@ -56,7 +58,7 @@ export default function MyEdit(props: Iprops) {
         category,
         address,
         createTime: time,
-        tag: 'default',
+        tag: [],
       },
       categoryChanged: activeItem.category && category !== activeItem.category,
       oriCategory: activeItem.category,
@@ -92,6 +94,7 @@ export default function MyEdit(props: Iprops) {
   useEffect(() => {
     setValue(activeItem?.content);
     setFileList(activeItem?.fileList ? JSON.parse(activeItem?.fileList) : []);
+    setTag(activeItem?.tag ? JSON.parse(activeItem?.tag) : []);
     setAddress(activeItem?.address);
     setTime(activeItem?.createTime);
     if (activeItem?.category) {
@@ -172,6 +175,14 @@ export default function MyEdit(props: Iprops) {
         category={category}
         changeCategory={(val) => setCategory(val)}
       />
+      <TagSetCom
+        style={{ fontSize: '12px' }}
+        tag={tag}
+        changeTag={(val) => {
+          console.log(2134, val);
+          setTag(val);
+        }}
+      />
       <AddressSetCom
         style={{ fontSize: '12px' }}
         address={address}
@@ -182,6 +193,7 @@ export default function MyEdit(props: Iprops) {
         time={time}
         changeTime={(val) => setTime(val)}
       />
+      <div>标签：</div>
 
       <FileListCom
         dataSource={fileList}

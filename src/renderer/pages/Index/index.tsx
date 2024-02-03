@@ -24,6 +24,9 @@ export default function IndexCom() {
   const { windowWidth, windowHeight } = useWindowSize();
 
   useEffect(() => {
+    if (!activeItem) {
+      return;
+    }
     if (!activeItem.code) {
       return;
     }
@@ -74,6 +77,7 @@ export default function IndexCom() {
       pageIndexRef.current = 0;
       const result = await getData();
       setTableData(result.data);
+      console.log(333, result);
       if (result.data?.length) {
         message.success('获取到前10条数据');
       } else {

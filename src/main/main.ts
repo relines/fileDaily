@@ -9,6 +9,7 @@ import { resolveHtmlPath } from './util';
 import { initDatabase } from './database/index';
 import listApi from './database/listApi';
 import categoryApi from './database/categoryApi';
+import tagApi from './database/tagApi';
 import addressApi from './database/addressApi';
 import fileApi from './file/index';
 
@@ -110,6 +111,27 @@ const ipcFunc = () => {
   ipcMain.handle('delete-category', async (event, message) => {
     const result = categoryApi.delCategory(message);
     mainWindow?.webContents.send('updateCategory');
+    return result;
+  });
+
+  // 标签操作
+  ipcMain.handle('add-tag', async (event, message) => {
+    const result = tagApi.addTag(message);
+    // mainWindow?.webContents.send('updateCategory');
+    return result;
+  });
+  ipcMain.handle('get-tag', async () => {
+    const result = tagApi.getTag();
+    return result;
+  });
+  ipcMain.handle('update-tag', async (event, message) => {
+    const result = tagApi.updateTag(message);
+    // mainWindow?.webContents.send('updateCategory');
+    return result;
+  });
+  ipcMain.handle('delete-tag', async (event, message) => {
+    const result = tagApi.delTag(message);
+    // mainWindow?.webContents.send('updateCategory');
     return result;
   });
 

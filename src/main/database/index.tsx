@@ -29,9 +29,9 @@ export function initDatabase() {
       createTime int,
       updateTime int,
       category varchar(500),
+      tag TEXT,
       address varchar(2000),
-      fileList TEXT,
-      tag varchar(2000)
+      fileList TEXT
     )`);
   }
   if (!tables.includes('category_table')) {
@@ -39,7 +39,14 @@ export function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       name varchar(500),
       remark varchar(500),
-      count int,
+      createTime int,
+      sort int
+    )`);
+  }
+  if (!tables.includes('tag_table')) {
+    db.exec(`create table if not exists tag_table (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      name varchar(500),
       createTime int,
       sort int
     )`);

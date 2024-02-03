@@ -52,9 +52,10 @@ export default function MyList(props: Iprops) {
     setLoading(true);
     const resp = await window.electron.ipcRenderer.invoke('add-data', {
       content: '',
-      tag: 'default',
+      tag: '',
       createTime: new Date().getTime(),
     });
+    console.log(666, resp);
     changeActiveItem(resp.data);
     setLoading(false);
     changeDataSource('new');
@@ -174,7 +175,11 @@ export default function MyList(props: Iprops) {
                   <div
                     className={styles.text}
                     onClick={() => {
-                      changeActiveItem(activeItem.code ? {} : item);
+                      if (activeItem.code && activeItem.code === item.code) {
+                        changeActiveItem({});
+                      } else {
+                        changeActiveItem(item);
+                      }
                     }}
                   >
                     {/* <div
@@ -207,7 +212,11 @@ export default function MyList(props: Iprops) {
                 <div
                   className={styles.bottom}
                   onClick={() => {
-                    changeActiveItem(activeItem.code ? {} : item);
+                    if (activeItem.code && activeItem.code === item.code) {
+                      changeActiveItem({});
+                    } else {
+                      changeActiveItem(item);
+                    }
                   }}
                 >
                   <span className={styles.time}>

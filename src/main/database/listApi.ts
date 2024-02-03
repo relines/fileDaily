@@ -28,7 +28,9 @@ export default {
     const db = connect();
 
     // 获取total语法
-    const stmTotal = db.prepare('select count(*) total from list_table where column_name like "%keyword" and column_name in ("content", "tag")');
+    const stmTotal = db.prepare(
+      'select count(*) total from list_table where column_name like "%keyword" and column_name in ("content", "tag")',
+    );
     // 实现分页语法
     const stmList = db.prepare(
       `select * from list_table ORDER BY createTime DESC LIMIT 10 OFFSET ${
@@ -91,9 +93,10 @@ export default {
       `select * from list_table where code = @code`,
     );
     const stmUpdate = db.prepare(
-      `UPDATE list_table SET content = @content, fileList = @fileListJson, category = @category, createTime = @createTime, address = @address, tag = @tag WHERE code = @code`,
+      `UPDATE list_table SET content = @content, fileList = @fileListJson, category = @category, createTime = @createTime, address = @address, tag = @tagJson WHERE code = @code`,
     );
     const fileListJson = JSON.stringify(fileList);
+    const tagJson = JSON.stringify(tag);
 
     try {
       stmUpdate.run({
@@ -101,7 +104,7 @@ export default {
         category,
         createTime,
         address,
-        tag,
+        tagJson,
         fileListJson,
         code,
       });

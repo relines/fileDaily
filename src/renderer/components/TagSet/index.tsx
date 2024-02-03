@@ -9,9 +9,10 @@ import {
   Table,
   Modal,
   Button,
-  Select,
   Input,
+  Checkbox,
   InputNumber,
+  Tag,
   message,
 } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
@@ -19,47 +20,46 @@ import { ExclamationCircleFilled } from '@ant-design/icons';
 import styles from './index.module.less';
 
 type Iprops = {
-  category: string;
-  changeCategory: (val: string) => void;
+  tag: any;
+  changeTag: (val: string) => void;
   style: any;
 };
 
 export default function HeaderCom(props: Iprops) {
-  const { style, category, changeCategory } = props;
+  const { style, tag, changeTag } = props;
 
-  const [showCategorySetModal, setShowCategorySetModal] = useState(false);
-  const [showCategoryChooseModal, setShowCategoryChooseModal] = useState(false);
-  const [categoryOption, setCategoryOption] = useState<any[]>([]);
+  const [showTagSetModal, setShowTagSetModal] = useState(false);
+  const [showTagChooseModal, setShowTagChooseModal] = useState(false);
+  const [tagOption, setTagOption] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [modalType, setModalType] = useState<string>('');
   const [editRecord, setEditRecord] = useState<any>({});
   const [tableData, setTableData] = useState<any[]>([]);
 
   const [addForm] = Form.useForm();
-  const [chooseForm] = Form.useForm();
 
-  const getCategory = async () => {
+  const getTag = async () => {
     setLoading(true);
-    const resp = await window.electron.ipcRenderer.invoke('get-category', {});
+    const resp = await window.electron.ipcRenderer.invoke('get-tag', {});
     const opt = resp.data?.map((item: any) => {
       return {
         label: item.name,
         value: item.name,
       };
     });
-    setCategoryOption(opt);
+    setTagOption(opt);
     setTableData(resp.data);
     setLoading(false);
   };
 
-  const addCategory = async () => {
+  const addTag = async () => {
     const values = addForm.getFieldsValue();
-    const resp = await window.electron.ipcRenderer.invoke('add-category', {
+    const resp = await window.electron.ipcRenderer.invoke('add-tag', {
       ...values,
     });
     if (resp.code === 200) {
       message.success('新增成功');
-      getCategory();
+      getTag();
       setModalType('');
       addForm.resetFields();
     } else {
@@ -67,15 +67,15 @@ export default function HeaderCom(props: Iprops) {
     }
   };
 
-  const updateCategory = async () => {
+  const updateTag = async () => {
     const values = addForm.getFieldsValue();
-    const resp = await window.electron.ipcRenderer.invoke('update-category', {
+    const resp = await window.electron.ipcRenderer.invoke('update-tag', {
       ...values,
       id: editRecord.id,
     });
     if (resp.code === 200) {
       message.success('更新成功');
-      getCategory();
+      getTag();
       setModalType('');
       addForm.resetFields();
     } else {
@@ -83,24 +83,24 @@ export default function HeaderCom(props: Iprops) {
     }
   };
 
-  const deleteCategory = async (id: number) => {
-    const resp = await window.electron.ipcRenderer.invoke('delete-category', {
+  const deleteTag = async (id: number) => {
+    const resp = await window.electron.ipcRenderer.invoke('delete-tag', {
       id,
     });
     if (resp.code === 200) {
       message.success('删除成功');
-      getCategory();
+      getTag();
     } else {
       message.error(resp.msg);
     }
   };
 
-  window.electron.ipcRenderer.on('updateCategory', () => {
-    getCategory();
+  window.electron.ipcRenderer.on('updateTag', () => {
+    getTag();
   });
 
   useEffect(() => {
-    getCategory();
+    getTag();
   }, []);
 
   const columns: any[] = [
@@ -109,6 +109,13 @@ export default function HeaderCom(props: Iprops) {
       dataIndex: 'name',
       key: 'name',
       width: 200,
+      align: 'center',
+    },
+    {
+      title: '颜色',
+      dataIndex: 'color',
+      key: 'color',
+      width: 100,
       align: 'center',
     },
     {
@@ -123,13 +130,6 @@ export default function HeaderCom(props: Iprops) {
       dataIndex: 'sort',
       key: 'sort',
       width: 100,
-      align: 'center',
-    },
-    {
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
-      width: 200,
       align: 'center',
     },
     {
@@ -157,7 +157,7 @@ export default function HeaderCom(props: Iprops) {
             danger
             onClick={() => {
               Modal.confirm({
-                title: '确定要删除这个分类么？',
+                title: '确定要删除这个标签么？',
                 icon: <ExclamationCircleFilled />,
                 content: '请注意，这是危险操作！',
                 okText: '确认',
@@ -167,7 +167,7 @@ export default function HeaderCom(props: Iprops) {
                 },
                 cancelText: '取消',
                 onOk() {
-                  deleteCategory(record.id);
+                  deleteTag(record.id);
                 },
               });
             }}
@@ -180,22 +180,24 @@ export default function HeaderCom(props: Iprops) {
   ];
 
   return (
-    <div className={styles.categoryContainer} style={style}>
-      <span onClick={() => setShowCategorySetModal(true)}>分类：</span>
-      <span onClick={() => setShowCategoryChooseModal(true)}>
-        {category || '-'}
-      </span>
+    <div className={styles.tagContainer} style={style}>
+      <span onClick={() => setShowTagSetModal(true)}>标签：</span>
+      {typeof tag !== 'string' &&
+        tag?.map((item: any) => {
+          return <Tag key={item}>{item}</Tag>;
+        })}
+      <span onClick={() => setShowTagChooseModal(true)}>123</span>
 
       <Modal
-        title="分类设置"
-        open={showCategorySetModal}
+        title="标签设置"
+        open={showTagSetModal}
         width={750}
         okText="确定"
         cancelText="取消"
         onOk={() => {
-          setShowCategorySetModal(false);
+          setShowTagSetModal(false);
         }}
-        onCancel={() => setShowCategorySetModal(false)}
+        onCancel={() => setShowTagSetModal(false)}
       >
         <div className={styles.topbar}>
           <Button
@@ -218,14 +220,14 @@ export default function HeaderCom(props: Iprops) {
           pagination={false}
         />
         <Modal
-          title={modalType === 'add' ? '新增分类' : '编辑分类'}
+          title={modalType === 'add' ? '新增标签' : '编辑标签'}
           open={modalType !== ''}
           width={600}
           onOk={() => {
             if (modalType === 'add') {
-              addCategory();
+              addTag();
             } else {
-              updateCategory();
+              updateTag();
             }
           }}
           onCancel={() => {
@@ -256,14 +258,14 @@ export default function HeaderCom(props: Iprops) {
             >
               <Input />
             </Form.Item>
-
             <Form.Item
-              label="备注"
-              name="remark"
+              label="颜色"
+              name="color"
               rules={[{ required: true, message: '请输入' }]}
             >
               <Input />
             </Form.Item>
+
             <Form.Item
               label="排序"
               name="sort"
@@ -274,43 +276,25 @@ export default function HeaderCom(props: Iprops) {
           </Form>
         </Modal>
       </Modal>
+
       <Modal
-        title="分类选择"
-        open={showCategoryChooseModal}
+        title="标签选择"
+        open={showTagChooseModal}
         width={400}
         onOk={() => {
-          const formVal = chooseForm.getFieldsValue();
-          changeCategory(formVal.name);
-          setShowCategoryChooseModal(false);
+          // changeTag(formVal.name);
+          setShowTagChooseModal(false);
         }}
-        onCancel={() => setShowCategoryChooseModal(false)}
+        onCancel={() => setShowTagChooseModal(false)}
       >
-        <Form
-          name="choose"
-          form={chooseForm}
-          style={{
-            margin: '20px 0',
+        <Checkbox.Group
+          options={tagOption}
+          // defaultValue={['Apple']}
+          value={tag}
+          onChange={(val: any) => {
+            changeTag(val);
           }}
-          labelCol={{
-            style: {
-              width: '80px',
-            },
-          }}
-          wrapperCol={{
-            style: {
-              width: '200px',
-            },
-          }}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="名称"
-            name="name"
-            rules={[{ required: true, message: '请输入' }]}
-          >
-            <Select style={{ width: 120 }} options={categoryOption} />
-          </Form.Item>
-        </Form>
+        />
       </Modal>
     </div>
   );
