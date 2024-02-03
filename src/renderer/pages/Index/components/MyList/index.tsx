@@ -7,7 +7,7 @@
 /* eslint-disable promise/catch-or-return */
 import React, { useState } from 'react';
 
-import { List, Dropdown, message } from 'antd';
+import { List, Input, Dropdown, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
 import VirtualList from 'rc-virtual-list';
@@ -55,7 +55,6 @@ export default function MyList(props: Iprops) {
       tag: '',
       createTime: new Date().getTime(),
     });
-    console.log(666, resp);
     changeActiveItem(resp.data);
     setLoading(false);
     changeDataSource('new');
@@ -91,11 +90,20 @@ export default function MyList(props: Iprops) {
           <PlusCircleOutlined
             disabled={loading}
             style={{
-              float: 'right',
               cursor: 'pointer',
               marginTop: '3px',
+              marginLeft: '5px',
             }}
             onClick={() => addData()}
+          />
+          <Input.Search
+            placeholder="input search text"
+            allowClear
+            size="small"
+            onSearch={(val) => {
+              console.log(333, val);
+            }}
+            style={{ width: 200, height: '20px', float: 'right' }}
           />
         </div>
         <div className={styles.liner}> </div>
