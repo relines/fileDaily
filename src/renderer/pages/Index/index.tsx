@@ -24,14 +24,22 @@ export default function IndexCom() {
   const { windowWidth, windowHeight } = useWindowSize();
 
   useEffect(() => {
-    console.log(1234, activeItem, windowWidth, windowHeight);
-    if (!activeItem.code || windowWidth > 1000) {
+    if (!activeItem.code) {
       return;
     }
-    // window.electron.ipcRenderer.send('change-window-size', {
-    //   width: windowWidth + 500,
-    //   height: windowHeight,
-    // });
+    if (windowWidth === 0 || windowHeight === 0) return;
+    if (showCalendar && windowWidth < 1276) {
+      window.electron.ipcRenderer.send('change-window-size', {
+        width: 1276,
+        height: windowHeight,
+      });
+    }
+    if (!showCalendar && windowWidth < 870) {
+      window.electron.ipcRenderer.send('change-window-size', {
+        width: 876,
+        height: windowHeight,
+      });
+    }
   }, [activeItem]);
 
   const getData = async () => {

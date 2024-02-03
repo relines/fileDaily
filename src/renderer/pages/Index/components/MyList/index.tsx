@@ -174,7 +174,7 @@ export default function MyList(props: Iprops) {
                   <div
                     className={styles.text}
                     onClick={() => {
-                      changeActiveItem(item);
+                      changeActiveItem(activeItem.code ? {} : item);
                     }}
                   >
                     {/* <div
@@ -207,7 +207,7 @@ export default function MyList(props: Iprops) {
                 <div
                   className={styles.bottom}
                   onClick={() => {
-                    changeActiveItem(item);
+                    changeActiveItem(activeItem.code ? {} : item);
                   }}
                 >
                   <span className={styles.time}>

@@ -8,6 +8,8 @@ import { MenuUnfoldOutlined } from '@ant-design/icons';
 
 import CategorySetCom from '../../../../components/CategorySet';
 
+import useWindowSize from '../../../../hooks/useWindowSize';
+
 import styles from './index.module.less';
 
 type Iprops = {
@@ -20,6 +22,18 @@ export default function HeaderCom(props: Iprops) {
 
   const [isFullScreen, setIsFullScreen] = useState<any>(false);
   const [category, setCategory] = useState<any>('');
+
+  const { windowWidth, windowHeight } = useWindowSize();
+
+  useEffect(() => {
+    if (windowWidth === 0 || windowHeight === 0) return;
+    if (showCalendar && windowWidth < 500) {
+      window.electron.ipcRenderer.send('change-window-size', {
+        width: windowWidth + 500,
+        height: windowHeight,
+      });
+    }
+  }, [showCalendar]);
 
   const workSpace = window.electron.ipcRenderer.getStoreValue('workSpace');
 
