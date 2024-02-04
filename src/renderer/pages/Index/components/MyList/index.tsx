@@ -86,8 +86,6 @@ export default function MyList(props: Iprops) {
     }
   };
 
-  console.log(334, keyword);
-
   return (
     <div className={styles.listContainer}>
       <List split={false}>
@@ -97,7 +95,7 @@ export default function MyList(props: Iprops) {
             disabled={loading}
             style={{
               cursor: 'pointer',
-              marginTop: '3px',
+              marginTop: '5px',
               marginLeft: '5px',
             }}
             onClick={() => addData()}
