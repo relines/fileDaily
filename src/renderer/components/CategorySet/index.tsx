@@ -28,7 +28,6 @@ export default function HeaderCom(props: Iprops) {
   const { style, category, changeCategory } = props;
 
   const [showCategorySetModal, setShowCategorySetModal] = useState(false);
-  const [showCategoryChooseModal, setShowCategoryChooseModal] = useState(false);
   const [categoryOption, setCategoryOption] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [modalType, setModalType] = useState<string>('');
@@ -36,7 +35,6 @@ export default function HeaderCom(props: Iprops) {
   const [tableData, setTableData] = useState<any[]>([]);
 
   const [addForm] = Form.useForm();
-  const [chooseForm] = Form.useForm();
 
   const getCategory = async () => {
     setLoading(true);
@@ -182,9 +180,18 @@ export default function HeaderCom(props: Iprops) {
   return (
     <div className={styles.categoryContainer} style={style}>
       <span onClick={() => setShowCategorySetModal(true)}>分类：</span>
-      <span onClick={() => setShowCategoryChooseModal(true)}>
-        {category || '-'}
-      </span>
+      <Select
+        value={category}
+        bordered={false}
+        style={{
+          marginLeft: '-10px',
+        }}
+        size="small"
+        options={categoryOption}
+        onChange={(val) => {
+          changeCategory(val);
+        }}
+      />
 
       <Modal
         title="分类设置"
@@ -273,44 +280,6 @@ export default function HeaderCom(props: Iprops) {
             </Form.Item>
           </Form>
         </Modal>
-      </Modal>
-      <Modal
-        title="分类选择"
-        open={showCategoryChooseModal}
-        width={400}
-        onOk={() => {
-          const formVal = chooseForm.getFieldsValue();
-          changeCategory(formVal.name);
-          setShowCategoryChooseModal(false);
-        }}
-        onCancel={() => setShowCategoryChooseModal(false)}
-      >
-        <Form
-          name="choose"
-          form={chooseForm}
-          style={{
-            margin: '20px 0',
-          }}
-          labelCol={{
-            style: {
-              width: '80px',
-            },
-          }}
-          wrapperCol={{
-            style: {
-              width: '200px',
-            },
-          }}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="名称"
-            name="name"
-            rules={[{ required: true, message: '请输入' }]}
-          >
-            <Select style={{ width: 120 }} options={categoryOption} />
-          </Form.Item>
-        </Form>
       </Modal>
     </div>
   );

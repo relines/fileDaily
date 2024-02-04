@@ -25,3 +25,10 @@ a:hover {
   opacity: 1;
   text-decoration: none;
 }
+
+.ant-select-selection-item {
+  font-size: 12px;
+}
+.ant-select-item-option-content {
+  font-size: 12px;
+}
