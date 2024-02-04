@@ -24,23 +24,25 @@ export default function IndexCom() {
   const { windowWidth, windowHeight } = useWindowSize();
 
   useEffect(() => {
-    if (!activeItem) {
-      return;
-    }
-    if (!activeItem.code) {
-      return;
-    }
+    if (!activeItem) return;
     if (windowWidth === 0 || windowHeight === 0) return;
+    if (!activeItem.code && windowWidth > 800) {
+      window.electron.ipcRenderer.send('change-window-size', {
+        width: windowWidth - 500,
+        height: windowHeight + 30,
+      });
+      return;
+    }
     if (showCalendar && windowWidth < 1276) {
       window.electron.ipcRenderer.send('change-window-size', {
         width: 1276,
-        height: windowHeight,
+        height: windowHeight + 26,
       });
     }
     if (!showCalendar && windowWidth < 870) {
       window.electron.ipcRenderer.send('change-window-size', {
         width: 876,
-        height: windowHeight,
+        height: windowHeight + 26,
       });
     }
   }, [activeItem]);

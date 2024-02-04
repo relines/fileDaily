@@ -30,7 +30,13 @@ export default function HeaderCom(props: Iprops) {
     if (showCalendar && windowWidth < 500) {
       window.electron.ipcRenderer.send('change-window-size', {
         width: windowWidth + 500,
-        height: windowHeight,
+        height: windowHeight + 26,
+      });
+    }
+    if (!showCalendar && windowWidth > 800) {
+      window.electron.ipcRenderer.send('change-window-size', {
+        width: windowWidth - 500,
+        height: windowHeight + 30,
       });
     }
   }, [showCalendar]);
