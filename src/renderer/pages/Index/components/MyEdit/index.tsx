@@ -84,7 +84,7 @@ export default function MyEdit(props: Iprops) {
           order: index + 1,
         };
       }) || [];
-    if (fileTimeArr.length !== 0) {
+    if (fileTimeArr && fileTimeArr.length !== 0) {
       setChooseFileTimeModal(true);
     }
     setFileTimeList(fileTimeArr);
@@ -162,10 +162,11 @@ export default function MyEdit(props: Iprops) {
           // className="ql-editor"
           style={{
             width: '500px',
-            height: '300px',
+            // height: '300px',
             resize: 'none',
+            maxHeight: '300px',
+            overflow: 'auto',
             borderRadius: '5px',
-            marginBottom: '5px',
           }}
           onChange={setValue}
         />

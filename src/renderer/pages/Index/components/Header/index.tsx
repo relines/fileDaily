@@ -104,7 +104,14 @@ export default function HeaderCom(props: Iprops) {
         工作空间目录：
       </span>
       <Tooltip title={workSpace}>
-        <span className={styles.workSpace}>{workSpace}</span>
+        <span
+          className={styles.workSpace}
+          onClick={() => {
+            window.electron.ipcRenderer.send('open-folder', workSpace);
+          }}
+        >
+          {workSpace}
+        </span>
       </Tooltip>
 
       <CategorySetCom
