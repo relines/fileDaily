@@ -33,7 +33,7 @@ export default function MyEdit(props: Iprops) {
   const [loading, setLoading] = useState<boolean>(false);
   const [fileList, setFileList] = useState<any[]>([]);
   const [category, setCategory] = useState<string>(activeItem.category);
-  const [tag, setTag] = useState<string>(activeItem.tag);
+  const [tag, setTag] = useState<any[]>(activeItem.tag);
   const [address, setAddress] = useState<string>(activeItem.address);
   const [time, setTime] = useState<any>(activeItem.createTime);
   const [fileTimeList, setFileTimeList] = useState<any[]>([]);
@@ -58,7 +58,7 @@ export default function MyEdit(props: Iprops) {
         category,
         address,
         createTime: time,
-        tag: [],
+        tag,
       },
       categoryChanged: activeItem.category && category !== activeItem.category,
       oriCategory: activeItem.category,

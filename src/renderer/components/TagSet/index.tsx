@@ -60,7 +60,7 @@ export default function HeaderCom(props: Iprops) {
     const values = addForm.getFieldsValue();
     const resp = await window.electron.ipcRenderer.invoke('add-tag', {
       ...values,
-      color: values.color.toHexString(),
+      color: values.color?.toHexString(),
     });
     if (resp.code === 200) {
       message.success('新增成功');
@@ -77,7 +77,7 @@ export default function HeaderCom(props: Iprops) {
     const resp = await window.electron.ipcRenderer.invoke('update-tag', {
       ...values,
       id: editRecord.id,
-      color: values.color.toHexString(),
+      color: values.color?.toHexString(),
     });
     if (resp.code === 200) {
       message.success('更新成功');
