@@ -247,8 +247,10 @@ export default function MyList(props: Iprops) {
           )}
         </VirtualList>
       </List>
-      {isLast && isBottom && (
+      {isLast && isBottom ? (
         <div className={styles.listBottom}>学到的知识越多，遗憾就越少</div>
+      ) : (
+        <div className={styles.listBottomEmpty}> </div>
       )}
     </div>
   );

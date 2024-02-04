@@ -27,26 +27,73 @@ export default function IndexCom() {
   useEffect(() => {
     if (!activeItem) return;
     if (windowWidth === 0 || windowHeight === 0) return;
-    if (!activeItem.code && windowWidth > 800) {
+
+    if (showCalendar && activeItem.code && windowWidth < 1270) {
       window.electron.ipcRenderer.send('change-window-size', {
-        width: windowWidth - 500,
-        height: windowHeight + 30,
-      });
-      return;
-    }
-    if (showCalendar && windowWidth < 1276) {
-      window.electron.ipcRenderer.send('change-window-size', {
-        width: 1276,
+        width: 1270,
         height: windowHeight + 26,
       });
     }
-    if (!showCalendar && windowWidth < 870) {
+    if (!showCalendar && !activeItem.code && windowWidth < 300) {
       window.electron.ipcRenderer.send('change-window-size', {
-        width: 876,
+        width: 300,
         height: windowHeight + 26,
       });
     }
-  }, [activeItem]);
+    if (!showCalendar && activeItem.code && windowWidth < 810) {
+      window.electron.ipcRenderer.send('change-window-size', {
+        width: 810,
+        height: windowHeight + 26,
+      });
+    }
+    if (showCalendar && !activeItem.code && windowWidth < 750) {
+      window.electron.ipcRenderer.send('change-window-size', {
+        width: 750,
+        height: windowHeight + 26,
+      });
+    }
+  }, [activeItem, showCalendar]);
+
+  // useEffect(() => {
+  //   if (!activeItem) return;
+  //   if (windowWidth === 0 || windowHeight === 0) return;
+
+  //   if (showCalendar && activeItem.code && windowWidth < 1270) {
+  //     window.electron.ipcRenderer.send('change-window-size', {
+  //       width: 1270,
+  //       height: windowHeight + 26,
+  //     });
+  //   }
+  //   if (!showCalendar && activeItem.code && windowWidth < 810) {
+  //     window.electron.ipcRenderer.send('change-window-size', {
+  //       width: 810,
+  //       height: windowHeight + 26,
+  //     });
+  //   }
+
+  //   if (!activeItem.code && windowWidth > 800) {
+  //     window.electron.ipcRenderer.send('change-window-size', {
+  //       width: windowWidth - 500,
+  //       height: windowHeight + 30,
+  //     });
+  //     return;
+  //   }
+  //   if (showCalendar && windowWidth < 1276) {
+  //     window.electron.ipcRenderer.send('change-window-size', {
+  //       width: 1276,
+  //       height: windowHeight + 26,
+  //     });
+  //   }
+  //   if (!showCalendar && windowWidth < 870) {
+  //     window.electron.ipcRenderer.send('change-window-size', {
+  //       width: 876,
+  //       height: windowHeight + 26,
+  //     });
+  //   }
+  //   console.log(777, showCalendar, activeItem.code, windowWidth);
+  // }, [activeItem, showCalendar]);
+
+  console.log(1234, windowWidth);
 
   const getData = async () => {
     const result = await window.electron.ipcRenderer.invoke('get-list', {
