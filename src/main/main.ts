@@ -92,6 +92,10 @@ const ipcFunc = () => {
     const result = listApi.getList(message);
     return result;
   });
+  ipcMain.handle('search-list', async (event, message) => {
+    const result = listApi.getList(message);
+    return result;
+  });
 
   // 分类操作
   ipcMain.handle('add-category', async (event, message) => {
@@ -233,8 +237,8 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1270,
-    height: 860,
+    width: 300,
+    height: 600,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       // webSecurity: false,

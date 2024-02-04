@@ -92,8 +92,6 @@ export default function ViewCom() {
     };
   });
 
-  console.log(333, fileList);
-
   return (
     <div className={styles.viewContainer}>
       <div className={styles.header}>123</div>

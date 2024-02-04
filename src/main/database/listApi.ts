@@ -3,44 +3,27 @@ import connect from './index';
 
 export default {
   getList(params: any) {
-    const { pageIndex = 1 } = params;
-    const db = connect();
-
-    // 获取total语法
-    const stmTotal = db.prepare('select count(*) total from list_table');
-    // 实现分页语法
-    const stmList = db.prepare(
-      `select * from list_table ORDER BY createTime DESC LIMIT 10 OFFSET ${
-        10 * pageIndex
-      }`,
-    );
-
-    try {
-      const total: any = stmTotal.all();
-      const data = stmList.all();
-      return { code: 200, msg: '成功', data, total: total[0]?.total };
-    } catch (error) {
-      return { code: 400, msg: error };
-    }
-  },
-  searchListByKeyWord(params: any) {
     const { pageIndex = 1, keyword } = params;
     const db = connect();
 
     // 获取total语法
-    const stmTotal = db.prepare(
-      'select count(*) total from list_table where column_name like "%keyword" and column_name in ("content", "tag")',
-    );
+    const stmTotal = !keyword
+      ? db.prepare('select count(*) total from list_table')
+      : db.prepare(
+          `select count(*) total from list_table where content like '%${keyword}%' or tag like '%${keyword}%'`,
+        );
     // 实现分页语法
-    const stmList = db.prepare(
-      `select * from list_table ORDER BY createTime DESC LIMIT 10 OFFSET ${
-        10 * pageIndex
-      }`,
-    );
-    // `SELECT *
-    // FROM table_name
-    // WHERE column_name LIKE '%keyword%'
-    // AND column_name IN ('value1', 'value2', 'value3')`;
+    const stmList = !keyword
+      ? db.prepare(
+          `select * from list_table ORDER BY createTime DESC LIMIT 10 OFFSET ${
+            10 * pageIndex
+          }`,
+        )
+      : db.prepare(
+          `select * from list_table where content like '%${keyword}%' or tag like '%${keyword}%' ORDER BY createTime DESC LIMIT 10 OFFSET ${
+            10 * pageIndex
+          }`,
+        );
 
     try {
       const total: any = stmTotal.all();

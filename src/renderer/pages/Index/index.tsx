@@ -18,6 +18,7 @@ export default function IndexCom() {
   const [total, setTotal] = useState<number>(0);
   const [isLast, setIsLast] = useState<boolean>(false);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const [keyword, setKeyword] = useState<string>('');
 
   const pageIndexRef = useRef<number>(0);
 
@@ -50,6 +51,7 @@ export default function IndexCom() {
   const getData = async () => {
     const result = await window.electron.ipcRenderer.invoke('get-list', {
       pageIndex: pageIndexRef.current,
+      keyword,
     });
     console.log(666, result);
     setTotal(result?.total || total);
@@ -79,7 +81,6 @@ export default function IndexCom() {
       pageIndexRef.current = 0;
       const result = await getData();
       setTableData(result.data);
-      console.log(333, result);
       if (result.data?.length) {
         message.success('获取到前10条数据');
       } else {
@@ -121,6 +122,8 @@ export default function IndexCom() {
           dataSource={tableData}
           total={total}
           isLast={isLast}
+          keyword={keyword}
+          changeKeyword={setKeyword}
           activeItem={activeItem}
           changeActiveItem={setActiveItem}
           changeDataSource={changeDataSource}

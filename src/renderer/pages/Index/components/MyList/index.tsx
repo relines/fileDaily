@@ -26,6 +26,8 @@ type Iprops = {
   dataSource: any[];
   total: number;
   isLast: boolean;
+  keyword: string;
+  changeKeyword: (val: string) => void;
   activeItem: any;
   changeActiveItem: any;
   changeDataSource: (type: 'more' | 'new' | 'save', data?: any) => void;
@@ -36,6 +38,8 @@ export default function MyList(props: Iprops) {
     dataSource,
     total,
     isLast,
+    keyword,
+    changeKeyword,
     activeItem,
     changeActiveItem,
     changeDataSource,
@@ -82,6 +86,8 @@ export default function MyList(props: Iprops) {
     }
   };
 
+  console.log(334, keyword);
+
   return (
     <div className={styles.listContainer}>
       <List split={false}>
@@ -100,8 +106,13 @@ export default function MyList(props: Iprops) {
             placeholder="input search text"
             allowClear
             size="small"
-            onSearch={(val) => {
-              console.log(333, val);
+            value={keyword}
+            onChange={(e: any) => {
+              changeKeyword(e.target.value);
+            }}
+            onSearch={(val, e, info) => {
+              if (info?.source === 'clear') return;
+              changeDataSource('new');
             }}
             style={{ width: 200, height: '20px', float: 'right' }}
           />
