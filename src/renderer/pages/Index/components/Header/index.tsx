@@ -3,7 +3,7 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useState, useEffect } from 'react';
 
-import { Dropdown } from 'antd';
+import { Dropdown, Tooltip } from 'antd';
 import { MenuUnfoldOutlined } from '@ant-design/icons';
 
 import CategorySetCom from '../../../../components/CategorySet';
@@ -103,17 +103,12 @@ export default function HeaderCom(props: Iprops) {
       >
         工作空间目录：
       </span>
-      <span
-        style={{
-          marginRight: '10px',
-          fontSize: '12px',
-        }}
-      >
-        {workSpace}
-      </span>
+      <Tooltip title={workSpace}>
+        <span className={styles.workSpace}>{workSpace}</span>
+      </Tooltip>
 
       <CategorySetCom
-        style={{ fontSize: '14px' }}
+        style={{ fontSize: '12px', float: 'right' }}
         category={category}
         changeCategory={(val) => setCategory(val)}
       />
