@@ -41,6 +41,7 @@ function ScrollCalendar() {
       }),
     );
     setSchedules(arr);
+    setClickDay(new Date());
     calendarRef.current?.scrollTo({ top: 1 });
   };
 
