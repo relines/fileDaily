@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { message } from 'antd';
 
 import HeaderCom from './components/Header';
-import MyCalendar from './components/MyCalendar';
+import MyCalendar from './components/MyCalendar2';
 import MyList from './components/MyList';
 import MyEdit from './components/MyEdit';
 
@@ -160,11 +160,11 @@ export default function IndexCom() {
         />
       </div>
       {showCalendar && (
-        <div className={`${styles.content} ${styles.calendarContainer}`}>
+        <div className={`${styles.calendarContainer}`}>
           <MyCalendar />
         </div>
       )}
-      <div className={`${styles.content} ${styles.listContainer}`}>
+      <div className={`${styles.listContainer}`}>
         <MyList
           dataSource={tableData}
           total={total}
@@ -177,7 +177,7 @@ export default function IndexCom() {
         />
       </div>
       {activeItem?.code && (
-        <div className={`${styles.content} ${styles.editContainer}`}>
+        <div className={`${styles.editContainer}`}>
           <MyEdit
             activeItem={activeItem}
             changeActiveItem={setActiveItem}
