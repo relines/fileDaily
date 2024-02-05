@@ -16,8 +16,9 @@ dayjs.locale('zh-cn');
 
 function ScrollCalendar() {
   const [clickDay, setClickDay] = useState<any>(new Date());
+  const calendarRef = useRef<HTMLDivElement>(null);
 
-  const { windowWidth, windowHeight } = useWindowSize();
+  const { windowHeight } = useWindowSize();
 
   const getDays = useCallback((month: Dayjs) => {
     return getDaysOfMonth(month.year(), month.month() + 1);
@@ -32,22 +33,31 @@ function ScrollCalendar() {
     );
   });
 
+  const backToday = () => {
+    const arr = [dayjs(), dayjs().add(1, 'month'), dayjs().add(2, 'month')].map(
+      (month) => ({
+        month,
+        days: getDays(month),
+      }),
+    );
+    setSchedules(arr);
+    calendarRef.current?.scrollTo({ top: 1 });
+  };
+
   const weekTitles = useMemo(() => {
     return [...Array(7)].map((_, weekInx) => {
       return dayjs().day(weekInx);
     });
   }, []);
 
-  const calendarRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
+  const scrollData = () => {
     let prevScrollHeight = 0;
     const scrollEvent = debounce(async (e) => {
       const scrollHeight = e.target.scrollHeight;
       const scrollTop = e.target.scrollTop;
       const offsetHeight = e.target.offsetHeight;
 
-      if (scrollTop < 100) {
+      if (scrollTop === 0) {
         console.log('列表置顶');
         setSchedules((schedule) => {
           const lastSchedule = schedule[0];
@@ -81,6 +91,10 @@ function ScrollCalendar() {
     }, 100);
 
     calendarRef.current?.addEventListener('scroll', scrollEvent);
+  };
+
+  useEffect(() => {
+    scrollData();
   }, []);
 
   return (
@@ -88,6 +102,9 @@ function ScrollCalendar() {
       {/* header */}
       <div className={styles.calendarHeader}>
         <span>{dayjs(clickDay).format('YYYY年MM月DD日')}</span>
+        <span className={styles.backToday} onClick={backToday}>
+          今天
+        </span>
       </div>
       <div
         className={styles.calendar}
