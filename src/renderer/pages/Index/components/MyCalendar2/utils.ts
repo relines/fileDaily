@@ -29,3 +29,9 @@ export const getDaysOfMonth = (year: number, month: number) => {
 
   return days;
 };
+
+export const getWeek = (val: any) => {
+  const datas = dayjs(val).day();
+  const week = ['日', '一', '二', '三', '四', '五', '六'];
+  return `星期${week[datas]}`;
+};

@@ -5,7 +5,7 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { debounce } from 'lodash-es';
-import { getDaysOfMonth } from './utils';
+import { getDaysOfMonth, getWeek } from './utils';
 import 'dayjs/locale/zh-cn';
 
 import useWindowSize from '../../../../hooks/useWindowSize';
@@ -101,7 +101,9 @@ function ScrollCalendar() {
     <div className={styles.myCalendar}>
       {/* header */}
       <div className={styles.calendarHeader}>
-        <span>{dayjs(clickDay).format('YYYY年MM月DD日')}</span>
+        <span>
+          {dayjs(clickDay).format('YYYY年MM月DD日')} {getWeek(clickDay)}
+        </span>
         <span className={styles.backToday} onClick={backToday}>
           今天
         </span>
