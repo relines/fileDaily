@@ -50,7 +50,7 @@ export default function MyList(props: Iprops) {
 
   const { windowHeight } = useWindowSize();
 
-  const ContainerHeight = windowHeight - 100;
+  const ContainerHeight = windowHeight === 0 ? 200 : windowHeight - 100;
 
   const addData = async () => {
     setLoading(true);

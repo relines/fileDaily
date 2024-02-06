@@ -93,8 +93,6 @@ export default function IndexCom() {
   //   console.log(777, showCalendar, activeItem.code, windowWidth);
   // }, [activeItem, showCalendar]);
 
-  console.log(1234, windowWidth);
-
   const getData = async () => {
     const result = await window.electron.ipcRenderer.invoke('get-list', {
       pageIndex: pageIndexRef.current,

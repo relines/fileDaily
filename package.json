@@ -96,7 +96,6 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
-    "@types/lodash-es": "^4.17.12",
     "antd": "^5.13.2",
     "date-fns": "^2.30.0",
     "electron-debug": "^3.2.0",

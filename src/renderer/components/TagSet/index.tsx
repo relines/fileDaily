@@ -269,6 +269,9 @@ export default function HeaderCom(props: Iprops) {
                 width: '200px',
               },
             }}
+            initialValues={{
+              color: '#1677ff',
+            }}
             style={{ maxWidth: 600 }}
             autoComplete="off"
           >
@@ -284,7 +287,7 @@ export default function HeaderCom(props: Iprops) {
               name="color"
               rules={[{ required: true, message: '请输入' }]}
             >
-              <ColorPicker defaultValue="#1677ff" />
+              <ColorPicker />
             </Form.Item>
 
             <Form.Item
