@@ -199,6 +199,7 @@ export default {
     const oriList1 = oriList.filter((item: any) => destList.includes(item));
 
     // 第三类是没有的，需要复制
+    console.log(333, fileList);
     const newFileList = fileList
       .filter((item: any) => !oriList1.includes(item.name))
       .map((item: any) => {

@@ -79,7 +79,7 @@ export default function MyList(props: Iprops) {
     setIsBottom(false);
     if (
       e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
-      ContainerHeight
+      ContainerHeight + 3
     ) {
       changeDataSource('more');
       setIsBottom(true);
