@@ -79,7 +79,7 @@ export default function MyList(props: Iprops) {
     setIsBottom(false);
     if (
       e.currentTarget.scrollHeight - e.currentTarget.scrollTop <=
-      ContainerHeight + 3
+      ContainerHeight + 31
     ) {
       changeDataSource('more');
       setIsBottom(true);
@@ -237,7 +237,7 @@ export default function MyList(props: Iprops) {
                   }}
                 >
                   <span className={styles.time}>
-                    {index + 1}
+                    {dataSource.length - index}
                     {'-->'}
                     {dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')}
                   </span>

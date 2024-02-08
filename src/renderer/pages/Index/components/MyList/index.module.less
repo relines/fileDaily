@@ -6,27 +6,30 @@
   :global(.ql-snow) {
     border: none !important;
   }
+
   :global(.ql-editor) {
-    padding: 5px !important;
+    padding: 0px !important;
   }
 
   .header {
     overflow: hidden;
-    padding: 2px;
+    padding: 2px 2px 2px 5px;
     height: 25px;
-    line-height: 20px;
+    line-height: 25px;
     vertical-align: middle;
+    background-color: #509296;
+    font-size: 12px;
   }
 
   .listItem {
     padding: 5px 0;
     position: relative;
+    // border: 1px solid #f00;
   }
 
   .liner {
     position: absolute;
     left: 68px;
-    z-index: 9;
     width: 1px;
     height: 100%;
     background-color: #1677ff;
@@ -54,9 +57,11 @@
       width: 22px;
       font-size: 10px;
       vertical-align: top;
+
       .month {
         font-size: 10px;
       }
+
       .week {
         font-size: 7px;
       }
@@ -76,11 +81,8 @@
   }
 
   .content {
-    // border: 1px solid #226b68;
     width: 100%;
     margin-left: 75px;
-    margin-top: 5px;
-    min-height: 70px;
     border-radius: 5px;
     cursor: pointer;
 
@@ -107,6 +109,7 @@
     font-size: 12px;
     line-height: 30px;
   }
+
   .listBottomEmpty {
     position: relative;
     height: 30px;

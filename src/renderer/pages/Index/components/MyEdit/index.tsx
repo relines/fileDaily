@@ -8,6 +8,7 @@ import 'react-quill/dist/quill.snow.css';
 import { Button, message, Modal, Radio, Space } from 'antd';
 
 import dayjs from 'dayjs';
+import useWindowSize from '../../../../hooks/useWindowSize';
 
 import FileListCom from '../../../../components/FileList';
 import CategorySetCom from '../../../../components/CategorySet';
@@ -41,6 +42,7 @@ export default function MyEdit(props: Iprops) {
     useState<boolean>(false);
 
   console.log(333, activeItem);
+  const { windowHeight } = useWindowSize();
 
   const quillRef = useRef<any>();
 
@@ -105,7 +107,13 @@ export default function MyEdit(props: Iprops) {
   }, [activeItem]);
 
   return (
-    <div className={styles.eidtContainer}>
+    <div
+      className={styles.eidtContainer}
+      style={{
+        height: `${windowHeight === 0 ? 200 : windowHeight - 50}px`,
+        overflow: 'auto',
+      }}
+    >
       <div
         style={{
           marginBottom: '10px',

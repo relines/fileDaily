@@ -1,22 +1,31 @@
 .myCalendar {
   width: 400px;
+
   .calendar {
     display: flex;
     flex-direction: column;
     width: 400px;
     overflow-y: scroll;
   }
+
   .calendarHeader {
     background-color: #509296;
+    margin-top: -3px;
+    padding: 0 5px;
+    height: 29px;
+    line-height: 29px;
+    font-size: 14px;
+
     .backToday {
       float: right;
       font-size: 12px;
       vertical-align: middle;
       height: 20px;
-      line-height: 23px;
+      line-height: 31px;
       cursor: pointer;
     }
   }
+
   .calendarTitle {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -28,11 +37,13 @@
     font-weight: 700;
     z-index: 9;
   }
+
   .calendarWeek {
     display: flex;
     align-items: center;
     justify-content: center;
   }
+
   .calendarMonth {
     display: flex;
     align-items: center;
@@ -43,25 +54,30 @@
     top: 54px;
     background-color: #dff;
   }
+
   .calendarContent {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
   }
+
   .calendarDay {
     display: flex;
     align-items: center;
     justify-content: center;
     aspect-ratio: 1;
     cursor: pointer;
+
     &:hover {
       color: #e18a3b;
     }
   }
+
   .toDay {
     border: 1px solid #1e90ff;
     border-radius: 50%;
   }
+
   .clickDay {
     background-color: #1e90ff;
     border-radius: 50%;
