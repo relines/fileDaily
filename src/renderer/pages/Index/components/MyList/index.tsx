@@ -5,7 +5,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import { List, Input, Dropdown, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
@@ -14,6 +14,7 @@ import VirtualList from 'rc-virtual-list';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import dayjs from 'dayjs';
+import { debounce } from 'lodash-es';
 
 import FileListShowCom from '../../../../components/FileListShow';
 import useWindowSize from '../../../../hooks/useWindowSize';
@@ -75,16 +76,16 @@ export default function MyList(props: Iprops) {
     changeDataSource('new');
   };
 
-  const onScroll = (e: React.UIEvent<HTMLElement, UIEvent>) => {
-    setIsBottom(false);
-    if (
-      e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
-      ContainerHeight
-    ) {
-      changeDataSource('more');
-      setIsBottom(true);
-    }
-  };
+  const onScroll = useCallback(
+    debounce((e: any) => {
+      setIsBottom(false);
+      if (e.target.scrollHeight - e.target.scrollTop === ContainerHeight) {
+        changeDataSource('more');
+        setIsBottom(true);
+      }
+    }, 100),
+    [ContainerHeight],
+  );
 
   return (
     <div className={styles.listContainer}>

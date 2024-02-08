@@ -95,7 +95,6 @@ export default function IndexCom() {
   // }, [activeItem, showCalendar]);
 
   const getData = async () => {
-    console.log(132, searchTime);
     const result = await window.electron.ipcRenderer.invoke('get-list', {
       pageIndex: pageIndexRef.current,
       keyword,

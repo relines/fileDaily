@@ -59,7 +59,7 @@ export default function ScrollCalendar(props: Iprops) {
 
   const scrollData = () => {
     let prevScrollHeight = 0;
-    const scrollEvent = debounce(async (e) => {
+    const scrollEvent = debounce(async (e: any) => {
       const scrollHeight = e.target.scrollHeight;
       const scrollTop = e.target.scrollTop;
       const offsetHeight = e.target.offsetHeight;
@@ -95,7 +95,7 @@ export default function ScrollCalendar(props: Iprops) {
           return [...schedule, nextSchedule];
         });
       }
-    }, 100);
+    }, 1000);
 
     calendarRef.current?.addEventListener('scroll', scrollEvent);
   };
