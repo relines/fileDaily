@@ -162,7 +162,7 @@ const ipcFunc = () => {
     const result = await fileApi.chooseFolder();
     if (result) {
       store.set('workSpace', result);
-      fileApi.initFolder();
+      await fileApi.initFolder();
       initDatabase();
       return result;
     }
@@ -306,6 +306,14 @@ const initWorkSpace = () => {
   }
 };
 
+const init = async () => {
+  initWorkSpace();
+  await fileApi.initFolder();
+  initDatabase();
+  ipcFunc();
+  createWindow();
+};
+
 app
   .whenReady()
   .then(() => {
@@ -317,11 +325,7 @@ app
     //   const url = request.url.slice(6);
     //   return net.fetch(decodeURIComponent(`file://${url}`), {});
     // });
-    initWorkSpace();
-    fileApi.initFolder();
-    initDatabase();
-    ipcFunc();
-    createWindow();
+    init();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.

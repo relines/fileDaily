@@ -182,7 +182,7 @@ export default function HeaderCom(props: Iprops) {
       <span onClick={() => setShowCategorySetModal(true)}>分类：</span>
       <Select
         value={category}
-        bordered={false}
+        variant="borderless"
         style={{
           marginLeft: '-10px',
         }}
