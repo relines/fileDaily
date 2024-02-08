@@ -23,13 +23,13 @@ export default {
       ? db.prepare(
           `select * from list_table where createTime <= ${
             searchTime || 9999999999999
-          } ORDER BY createTime DESC LIMIT 10 OFFSET ${10 * pageIndex}`,
+          } ORDER BY createTime DESC LIMIT 20 OFFSET ${20 * pageIndex}`,
         )
       : db.prepare(
           `select * from list_table where createTime <= ${
             searchTime || 9999999999999
-          } and content like '%${keyword}%' or tag like '%${keyword}%' ORDER BY createTime DESC LIMIT 10 OFFSET ${
-            10 * pageIndex
+          } and content like '%${keyword}%' or tag like '%${keyword}%' ORDER BY createTime DESC LIMIT 20 OFFSET ${
+            20 * pageIndex
           }`,
         );
 
