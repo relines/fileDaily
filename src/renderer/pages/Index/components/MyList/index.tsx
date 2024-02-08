@@ -78,8 +78,8 @@ export default function MyList(props: Iprops) {
   const onScroll = (e: React.UIEvent<HTMLElement, UIEvent>) => {
     setIsBottom(false);
     if (
-      e.currentTarget.scrollHeight - e.currentTarget.scrollTop <=
-      ContainerHeight + 31
+      e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
+      ContainerHeight
     ) {
       changeDataSource('more');
       setIsBottom(true);

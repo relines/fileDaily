@@ -89,6 +89,7 @@ export default {
             console.log('👉👉👉--------------->fileDaily目录创建成功');
           });
         }
+        resolve({});
       });
       // 查看workSpace/file文件夹是否存在，不存在则创建
       fs.access(`${workSpace}/file`, (err: any) => {
@@ -99,6 +100,7 @@ export default {
             console.log('👉👉👉--------------->file目录创建成功');
           });
         }
+        resolve({});
       });
     });
   },
@@ -203,7 +205,6 @@ export default {
     const oriList1 = oriList.filter((item: any) => destList.includes(item));
 
     // 第三类是没有的，需要复制
-    console.log(333, fileList);
     const newFileList = fileList
       .filter((item: any) => !oriList1.includes(item.name))
       .map((item: any) => {

@@ -19,6 +19,7 @@ export default function IndexCom() {
   const [isLast, setIsLast] = useState<boolean>(false);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>('');
+  const [searchTime, setSearchTime] = useState<any>();
 
   const pageIndexRef = useRef<number>(0);
 
@@ -94,9 +95,11 @@ export default function IndexCom() {
   // }, [activeItem, showCalendar]);
 
   const getData = async () => {
+    console.log(132, searchTime);
     const result = await window.electron.ipcRenderer.invoke('get-list', {
       pageIndex: pageIndexRef.current,
       keyword,
+      searchTime,
     });
     console.log(666, result);
     setTotal(result?.total || total);
@@ -147,7 +150,7 @@ export default function IndexCom() {
 
   useEffect(() => {
     changeDataSource('new');
-  }, []);
+  }, [searchTime]);
 
   return (
     <div className={styles.container}>
@@ -159,7 +162,10 @@ export default function IndexCom() {
       </div>
       {showCalendar && (
         <div className={`${styles.calendarContainer}`}>
-          <MyCalendar />
+          <MyCalendar
+            searchTime={searchTime}
+            changeSearchTime={setSearchTime}
+          />
         </div>
       )}
       <div className={`${styles.listContainer}`}>

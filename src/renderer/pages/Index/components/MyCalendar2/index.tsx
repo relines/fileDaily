@@ -14,8 +14,14 @@ import styles from './index.module.less';
 
 dayjs.locale('zh-cn');
 
-function ScrollCalendar() {
-  const [clickDay, setClickDay] = useState<any>(new Date());
+type Iprops = {
+  searchTime: any;
+  changeSearchTime: (val: any) => void;
+};
+
+export default function ScrollCalendar(props: Iprops) {
+  const { searchTime, changeSearchTime } = props;
+
   const calendarRef = useRef<HTMLDivElement>(null);
 
   const { windowHeight } = useWindowSize();
@@ -41,7 +47,7 @@ function ScrollCalendar() {
       }),
     );
     setSchedules(arr);
-    setClickDay(new Date());
+    changeSearchTime(dayjs(new Date()).endOf('day').valueOf());
     calendarRef.current?.scrollTo({ top: 1 });
   };
 
@@ -103,7 +109,7 @@ function ScrollCalendar() {
       {/* header */}
       <div className={styles.calendarHeader}>
         <span>
-          {dayjs(clickDay).format('YYYY年MM月DD日')} {getWeek(clickDay)}
+          {dayjs(searchTime).format('YYYY年MM月DD日')} {getWeek(searchTime)}
         </span>
         <span className={styles.backToday} onClick={backToday}>
           今天
@@ -145,11 +151,12 @@ function ScrollCalendar() {
                           dayjs(new Date()).format('YYYYMMDD') && styles.toDay
                       } ${
                         dayjs(item2).format('YYYYMMDD') ===
-                          dayjs(clickDay).format('YYYYMMDD') && styles.clickDay
+                          dayjs(searchTime).format('YYYYMMDD') &&
+                        styles.clickDay
                       }`}
                       onClick={() => {
                         if (!item2) return;
-                        setClickDay(item2);
+                        changeSearchTime(dayjs(item2).endOf('day').valueOf());
                       }}
                     >
                       {item2 ? item2.format('DD') : ''}
@@ -164,5 +171,3 @@ function ScrollCalendar() {
     </div>
   );
 }
-
-export default ScrollCalendar;
