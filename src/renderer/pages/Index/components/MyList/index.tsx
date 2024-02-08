@@ -78,6 +78,11 @@ export default function MyList(props: Iprops) {
 
   const onScroll = useCallback(
     debounce((e: any) => {
+      console.log(
+        123,
+        e.target.scrollHeight - e.target.scrollTop,
+        ContainerHeight,
+      );
       setIsBottom(false);
       if (e.target.scrollHeight - e.target.scrollTop === ContainerHeight) {
         changeDataSource('more');

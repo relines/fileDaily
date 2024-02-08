@@ -188,6 +188,7 @@ export default function IndexCom() {
           />
         </div>
       )}
+      <div className={`${styles.bottom}`}> </div>
     </div>
   );
 }

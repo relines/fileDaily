@@ -41,7 +41,6 @@ export default function MyEdit(props: Iprops) {
   const [chooseFileTimeModal, setChooseFileTimeModal] =
     useState<boolean>(false);
 
-  console.log(333, activeItem);
   const { windowHeight } = useWindowSize();
 
   const quillRef = useRef<any>();
