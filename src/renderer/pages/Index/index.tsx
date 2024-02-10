@@ -5,7 +5,7 @@ import { message } from 'antd';
 
 import HeaderCom from './components/Header';
 import MyCalendar from './components/MyCalendar2';
-import MyList from './components/MyList2';
+import MyList from './components/MyList';
 import MyEdit from './components/MyEdit';
 
 import useWindowSize from '../../hooks/useWindowSize';
@@ -16,7 +16,6 @@ export default function IndexCom() {
   const [activeItem, setActiveItem] = useState<any>({});
   const [tableData, setTableData] = useState<any[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const [isLast, setIsLast] = useState<boolean>(false);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>('');
   const [searchTime, setSearchTime] = useState<any>();
@@ -117,11 +116,9 @@ export default function IndexCom() {
       const result = await getData();
       if (result.data?.length) {
         setTableData(tableData.concat(result.data));
-        setIsLast(false);
         message.success('+10条数据');
       } else {
-        setIsLast(true);
-        // message.warning('没有更多数据了');
+        message.warning('没有更多数据了');
       }
     }
     if (type === 'new') {
@@ -171,7 +168,6 @@ export default function IndexCom() {
         <MyList
           dataSource={tableData}
           total={total}
-          isLast={isLast}
           keyword={keyword}
           changeKeyword={setKeyword}
           activeItem={activeItem}
