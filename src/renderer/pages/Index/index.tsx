@@ -5,7 +5,7 @@ import { message } from 'antd';
 
 import HeaderCom from './components/Header';
 import MyCalendar from './components/MyCalendar2';
-import MyList from './components/MyList';
+import MyList from './components/MyList2';
 import MyEdit from './components/MyEdit';
 
 import useWindowSize from '../../hooks/useWindowSize';

@@ -5,16 +5,16 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 
-import { List, Input, Dropdown, message } from 'antd';
+import { Input, Dropdown, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
-import VirtualList from 'rc-virtual-list';
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import dayjs from 'dayjs';
-import { debounce } from 'lodash-es';
 
 import FileListShowCom from '../../../../components/FileListShow';
 import useWindowSize from '../../../../hooks/useWindowSize';
@@ -47,11 +47,10 @@ export default function MyList(props: Iprops) {
   } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [isBottom, setIsBottom] = useState<boolean>(false);
 
   const { windowHeight } = useWindowSize();
 
-  const ContainerHeight = windowHeight === 0 ? 200 : windowHeight - 100;
+  const ContainerHeight = windowHeight === 0 ? 200 : windowHeight - 83;
 
   const addData = async () => {
     setLoading(true);
@@ -76,61 +75,51 @@ export default function MyList(props: Iprops) {
     changeDataSource('new');
   };
 
-  const onScroll = useCallback(
-    debounce((e: any) => {
-      console.log(
-        123,
-        e.target.scrollHeight - e.target.scrollTop,
-        ContainerHeight,
-      );
-      setIsBottom(false);
-      if (e.target.scrollHeight - e.target.scrollTop === ContainerHeight) {
-        changeDataSource('more');
-        setIsBottom(true);
-      }
-    }, 100),
-    [ContainerHeight],
-  );
-
   return (
     <div className={styles.listContainer}>
-      <List split={false}>
-        <div className={styles.header}>
-          <span>共{total}条</span>
-          <PlusCircleOutlined
-            disabled={loading}
-            style={{
-              cursor: 'pointer',
-              marginTop: '5px',
-              marginLeft: '5px',
-            }}
-            onClick={() => addData()}
-          />
-          <Input.Search
-            placeholder="input search text"
-            allowClear
-            size="small"
-            value={keyword}
-            onChange={(e: any) => {
-              changeKeyword(e.target.value);
-            }}
-            onSearch={(val, e, info) => {
-              if (info?.source === 'clear') return;
-              changeDataSource('new');
-            }}
-            style={{ width: 200, height: '20px', float: 'right' }}
-          />
-        </div>
-        <div className={styles.liner}> </div>
-        <VirtualList
-          data={dataSource}
-          height={ContainerHeight}
-          itemHeight={50}
-          itemKey="code"
-          onScroll={onScroll}
-        >
-          {(item: any, index: number) => (
-            <List.Item key={item.code} className={styles.listItem}>
+      <div className={styles.header}>
+        <span>共{total}条</span>
+        <PlusCircleOutlined
+          disabled={loading}
+          style={{
+            cursor: 'pointer',
+            marginTop: '5px',
+            marginLeft: '5px',
+          }}
+          onClick={() => addData()}
+        />
+        <Input.Search
+          placeholder="input search text"
+          allowClear
+          size="small"
+          value={keyword}
+          onChange={(e: any) => {
+            changeKeyword(e.target.value);
+          }}
+          onSearch={(val, e, info) => {
+            if (info?.source === 'clear') return;
+            changeDataSource('new');
+          }}
+          style={{ width: 200, height: '20px', float: 'right' }}
+        />
+      </div>
+      <div className={styles.liner}> </div>
+      <InfiniteScroll
+        dataLength={dataSource.length}
+        next={() => {
+          changeDataSource('more');
+        }}
+        hasMore={dataSource.length < total}
+        loader={<h4>Loading...</h4>}
+        height={ContainerHeight}
+        className={styles.scrollContainer}
+        endMessage={
+          <div className={styles.listBottom}>学到的知识越多，遗憾就越少</div>
+        }
+      >
+        {dataSource.map((item: any, index: number) => {
+          return (
+            <div key={item.code} className={styles.listItem}>
               <div className={styles.timeLine}>
                 <div className={styles.left}>
                   {dayjs(item.createTime).format('DD')}
@@ -249,15 +238,10 @@ export default function MyList(props: Iprops) {
                   </span>
                 </div>
               </div>
-            </List.Item>
-          )}
-        </VirtualList>
-      </List>
-      {isLast && isBottom ? (
-        <div className={styles.listBottom}>学到的知识越多，遗憾就越少</div>
-      ) : (
-        <div className={styles.listBottomEmpty}> </div>
-      )}
+            </div>
+          );
+        })}
+      </InfiniteScroll>
     </div>
   );
 }
