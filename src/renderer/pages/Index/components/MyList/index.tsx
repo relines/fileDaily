@@ -26,7 +26,6 @@ require('dayjs/locale/zh-cn');
 type Iprops = {
   dataSource: any[];
   total: number;
-  isLast: boolean;
   keyword: string;
   changeKeyword: (val: string) => void;
   activeItem: any;

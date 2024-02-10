@@ -60,6 +60,7 @@ export default {
     return resp.filePaths[0];
   },
   async openFolder(val: any) {
+    console.log(333, val);
     exec(`open -R ${val}`);
   },
   async chooseFile() {
