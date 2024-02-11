@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useState, useEffect, useRef } from 'react';
 
 import { message } from 'antd';
@@ -90,7 +89,6 @@ export default function IndexCom() {
   //       height: windowHeight + 26,
   //     });
   //   }
-  //   console.log(777, showCalendar, activeItem.code, windowWidth);
   // }, [activeItem, showCalendar]);
 
   const getData = async () => {
@@ -99,13 +97,12 @@ export default function IndexCom() {
       keyword,
       searchTime,
     });
-    console.log(666, result);
     setTotal(result?.total || total);
     return result;
   };
 
   const changeDataSource = async (
-    type: 'more' | 'new' | 'save',
+    type: 'more' | 'new' | 'save' | 'rename',
     data?: any,
   ) => {
     // more: 下拉刷新, pageIndex += 1,然后获取tableData；
@@ -141,6 +138,15 @@ export default function IndexCom() {
       });
       setTableData(newData);
       setActiveItem(data);
+    }
+    if (type === 'rename') {
+      const newData = tableData.map((item: any) => {
+        if (item.code === data?.code) {
+          return data;
+        }
+        return item;
+      });
+      setTableData(newData);
     }
   };
 

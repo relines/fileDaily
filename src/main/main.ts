@@ -1,5 +1,3 @@
-/* eslint-disable global-require */
-/* eslint-disable promise/always-return */
 import { app, BrowserWindow, shell, ipcMain, protocol, net } from 'electron';
 import path from 'path';
 import { autoUpdater } from 'electron-updater';
@@ -72,7 +70,6 @@ const ipcFunc = () => {
 
   ipcMain.handle('update-data', async (event, message) => {
     let copyResult = { ...message.data };
-
     if (message.categoryChanged) {
       copyResult = await fileApi.copyAllFileList(message);
     } else {
@@ -80,6 +77,11 @@ const ipcFunc = () => {
     }
 
     const result = listApi.updateList(copyResult);
+    return result;
+  });
+
+  ipcMain.handle('update-file-list', async (event, message) => {
+    const result = listApi.updateFileList(message);
     return result;
   });
 
@@ -183,6 +185,10 @@ const ipcFunc = () => {
     return {
       data: resp,
     };
+  });
+  ipcMain.handle('change-file-name', (event, message) => {
+    const result = fileApi.changeFileName(message);
+    return result;
   });
 
   // 窗口操作

@@ -108,6 +108,32 @@ export default {
       return { code: 400, msg: error };
     }
   },
+  updateFileList(params: any) {
+    const { code, fileList } = params;
+    const db = connect();
+
+    const stmInquire = db.prepare(
+      `select * from list_table where code = @code`,
+    );
+    const stmUpdate = db.prepare(
+      `UPDATE list_table SET fileList = @fileListJson WHERE code = @code`,
+    );
+    const fileListJson = JSON.stringify(fileList);
+
+    try {
+      stmUpdate.run({
+        code,
+        fileListJson,
+      });
+      const item = stmInquire.get({ code });
+      if (!item) {
+        return { code: 201, msg: '没有查到code', data: item };
+      }
+      return { code: 200, msg: '成功', data: item };
+    } catch (error) {
+      return { code: 400, msg: error };
+    }
+  },
   delList(params: any) {
     const { code } = params;
     const db = connect();

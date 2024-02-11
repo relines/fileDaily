@@ -1,10 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-lonely-if */
-/* eslint-disable import/no-cycle */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable promise/always-return */
-/* eslint-disable promise/catch-or-return */
 import React, { useState } from 'react';
 
 import { Input, Dropdown, message } from 'antd';
@@ -30,7 +23,10 @@ type Iprops = {
   changeKeyword: (val: string) => void;
   activeItem: any;
   changeActiveItem: any;
-  changeDataSource: (type: 'more' | 'new' | 'save', data?: any) => void;
+  changeDataSource: (
+    type: 'more' | 'new' | 'save' | 'rename',
+    data?: any,
+  ) => void;
 };
 
 export default function MyList(props: Iprops) {
@@ -215,8 +211,8 @@ export default function MyList(props: Iprops) {
                 </Dropdown>
 
                 <FileListShowCom
-                  dataSource={item.fileList ? JSON.parse(item.fileList) : []}
-                  changeDataSource={() => {}}
+                  dataSource={item}
+                  changeDataSource={changeDataSource}
                 />
 
                 <div

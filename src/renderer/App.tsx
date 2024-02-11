@@ -1,3 +1,4 @@
+import { App } from 'antd';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -12,13 +13,15 @@ function Hello() {
   );
 }
 
-export default function App() {
+export default function AppCom() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Hello />} />
-        <Route path="/view" element={<ViewCom />} />
-      </Routes>
-    </Router>
+    <App>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Hello />} />
+          <Route path="/view" element={<ViewCom />} />
+        </Routes>
+      </Router>
+    </App>
   );
 }

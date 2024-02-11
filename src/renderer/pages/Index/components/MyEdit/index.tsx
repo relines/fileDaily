@@ -24,7 +24,10 @@ import styles from './index.module.less';
 type Iprops = {
   activeItem: any;
   changeActiveItem: (val: any) => void;
-  changeDataSource: (type: 'more' | 'new' | 'save', data?: any) => void;
+  changeDataSource: (
+    type: 'more' | 'new' | 'save' | 'rename',
+    data?: any,
+  ) => void;
 };
 
 export default function MyEdit(props: Iprops) {

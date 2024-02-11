@@ -88,7 +88,7 @@ export default function Index(props: Iprops) {
                         删除
                       </div>
                     ),
-                    key: 'edit',
+                    key: 'del',
                   },
                 ],
               }}

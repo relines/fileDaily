@@ -60,7 +60,6 @@ export default {
     return resp.filePaths[0];
   },
   async openFolder(val: any) {
-    console.log(333, val);
     exec(`open -R ${val}`);
   },
   async chooseFile() {
@@ -104,6 +103,14 @@ export default {
         resolve({});
       });
     });
+  },
+  changeFileName(val: any) {
+    try {
+      fs.renameSync(`${val.url}${val.originName}`, `${val.url}${val.newName}`);
+    } catch (err) {
+      return { code: 200, msg: err, data: val };
+    }
+    return { code: 200, msg: '', data: val };
   },
   getVideoPath() {
     const videoPath = '/Users/popmart/Documents/fileDaily/file/oceans.mp4';
