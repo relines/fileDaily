@@ -187,6 +187,7 @@ export default function HeaderCom(props: Iprops) {
           marginLeft: '-10px',
         }}
         size="small"
+        popupMatchSelectWidth={false}
         options={categoryOption}
         onChange={(val) => {
           changeCategory(val);

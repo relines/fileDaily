@@ -1,7 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useState, useEffect } from 'react';
 
 import {
@@ -77,7 +73,6 @@ export default function HeaderCom(props: Iprops) {
 
   const updateTag = async () => {
     const values = addForm.getFieldsValue();
-    console.log(1234, values);
     const resp = await window.electron.ipcRenderer.invoke('update-tag', {
       ...values,
       id: editRecord.id,
@@ -312,14 +307,15 @@ export default function HeaderCom(props: Iprops) {
         title="标签选择"
         open={showTagChooseModal}
         width={400}
-        onOk={() => {
-          // changeTag(formVal.name);
-          setShowTagChooseModal(false);
-        }}
-        onCancel={() => {
-          changeTag([]);
-          setShowTagChooseModal(false);
-        }}
+        footer={[
+          <Button
+            key="ok"
+            type="primary"
+            onClick={() => setShowTagChooseModal(false)}
+          >
+            ok
+          </Button>,
+        ]}
       >
         <Checkbox.Group
           options={tagOption}
