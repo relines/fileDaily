@@ -1,8 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useEffect, useState } from 'react';
 
 import { Form, Modal, DatePicker } from 'antd';
@@ -32,7 +27,17 @@ export default function HeaderCom(props: Iprops) {
 
   return (
     <div className={styles.timeContainer} style={style}>
-      <span>时间：</span>
+      <span
+        style={{
+          userSelect: 'none',
+          cursor: 'pointer',
+        }}
+        onClick={() => {
+          changeTime(dayjs(new Date()).valueOf());
+        }}
+      >
+        时间：
+      </span>
       <span onClick={() => setShowTimeChooseModal(true)}>
         {dayjs(time).format('YYYY-MM-DD HH:mm:ss') || '-'}
       </span>
