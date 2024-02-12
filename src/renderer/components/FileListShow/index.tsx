@@ -95,6 +95,8 @@ export default function FileListShow(props: Iprops) {
     }
   }, [fileList]);
 
+  console.log(123, fileList);
+
   return (
     <App>
       <ReactSortable

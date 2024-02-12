@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useState, useEffect, useRef } from 'react';
 
+import Draggable from 'react-draggable';
 import useWindowSize from '../../hooks/useWindowSize';
 
 import styles from './index.module.less';
@@ -16,6 +17,7 @@ export default function ViewCom() {
   const zoomCount = useRef<number>(1);
 
   const getDataSource = () => {
+    console.log(3, localStorage.getItem('activeOrder'));
     setFileList(JSON.parse(localStorage.getItem('fileList') || '[]'));
     setCur(Number(localStorage.getItem('activeOrder')) - 1);
   };
@@ -95,88 +97,97 @@ export default function ViewCom() {
   return (
     <div className={styles.viewContainer}>
       <div className={styles.header}>123</div>
+
       <div className={styles.viewItem}>
         {fileList?.map((item: any, index: number) => {
           if (item.type === 'img' && index === cur) {
             return (
-              <div
-                key={item.order}
-                className={styles.itemContainer}
-                onWheel={(e: any) => {
-                  zoomCount.current -= e.deltaY * 0.0001;
-                  if (zoomCount.current < 0.1) {
-                    zoomCount.current = 0.1;
-                  }
-                  if (zoomCount.current > 10) {
-                    zoomCount.current = 10;
-                  }
-                  contentRef.current[
-                    `${item.order}`
-                  ].style.transform = `scale(${zoomCount.current})`;
-                }}
-              >
+              <Draggable key={item.order} handle=".handle">
                 <div
-                  className={styles.item}
-                  key={item.order}
-                  ref={(r: any) => {
-                    contentRef.current[`${item.order}`] = r;
+                  className={styles.itemContainer}
+                  onWheel={(e: any) => {
+                    zoomCount.current -= e.deltaY * 0.0001;
+                    if (zoomCount.current < 0.1) {
+                      zoomCount.current = 0.1;
+                    }
+                    if (zoomCount.current > 10) {
+                      zoomCount.current = 10;
+                    }
+                    contentRef.current[
+                      `${item.order}`
+                    ].style.transform = `scale(${zoomCount.current})`;
                   }}
+                  onClick={(e) => e.preventDefault()}
                 >
-                  <img
-                    src={`atom://${item.url}`}
-                    alt=""
+                  <div
+                    className={`${styles.item} handle`}
+                    key={item.order}
+                    title={`atom://${item.url}`}
                     ref={(r: any) => {
-                      fileRef.current[`${item.order}`] = r;
+                      contentRef.current[`${item.order}`] = r;
                     }}
-                    className={styles.content}
-                  />
+                  >
+                    <img
+                      src={`atom://${item.url}`}
+                      alt=""
+                      ref={(r: any) => {
+                        fileRef.current[`${item.order}`] = r;
+                      }}
+                      style={{
+                        pointerEvents: 'none',
+                      }}
+                      className={styles.content}
+                    />
+                  </div>
                 </div>
-              </div>
+              </Draggable>
             );
           }
           if (item.type === 'video' && index === cur) {
             return (
-              <div
-                key={item.order}
-                className={styles.itemContainer}
-                onWheel={(e: any) => {
-                  zoomCount.current -= e.deltaY * 0.0001;
-                  if (zoomCount.current < 0.1) {
-                    zoomCount.current = 0.1;
-                  }
-                  if (zoomCount.current > 10) {
-                    zoomCount.current = 10;
-                  }
-                  contentRef.current[
-                    `${item.order}`
-                  ].style.transform = `scale(${zoomCount.current})`;
-                }}
-              >
+              <Draggable key={item.order}>
                 <div
-                  key={item.name}
-                  ref={(r: any) => {
-                    contentRef.current[`${item.order}`] = r;
+                  className={styles.itemContainer}
+                  onWheel={(e: any) => {
+                    zoomCount.current -= e.deltaY * 0.0001;
+                    if (zoomCount.current < 0.1) {
+                      zoomCount.current = 0.1;
+                    }
+                    if (zoomCount.current > 10) {
+                      zoomCount.current = 10;
+                    }
+                    contentRef.current[
+                      `${item.order}`
+                    ].style.transform = `scale(${zoomCount.current})`;
                   }}
-                  className={styles.item}
                 >
-                  <video
-                    controls
-                    muted
-                    loop
-                    width="100%"
-                    className={styles.content}
+                  <div
+                    key={item.name}
                     ref={(r: any) => {
-                      fileRef.current[`${item.order}`] = r;
+                      contentRef.current[`${item.order}`] = r;
                     }}
+                    title={`atom://${item.url}`}
+                    className={styles.item}
                   >
-                    <source
-                      // src="http://vjs.zencdn.net/v/oceans.mp4"
-                      src={`atom://${item.url}`}
-                      type="video/mp4"
-                    />
-                  </video>
+                    <video
+                      controls
+                      muted
+                      loop
+                      width="100%"
+                      className={styles.content}
+                      ref={(r: any) => {
+                        fileRef.current[`${item.order}`] = r;
+                      }}
+                    >
+                      <source
+                        // src="http://vjs.zencdn.net/v/oceans.mp4"
+                        src={`atom://${item.url}`}
+                        type="video/mp4"
+                      />
+                    </video>
+                  </div>
                 </div>
-              </div>
+              </Draggable>
             );
           }
           return null;

@@ -85,7 +85,7 @@ export default function MyEdit(props: Iprops) {
           name: item.parseUrl.base,
           type: item.parseUrl.ext === '.mp4' ? 'video' : 'img',
           url: item.url,
-          order: index + 1,
+          order: fileList.length + index + 1,
         };
       }) || [];
     if (fileTimeArr && fileTimeArr.length !== 0) {

@@ -18,6 +18,7 @@ module.exports = {
     'promise/always-return': 'off',
     'global-require': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
+    'import/prefer-default-export': 'off',
     'promise/no-callback-in-promise': 'off',
     'react-hooks/exhaustive-deps': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
