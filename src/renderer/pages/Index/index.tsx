@@ -53,44 +53,6 @@ export default function IndexCom() {
     }
   }, [activeItem, showCalendar]);
 
-  // useEffect(() => {
-  //   if (!activeItem) return;
-  //   if (windowWidth === 0 || windowHeight === 0) return;
-
-  //   if (showCalendar && activeItem.code && windowWidth < 1270) {
-  //     window.electron.ipcRenderer.send('change-window-size', {
-  //       width: 1270,
-  //       height: windowHeight + 26,
-  //     });
-  //   }
-  //   if (!showCalendar && activeItem.code && windowWidth < 810) {
-  //     window.electron.ipcRenderer.send('change-window-size', {
-  //       width: 810,
-  //       height: windowHeight + 26,
-  //     });
-  //   }
-
-  //   if (!activeItem.code && windowWidth > 800) {
-  //     window.electron.ipcRenderer.send('change-window-size', {
-  //       width: windowWidth - 500,
-  //       height: windowHeight + 30,
-  //     });
-  //     return;
-  //   }
-  //   if (showCalendar && windowWidth < 1276) {
-  //     window.electron.ipcRenderer.send('change-window-size', {
-  //       width: 1276,
-  //       height: windowHeight + 26,
-  //     });
-  //   }
-  //   if (!showCalendar && windowWidth < 870) {
-  //     window.electron.ipcRenderer.send('change-window-size', {
-  //       width: 876,
-  //       height: windowHeight + 26,
-  //     });
-  //   }
-  // }, [activeItem, showCalendar]);
-
   const getData = async () => {
     const result = await window.electron.ipcRenderer.invoke('get-list', {
       pageIndex: pageIndexRef.current,
@@ -113,7 +75,7 @@ export default function IndexCom() {
       const result = await getData();
       if (result.data?.length) {
         setTableData(tableData.concat(result.data));
-        message.success('+10条数据');
+        message.success('+20条数据');
       } else {
         message.warning('没有更多数据了');
       }
@@ -123,7 +85,7 @@ export default function IndexCom() {
       const result = await getData();
       setTableData(result.data);
       if (result.data?.length) {
-        message.success('获取到前10条数据');
+        message.success('获取到前20条数据');
       } else {
         setTableData(result.data);
         message.warning('暂无数据');

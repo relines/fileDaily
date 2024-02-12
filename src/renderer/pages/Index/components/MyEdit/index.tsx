@@ -44,7 +44,7 @@ export default function MyEdit(props: Iprops) {
   const [chooseFileTimeModal, setChooseFileTimeModal] =
     useState<boolean>(false);
 
-  const { windowHeight } = useWindowSize();
+  const { windowWidth, windowHeight } = useWindowSize();
 
   const quillRef = useRef<any>();
 
@@ -141,6 +141,10 @@ export default function MyEdit(props: Iprops) {
           }}
           onClick={() => {
             changeActiveItem({});
+            window.electron.ipcRenderer.send('change-window-size', {
+              width: windowWidth - 450,
+              height: windowHeight + 28,
+            });
           }}
         >
           取消

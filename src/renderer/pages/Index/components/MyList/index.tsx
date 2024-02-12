@@ -42,7 +42,7 @@ export default function MyList(props: Iprops) {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { windowHeight } = useWindowSize();
+  const { windowWidth, windowHeight } = useWindowSize();
 
   const ContainerHeight = windowHeight === 0 ? 200 : windowHeight - 73;
 
@@ -183,8 +183,16 @@ export default function MyList(props: Iprops) {
                     onClick={() => {
                       if (activeItem.code && activeItem.code === item.code) {
                         changeActiveItem({});
+                        window.electron.ipcRenderer.send('change-window-size', {
+                          width: windowWidth - 480,
+                          height: windowHeight + 28,
+                        });
                       } else {
                         changeActiveItem(item);
+                        window.electron.ipcRenderer.send('change-window-size', {
+                          width: windowWidth + 480,
+                          height: windowHeight + 28,
+                        });
                       }
                     }}
                   >
@@ -220,8 +228,16 @@ export default function MyList(props: Iprops) {
                   onClick={() => {
                     if (activeItem.code && activeItem.code === item.code) {
                       changeActiveItem({});
+                      window.electron.ipcRenderer.send('change-window-size', {
+                        width: windowWidth - 480,
+                        height: windowHeight + 28,
+                      });
                     } else {
                       changeActiveItem(item);
+                      window.electron.ipcRenderer.send('change-window-size', {
+                        width: windowWidth + 480,
+                        height: windowHeight + 28,
+                      });
                     }
                   }}
                 >

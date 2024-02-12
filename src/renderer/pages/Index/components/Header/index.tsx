@@ -25,22 +25,6 @@ export default function HeaderCom(props: Iprops) {
 
   const { windowWidth, windowHeight } = useWindowSize();
 
-  useEffect(() => {
-    if (windowWidth === 0 || windowHeight === 0) return;
-    // if (showCalendar && windowWidth < 500) {
-    //   window.electron.ipcRenderer.send('change-window-size', {
-    //     width: windowWidth + 500,
-    //     height: windowHeight + 26,
-    //   });
-    // }
-    if (!showCalendar && windowWidth > 800) {
-      window.electron.ipcRenderer.send('change-window-size', {
-        width: windowWidth - 400,
-        height: windowHeight + 30,
-      });
-    }
-  }, [showCalendar]);
-
   const workSpace = window.electron.ipcRenderer.getStoreValue('workSpace');
 
   window.electron.ipcRenderer.on('mainWindowResize', (arg) => {
@@ -79,6 +63,17 @@ export default function HeaderCom(props: Iprops) {
               label: (
                 <div
                   onClick={() => {
+                    if (showCalendar) {
+                      window.electron.ipcRenderer.send('change-window-size', {
+                        width: windowWidth - 480,
+                        height: windowHeight + 28,
+                      });
+                    } else {
+                      window.electron.ipcRenderer.send('change-window-size', {
+                        width: windowWidth + 480,
+                        height: windowHeight + 28,
+                      });
+                    }
                     changeShowCalendar(!showCalendar);
                   }}
                 >
