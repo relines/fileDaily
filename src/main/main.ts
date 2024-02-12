@@ -37,16 +37,12 @@ const openViewWindow = () => {
     title: 'view',
     autoHideMenuBar: true,
     webPreferences: {
-      // 禁用同源策略，允许跨域
-      webSecurity: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
   });
   viewWindow.loadURL(`${resolveHtmlPath('index.html')}?page=view`);
-
-  viewWindow.webContents.openDevTools();
 
   viewWindow.on('close', () => {
     viewWindow = null;
@@ -257,8 +253,6 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
-
-  mainWindow.webContents.openDevTools();
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
