@@ -1,4 +1,3 @@
-/* eslint-disable global-require */
 // import { app } from 'electron';
 import sqlite from 'better-sqlite3';
 import path from 'path';

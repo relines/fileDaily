@@ -1,7 +1,3 @@
-/* eslint-disable no-plusplus */
-/* eslint-disable func-names */
-/* eslint-disable no-undef */
-/* eslint-disable no-restricted-syntax */
 import path from 'path';
 // import exif from 'exif';
 // const ffmpeg = require('fluent-ffmpeg');
