@@ -83,7 +83,9 @@ export default function MyEdit(props: Iprops) {
       resp?.map((item: any, index: number) => {
         return {
           name: item.parseUrl.base,
+          base: item.parseUrl.name,
           type: item.parseUrl.ext === '.mp4' ? 'video' : 'img',
+          ext: item.parseUrl.ext,
           url: item.url,
           order: fileList.length + index + 1,
         };
