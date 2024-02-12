@@ -17,7 +17,6 @@ export default function ViewCom() {
   const zoomCount = useRef<number>(1);
 
   const getDataSource = () => {
-    console.log(3, localStorage.getItem('activeOrder'));
     setFileList(JSON.parse(localStorage.getItem('fileList') || '[]'));
     setCur(Number(localStorage.getItem('activeOrder')) - 1);
   };
@@ -96,7 +95,7 @@ export default function ViewCom() {
 
   return (
     <div className={styles.viewContainer}>
-      <div className={styles.header}>123</div>
+      {/* <div className={styles.header}>123</div> */}
 
       <div className={styles.viewItem}>
         {fileList?.map((item: any, index: number) => {
