@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Dropdown, Form, App } from 'antd';
+import { Dropdown, Form, message } from 'antd';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 
 import { ReactSortable } from 'react-sortablejs';
+import dayjs from 'dayjs';
 
 import { RightCircleOutlined } from '@ant-design/icons';
 
@@ -22,7 +23,7 @@ type Iprops = {
 export default function FileListShow(props: Iprops) {
   const { dataSource, changeDataSource } = props;
 
-  const { message } = App.useApp();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [imgCol, setImgCol] = useState<number>(1);
   const [modalShow, setModalShow] = useState(false);
@@ -45,8 +46,29 @@ export default function FileListShow(props: Iprops) {
       'update-file-list',
       val,
     );
-    message.success('保存成功');
+    messageApi.open({
+      type: 'success',
+      content: '保存成功',
+    });
     changeDataSource('rename', result?.data);
+  };
+
+  const updateCalendar = async (date: string, url: string) => {
+    const resp = await window.electron.ipcRenderer.invoke('update-calendar', {
+      date,
+      url,
+    });
+    if (resp.code === 200) {
+      messageApi.open({
+        type: 'success',
+        content: '保存成功',
+      });
+    } else {
+      messageApi.open({
+        type: 'error',
+        content: resp.msg,
+      });
+    }
   };
 
   const changeFileName = async (values: any) => {
@@ -56,7 +78,10 @@ export default function FileListShow(props: Iprops) {
       url,
     });
     if (resp.code === 200) {
-      message.success('修改成功');
+      messageApi.open({
+        type: 'success',
+        content: '修改成功',
+      });
       const newFileList = fileList.map((item: any) => {
         if (item.name === values.originName) {
           item.name = values.newName;
@@ -70,7 +95,10 @@ export default function FileListShow(props: Iprops) {
       });
       setModalShow(false);
     } else {
-      message.error(resp.msg);
+      messageApi.open({
+        type: 'error',
+        content: resp.msg,
+      });
     }
   };
 
@@ -96,7 +124,8 @@ export default function FileListShow(props: Iprops) {
   }, [fileList]);
 
   return (
-    <App>
+    <div>
+      {contextHolder}
       <ReactSortable
         list={fileList}
         setList={() => {}}
@@ -151,6 +180,27 @@ export default function FileListShow(props: Iprops) {
                         </div>
                       ),
                       key: 'rename',
+                    },
+                    {
+                      label: (
+                        <div
+                          style={{
+                            width: '86px',
+                            height: '15px',
+                            lineHeight: '15px',
+                            textAlign: 'center',
+                          }}
+                          onClick={() => {
+                            const date = dayjs(dataSource.createTime).format(
+                              'YYYY-MM-DD',
+                            );
+                            updateCalendar(date, item.url);
+                          }}
+                        >
+                          设为日历图
+                        </div>
+                      ),
+                      key: 'calendar',
                     },
                   ],
                 }}
@@ -324,6 +374,6 @@ export default function FileListShow(props: Iprops) {
           placeholder="请输入名称"
         />
       </ModalForm>
-    </App>
+    </div>
   );
 }

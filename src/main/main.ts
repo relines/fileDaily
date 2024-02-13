@@ -9,6 +9,7 @@ import listApi from './database/listApi';
 import categoryApi from './database/categoryApi';
 import tagApi from './database/tagApi';
 import addressApi from './database/addressApi';
+import calendarApi from './database/calendarApi';
 import fileApi from './file/index';
 
 const Store = require('electron-store');
@@ -94,6 +95,16 @@ const ipcFunc = () => {
   });
   ipcMain.handle('search-list', async (event, message) => {
     const result = listApi.getList(message);
+    return result;
+  });
+
+  // calendar操作
+  ipcMain.handle('get-calendar', async (event, message) => {
+    const result = calendarApi.getCalendar(message);
+    return result;
+  });
+  ipcMain.handle('update-calendar', async (event, message) => {
+    const result = calendarApi.updateCalendar(message);
     return result;
   });
 

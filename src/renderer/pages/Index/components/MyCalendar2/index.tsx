@@ -39,6 +39,34 @@ export default function ScrollCalendar(props: Iprops) {
     );
   });
 
+  const getCalendarInfo = async (month: any) => {
+    console.log(
+      333,
+      month,
+      dayjs(month[0]).format('YYYY-MM-01').startOf('day'),
+    );
+    const resp = await window.electron.ipcRenderer.invoke('get-calendar', {
+      month,
+    });
+    console.log(666, resp);
+    // if (resp.code === 200) {
+    //   messageApi.open({
+    //     type: 'success',
+    //     content: '保存成功',
+    //   });
+    // } else {
+    //   messageApi.open({
+    //     type: 'error',
+    //     content: resp.msg,
+    //   });
+    // }
+  };
+
+  useEffect(() => {
+    console.log(132, schedules);
+    getCalendarInfo(schedules.map((item: any) => item.month));
+  }, [schedules]);
+
   const backToday = () => {
     const arr = [dayjs(), dayjs().add(1, 'month'), dayjs().add(2, 'month')].map(
       (month) => ({

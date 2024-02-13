@@ -58,6 +58,15 @@ export function initDatabase() {
       createTime int
     )`);
   }
+  if (!tables.includes('calendar_table')) {
+    db.exec(`create table if not exists calendar_table (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      date varchar(20),
+      url varchar(500),
+      tag varchar(200),
+      content varchar(500)
+    )`);
+  }
 
   // db.exec(`DROP TABLE cats`)//删除表
 }
