@@ -63,17 +63,6 @@ export default function HeaderCom(props: Iprops) {
               label: (
                 <div
                   onClick={() => {
-                    if (showCalendar) {
-                      window.electron.ipcRenderer.send('change-window-size', {
-                        width: windowWidth - 480,
-                        height: windowHeight + 28,
-                      });
-                    } else {
-                      window.electron.ipcRenderer.send('change-window-size', {
-                        width: windowWidth + 480,
-                        height: windowHeight + 28,
-                      });
-                    }
                     changeShowCalendar(!showCalendar);
                   }}
                 >

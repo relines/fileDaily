@@ -13,14 +13,11 @@ function MyCalendar() {
     <div>
       <Calendar
         onChange={(val: any) => {
-          console.log(132, val, val.getMonth() + 1);
           const solar2lunarData = solarLunar.solar2lunar(
             val.getFullYear(),
             Number(val.getMonth()) + 1,
             val.getDate(),
           );
-          console.log(3, val.getFullYear(), val.getMonth() + 1, val.getDate());
-          console.log(333, solar2lunarData);
           setVal(val);
         }}
         className={styles.myCalendar}
@@ -35,7 +32,6 @@ function MyCalendar() {
           }
         }}
         tileContent={({ date, view }) => {
-          // console.log(1, date, view, date.getMonth());
           const solar2lunarData = solarLunar.solar2lunar(
             date.getFullYear(),
             date.getMonth() + 1,

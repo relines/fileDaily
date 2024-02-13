@@ -27,28 +27,28 @@ export default function IndexCom() {
     if (!activeItem) return;
     if (windowWidth === 0 || windowHeight === 0) return;
 
-    if (showCalendar && activeItem.code && windowWidth !== 1270) {
+    if (showCalendar && activeItem.code) {
       window.electron.ipcRenderer.send('change-window-size', {
         width: 1270,
-        height: windowHeight + 26,
+        height: windowHeight + 28,
       });
     }
-    if (!showCalendar && !activeItem.code && windowWidth < 300) {
-      window.electron.ipcRenderer.send('change-window-size', {
-        width: 300,
-        height: windowHeight + 26,
-      });
-    }
-    if (!showCalendar && activeItem.code && windowWidth !== 810) {
-      window.electron.ipcRenderer.send('change-window-size', {
-        width: 810,
-        height: windowHeight + 26,
-      });
-    }
-    if (showCalendar && !activeItem.code && windowWidth !== 751) {
+    if (showCalendar && !activeItem.code) {
       window.electron.ipcRenderer.send('change-window-size', {
         width: 750,
-        height: windowHeight + 26,
+        height: windowHeight + 28,
+      });
+    }
+    if (!showCalendar && activeItem.code) {
+      window.electron.ipcRenderer.send('change-window-size', {
+        width: 810,
+        height: windowHeight + 28,
+      });
+    }
+    if (!showCalendar && !activeItem.code) {
+      window.electron.ipcRenderer.send('change-window-size', {
+        width: 300,
+        height: windowHeight + 28,
       });
     }
   }, [activeItem, showCalendar]);
@@ -59,7 +59,7 @@ export default function IndexCom() {
       keyword,
       searchTime,
     });
-    setTotal(result?.total || total);
+    setTotal(result?.total);
     return result;
   };
 

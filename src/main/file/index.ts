@@ -208,7 +208,6 @@ export default {
     // 第二类是已经存在的，不需要操作，跳过即可；
     const oriList1 = oriList.filter((item: any) => destList.includes(item));
 
-    console.log(6, fileList);
     // 第三类是没有的，需要复制
     const newFileList = fileList
       .filter((item: any) => !oriList1.includes(item.name))
@@ -216,7 +215,6 @@ export default {
         const random4 = Math.floor(1000 + Math.random() * 9000);
         const destUrl = `${destDir}/${item.base}-${code}-${random4}${item.ext}`;
 
-        console.log(7, item.url, destUrl);
         fs.createReadStream(item.url).pipe(fs.createWriteStream(destUrl));
         return {
           ...item,
