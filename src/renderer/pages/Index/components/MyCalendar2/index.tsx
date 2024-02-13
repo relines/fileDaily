@@ -1,8 +1,7 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable react/no-array-index-key */
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+
+import { message } from 'antd';
+
 import dayjs, { Dayjs } from 'dayjs';
 import { debounce } from 'lodash-es';
 import { getDaysOfMonth, getWeek } from './utils';
@@ -22,9 +21,14 @@ type Iprops = {
 export default function ScrollCalendar(props: Iprops) {
   const { searchTime, changeSearchTime } = props;
 
+  const [fileList, setFileList] = useState<any[]>([]);
+
   const calendarRef = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<any>({});
 
   const { windowHeight } = useWindowSize();
+
+  const [messageApi, contextHolder] = message.useMessage();
 
   const getDays = useCallback((month: Dayjs) => {
     return getDaysOfMonth(month.year(), month.month() + 1);
@@ -35,36 +39,29 @@ export default function ScrollCalendar(props: Iprops) {
       (month) => ({
         month,
         days: getDays(month),
+        url: '',
       }),
     );
   });
 
   const getCalendarInfo = async (month: any) => {
-    console.log(
-      333,
-      month,
-      dayjs(month[0]).format('YYYY-MM-01').startOf('day'),
-    );
     const resp = await window.electron.ipcRenderer.invoke('get-calendar', {
       month,
     });
-    console.log(666, resp);
-    // if (resp.code === 200) {
-    //   messageApi.open({
-    //     type: 'success',
-    //     content: '保存成功',
-    //   });
-    // } else {
-    //   messageApi.open({
-    //     type: 'error',
-    //     content: resp.msg,
-    //   });
-    // }
+    if (resp.code === 200) {
+      setFileList(resp.data);
+    } else {
+      messageApi.open({
+        type: 'error',
+        content: resp.msg,
+      });
+    }
   };
 
   useEffect(() => {
-    console.log(132, schedules);
-    getCalendarInfo(schedules.map((item: any) => item.month));
+    getCalendarInfo(
+      schedules.map((item: any) => dayjs(item.month).format('YYYY-MM')),
+    );
   }, [schedules]);
 
   const backToday = () => {
@@ -72,6 +69,7 @@ export default function ScrollCalendar(props: Iprops) {
       (month) => ({
         month,
         days: getDays(month),
+        url: '',
       }),
     );
     setSchedules(arr);
@@ -100,6 +98,7 @@ export default function ScrollCalendar(props: Iprops) {
           const prevSchedule = {
             month: prevMonth,
             days: getDays(prevMonth),
+            url: '',
           };
           return [prevSchedule, ...schedule];
         });
@@ -119,6 +118,7 @@ export default function ScrollCalendar(props: Iprops) {
           const nextSchedule = {
             month: nextMonth,
             days: getDays(nextMonth),
+            url: '',
           };
           return [...schedule, nextSchedule];
         });
@@ -134,6 +134,7 @@ export default function ScrollCalendar(props: Iprops) {
 
   return (
     <div className={styles.myCalendar}>
+      {contextHolder}
       {/* header */}
       <div className={styles.calendarHeader}>
         <span>
@@ -170,7 +171,11 @@ export default function ScrollCalendar(props: Iprops) {
 
               {/* 日 */}
               <div className={styles.calendarContent}>
-                {schedule.days.map((item2, index2) => {
+                {schedule.days.map((item2: any, index2: number) => {
+                  const fileInfo = fileList.filter(
+                    (item3: any) =>
+                      item3.date === dayjs(item2).format('YYYY-MM-DD'),
+                  )[0];
                   return (
                     <div
                       key={index2}
@@ -187,7 +192,67 @@ export default function ScrollCalendar(props: Iprops) {
                         changeSearchTime(dayjs(item2).endOf('day').valueOf());
                       }}
                     >
-                      {item2 ? item2.format('DD') : ''}
+                      <span>{item2 ? item2.format('DD') : ''}</span>
+                      {fileInfo && fileInfo.type === 'img' && (
+                        <div className={styles.imgContainer}>
+                          <img
+                            src={`atom:/${fileInfo.url}`}
+                            alt={fileInfo.url}
+                            ref={(r: any) => {
+                              fileRef.current[`${fileInfo.id}_${index}`] = r;
+                            }}
+                            onLoad={(e: any) => {
+                              if (e.target.width > e.target.height) {
+                                fileRef.current[
+                                  `${fileInfo.id}_${index}`
+                                ].style.width = 'auto';
+                                fileRef.current[
+                                  `${fileInfo.id}_${index}`
+                                ].style.height = '100%';
+                              } else {
+                                fileRef.current[
+                                  `${fileInfo.id}_${index}`
+                                ].style.width = '100%';
+                                fileRef.current[
+                                  `${fileInfo.id}_${index}`
+                                ].style.height = 'auto';
+                              }
+                            }}
+                          />
+                        </div>
+                      )}
+                      {fileInfo && fileInfo.type === 'video' && (
+                        <video
+                          loop
+                          muted
+                          className={styles.videoContainer}
+                          ref={(r: any) => {
+                            fileRef.current[`${fileInfo.id}_${index}`] = r;
+                          }}
+                          onCanPlay={(e: any) => {
+                            if (e.target.videoWidth > e.target.videoHeight) {
+                              fileRef.current[
+                                `${fileInfo.id}_${index}`
+                              ].style.width = 'auto';
+                              fileRef.current[
+                                `${fileInfo.id}_${index}`
+                              ].style.height = '100%';
+                            } else {
+                              fileRef.current[
+                                `${fileInfo.id}_${index}`
+                              ].style.width = '100%';
+                              fileRef.current[
+                                `${fileInfo.id}_${index}`
+                              ].style.height = 'auto';
+                            }
+                          }}
+                        >
+                          <source
+                            src={`atom:/${fileInfo.url}`}
+                            type="video/mp4"
+                          />
+                        </video>
+                      )}
                     </div>
                   );
                 })}

@@ -17,6 +17,8 @@ module.exports = {
     'no-lonely-if': 'off',
     'promise/always-return': 'off',
     'global-require': 'off',
+    'prefer-template': 'off',
+    'prefer-destructuring': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
     'import/prefer-default-export': 'off',
     'promise/no-callback-in-promise': 'off',

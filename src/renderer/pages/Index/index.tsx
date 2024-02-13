@@ -45,7 +45,7 @@ export default function IndexCom() {
         height: windowHeight + 26,
       });
     }
-    if (showCalendar && !activeItem.code && windowWidth !== 750) {
+    if (showCalendar && !activeItem.code && windowWidth !== 751) {
       window.electron.ipcRenderer.send('change-window-size', {
         width: 750,
         height: windowHeight + 26,
@@ -75,18 +75,13 @@ export default function IndexCom() {
       const result = await getData();
       if (result.data?.length) {
         setTableData(tableData.concat(result.data));
-        message.success('+20条数据');
-      } else {
-        message.warning('没有更多数据了');
       }
     }
     if (type === 'new') {
       pageIndexRef.current = 0;
       const result = await getData();
       setTableData(result.data);
-      if (result.data?.length) {
-        message.success('获取到前20条数据');
-      } else {
+      if (!result.data?.length) {
         setTableData(result.data);
         message.warning('暂无数据');
       }

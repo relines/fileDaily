@@ -63,6 +63,7 @@ export function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       date varchar(20),
       url varchar(500),
+      type varchar(20),
       tag varchar(200),
       content varchar(500)
     )`);

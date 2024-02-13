@@ -1,23 +1,28 @@
-import dayjs from 'dayjs';
 import connect from './index';
 
 export default {
   getCalendar(params: any) {
     const { month } = params;
-    console.log(123, month);
-    // console.log(333, dayjs(month[0]).format('YYYY-MM'));
-    // console.log(333, dayjs(month[0]));
     const db = connect();
 
     // 获取total语法
-    const stmTotal = db.prepare('select count(*) total from calendar_table');
-    // 实现分页语法
-    const stmList = db.prepare('select * from calendar_table');
+    const stmTotal = db.prepare(
+      `SELECT count(*) total FROM calendar_table WHERE strftime('%Y-%m', date) IN (${month
+        .map((item: string) => `'${item}'`)
+        .join(',')})`,
+    );
+
+    // 获取包含特定值的记录
+    const stmList = db.prepare(
+      `SELECT * FROM calendar_table WHERE strftime('%Y-%m', date) IN (${month
+        .map((item: string) => `'${item}'`)
+        .join(',')})`,
+    );
 
     try {
-      const total = stmTotal.all();
+      const total: any = stmTotal.all();
       const data = stmList.all();
-      return { code: 200, msg: '成功', data, total };
+      return { code: 200, msg: '成功', data, total: total[0]?.total };
     } catch (error) {
       return { code: 400, msg: error };
     }
@@ -45,25 +50,25 @@ export default {
     }
   },
   updateCalendar(params: any) {
-    const { date, url } = params;
+    const { date, url, type } = params;
     const db = connect();
 
     const stmQueryByDate = db.prepare(
       `SELECT * FROM calendar_table WHERE date LIKE @date`,
     );
     const stmAdd = db.prepare(
-      `INSERT INTO calendar_table (date, url) values (@date, @url)`,
+      `INSERT INTO calendar_table (date, url, type) values (@date, @url, @type)`,
     );
     const stmUpdate = db.prepare(
-      `UPDATE calendar_table SET url = @url WHERE date = @date`,
+      `UPDATE calendar_table SET url = @url, type = @type WHERE date = @date`,
     );
 
     try {
       const listByDate = stmQueryByDate.all({ date });
       if (listByDate.length === 0) {
-        stmAdd.run({ date, url });
+        stmAdd.run({ date, url, type });
       } else {
-        stmUpdate.run({ date, url });
+        stmUpdate.run({ date, url, type });
       }
       return { code: 200, msg: '成功' };
     } catch (error) {

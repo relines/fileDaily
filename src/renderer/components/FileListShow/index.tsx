@@ -53,10 +53,11 @@ export default function FileListShow(props: Iprops) {
     changeDataSource('rename', result?.data);
   };
 
-  const updateCalendar = async (date: string, url: string) => {
+  const updateCalendar = async (date: string, url: string, type: string) => {
     const resp = await window.electron.ipcRenderer.invoke('update-calendar', {
       date,
       url,
+      type,
     });
     if (resp.code === 200) {
       messageApi.open({
@@ -194,7 +195,7 @@ export default function FileListShow(props: Iprops) {
                             const date = dayjs(dataSource.createTime).format(
                               'YYYY-MM-DD',
                             );
-                            updateCalendar(date, item.url);
+                            updateCalendar(date, item.url, item.type);
                           }}
                         >
                           设为日历图
@@ -266,6 +267,48 @@ export default function FileListShow(props: Iprops) {
                       </div>
                     ),
                     key: 'open',
+                  },
+                  {
+                    label: (
+                      <div
+                        style={{
+                          width: '86px',
+                          height: '15px',
+                          lineHeight: '15px',
+                          textAlign: 'center',
+                        }}
+                        onClick={() => {
+                          form.setFieldsValue({
+                            originName: item.name,
+                          });
+                          setModalShow(true);
+                        }}
+                      >
+                        重命名
+                      </div>
+                    ),
+                    key: 'rename',
+                  },
+                  {
+                    label: (
+                      <div
+                        style={{
+                          width: '86px',
+                          height: '15px',
+                          lineHeight: '15px',
+                          textAlign: 'center',
+                        }}
+                        onClick={() => {
+                          const date = dayjs(dataSource.createTime).format(
+                            'YYYY-MM-DD',
+                          );
+                          updateCalendar(date, item.url, item.type);
+                        }}
+                      >
+                        设为日历图
+                      </div>
+                    ),
+                    key: 'calendar',
                   },
                 ],
               }}
