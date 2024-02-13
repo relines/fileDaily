@@ -3,30 +3,30 @@ import connect from './index';
 
 export default {
   getList(params: any) {
-    const { pageIndex = 1, keyword, searchTime } = params;
+    const { pageIndex = 1, category, keyword, searchTime } = params;
     const db = connect();
 
     // 获取total语法
     const stmTotal = !keyword
       ? db.prepare(
-          `select count(*) total from list_table where createTime <= ${
+          `select count(*) total from list_table where category like '%${category}%' and createTime <= ${
             searchTime || 9999999999999
           }`,
         )
       : db.prepare(
-          `select count(*) total from list_table where createTime <= ${
+          `select count(*) total from list_table where category like '%${category}%' and createTime <= ${
             searchTime || 9999999999999
           } and content like '%${keyword}%' or tag like '%${keyword}%'`,
         );
     // 实现分页语法
     const stmList = !keyword
       ? db.prepare(
-          `select * from list_table where createTime <= ${
+          `select * from list_table where category like '%${category}%' and createTime <= ${
             searchTime || 9999999999999
           } ORDER BY createTime DESC LIMIT 20 OFFSET ${20 * pageIndex}`,
         )
       : db.prepare(
-          `select * from list_table where createTime <= ${
+          `select * from list_table where category like '%${category}%' and createTime <= ${
             searchTime || 9999999999999
           } and content like '%${keyword}%' or tag like '%${keyword}%' ORDER BY createTime DESC LIMIT 20 OFFSET ${
             20 * pageIndex

@@ -17,6 +17,7 @@ export default function IndexCom() {
   const [total, setTotal] = useState<number>(0);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>('');
+  const [category, setCategory] = useState<string>('');
   const [searchTime, setSearchTime] = useState<any>();
 
   const pageIndexRef = useRef<number>(0);
@@ -56,12 +57,18 @@ export default function IndexCom() {
   const getData = async () => {
     const result = await window.electron.ipcRenderer.invoke('get-list', {
       pageIndex: pageIndexRef.current,
+      category,
       keyword,
       searchTime,
     });
     setTotal(result?.total);
+    console.log(123, result);
     return result;
   };
+
+  useEffect(() => {
+    getData();
+  }, [category]);
 
   const changeDataSource = async (
     type: 'more' | 'new' | 'save' | 'rename',
@@ -117,6 +124,9 @@ export default function IndexCom() {
         <HeaderCom
           showCalendar={showCalendar}
           changeShowCalendar={setShowCalendar}
+          changeCategory={(val: any) => {
+            setCategory(val);
+          }}
         />
       </div>
       {showCalendar && (

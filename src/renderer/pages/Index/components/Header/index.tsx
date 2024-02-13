@@ -8,22 +8,19 @@ import { MenuUnfoldOutlined } from '@ant-design/icons';
 
 import CategorySetCom from '../../../../components/CategorySet';
 
-import useWindowSize from '../../../../hooks/useWindowSize';
-
 import styles from './index.module.less';
 
 type Iprops = {
   showCalendar: boolean;
   changeShowCalendar: (val: any) => void;
+  changeCategory: (val: any) => void;
 };
 
 export default function HeaderCom(props: Iprops) {
-  const { showCalendar, changeShowCalendar } = props;
+  const { showCalendar, changeShowCalendar, changeCategory } = props;
 
   const [isFullScreen, setIsFullScreen] = useState<any>(false);
   const [category, setCategory] = useState<any>('');
-
-  const { windowWidth, windowHeight } = useWindowSize();
 
   const workSpace = window.electron.ipcRenderer.getStoreValue('workSpace');
 
@@ -101,7 +98,10 @@ export default function HeaderCom(props: Iprops) {
       <CategorySetCom
         style={{ fontSize: '12px', float: 'right' }}
         category={category}
-        changeCategory={(val) => setCategory(val)}
+        changeCategory={(val) => {
+          changeCategory(val);
+          setCategory(val);
+        }}
       />
     </div>
   );
