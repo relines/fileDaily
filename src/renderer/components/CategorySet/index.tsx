@@ -24,11 +24,10 @@ type Iprops = {
   category: string;
   changeCategory: (val: string) => void;
   style: any;
-  origin: string;
 };
 
 export default function HeaderCom(props: Iprops) {
-  const { style, category, changeCategory, origin } = props;
+  const { style, category, changeCategory } = props;
 
   const [showCategorySetModal, setShowCategorySetModal] = useState(false);
   const [categoryOption, setCategoryOption] = useState<any[]>([]);
@@ -122,10 +121,10 @@ export default function HeaderCom(props: Iprops) {
       align: 'center',
     },
     {
-      title: '日记数',
-      dataIndex: 'number',
-      key: 'number',
-      width: 100,
+      title: '备注',
+      dataIndex: 'remark',
+      key: 'remark',
+      width: 200,
       align: 'center',
     },
     {
@@ -136,16 +135,9 @@ export default function HeaderCom(props: Iprops) {
       align: 'center',
     },
     {
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
-      width: 200,
-      align: 'center',
-    },
-    {
       title: '操作',
       key: 'operate',
-      width: 100,
+      width: 150,
       align: 'center',
       render: (_: any, record: any) => (
         <div
@@ -267,6 +259,7 @@ export default function HeaderCom(props: Iprops) {
                 width: '200px',
               },
             }}
+            initialValues={editRecord}
             style={{ maxWidth: 600 }}
             autoComplete="off"
           >

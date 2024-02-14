@@ -187,7 +187,6 @@ export default function MyEdit(props: Iprops) {
         style={{ fontSize: '12px' }}
         category={category}
         changeCategory={(val) => setCategory(val)}
-        origin="edit"
       />
       <TagSetCom
         style={{ fontSize: '12px' }}

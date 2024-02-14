@@ -107,7 +107,6 @@ export default function HeaderCom(props: Iprops) {
           changeCategory(val);
           setCategory(val);
         }}
-        origin="header"
       />
     </div>
   );

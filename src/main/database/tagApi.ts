@@ -48,11 +48,23 @@ export default {
     const { id, name, color, sort } = params;
     const db = connect();
 
+    const stmQueryByName = db.prepare(
+      `SELECT * FROM tag_table WHERE name = @name and id != @id`,
+    );
+    const stmQueryBySort = db.prepare(
+      `SELECT * FROM tag_table WHERE sort = @sort AND id != @id`,
+    );
+
     const stmUpdate = db.prepare(
       `UPDATE tag_table SET name = @name, color = @color, sort = @sort WHERE id = @id`,
     );
 
     try {
+      const listByName = stmQueryByName.all({ id, name });
+      const listBySort = stmQueryBySort.all({ id, sort });
+      if (listByName.length || listBySort.length) {
+        return { code: 400, msg: '名称或排序重复' };
+      }
       stmUpdate.run({ name, color, sort, id });
       return { code: 200, msg: '成功' };
     } catch (error) {

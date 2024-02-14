@@ -51,10 +51,10 @@ export default {
     const db = connect();
 
     const stmQueryByName = db.prepare(
-      `SELECT * FROM category_table WHERE name LIKE @name`,
+      `SELECT * FROM category_table WHERE name = @name and id != @id`,
     );
-    const stmQueryById = db.prepare(
-      `select * from category_table where id = @id`,
+    const stmQueryBySort = db.prepare(
+      `select * from category_table where sort = @sort and id != @id`,
     );
 
     const stmUpdate = db.prepare(
@@ -62,10 +62,10 @@ export default {
     );
 
     try {
-      const listByName = stmQueryByName.all({ name });
-      const listById = stmQueryById.all({ id });
-      if (listByName.length !== 0 || listById.length !== 0) {
-        return { code: 400, msg: 'repeat' };
+      const listByName = stmQueryByName.all({ id, name });
+      const listBySort = stmQueryBySort.all({ id, sort });
+      if (listByName.length !== 0 || listBySort.length !== 0) {
+        return { code: 400, msg: '名称或排序重复' };
       }
       stmUpdate.run({ name, remark, sort, id });
       return { code: 200, msg: '成功' };

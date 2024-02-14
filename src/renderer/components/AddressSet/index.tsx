@@ -102,13 +102,6 @@ export default function HeaderCom(props: Iprops) {
       align: 'center',
     },
     {
-      title: '日记数',
-      dataIndex: 'number',
-      key: 'number',
-      width: 100,
-      align: 'center',
-    },
-    {
       title: '操作',
       key: 'operate',
       width: 150,
@@ -157,7 +150,20 @@ export default function HeaderCom(props: Iprops) {
 
   return (
     <div className={styles.addressContainer} style={style}>
-      <span onClick={() => setShowAddressSetModal(true)}>地址：</span>
+      <span onClick={() => setShowAddressSetModal(true)}>地址</span>
+      <ExclamationCircleOutlined
+        style={{
+          color: '#1e90ff',
+          position: 'relative',
+          top: '0.5px',
+          marginLeft: '2px',
+          marginRight: '2px',
+          cursor: 'pointer',
+        }}
+        title="选择常用地址"
+        onClick={() => setShowAddressChooseModal(true)}
+      />
+      ：
       <div className={styles.input}>
         <Input
           placeholder="address"
@@ -168,18 +174,6 @@ export default function HeaderCom(props: Iprops) {
           }}
         />
       </div>
-
-      <ExclamationCircleOutlined
-        style={{
-          color: '#1e90ff',
-          position: 'relative',
-          top: '-1px',
-          marginLeft: '5px',
-          cursor: 'pointer',
-        }}
-        onClick={() => setShowAddressChooseModal(true)}
-      />
-
       <Modal
         title="常用地址设置"
         open={showAddressSetModal}
@@ -240,6 +234,7 @@ export default function HeaderCom(props: Iprops) {
                 width: '200px',
               },
             }}
+            initialValues={editRecord}
             style={{ maxWidth: 600 }}
             autoComplete="off"
           >
@@ -254,7 +249,7 @@ export default function HeaderCom(props: Iprops) {
         </Modal>
       </Modal>
       <Modal
-        title="地址选择"
+        title="常用地址选择"
         open={showAddressChooseModal}
         width={400}
         onOk={() => {
