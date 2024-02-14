@@ -50,17 +50,13 @@ export default function HeaderCom(props: Iprops) {
         value: item.name,
       };
     });
-    if (origin === 'header') {
-      setCategoryOption([
-        {
-          label: '全部',
-          value: 'all',
-        },
-        ...opt,
-      ]);
-    } else {
-      setCategoryOption(opt);
-    }
+    setCategoryOption([
+      {
+        label: '全部',
+        value: 'all',
+      },
+      ...opt,
+    ]);
 
     setTableData(resp.data);
     setLoading(false);
