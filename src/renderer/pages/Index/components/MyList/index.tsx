@@ -204,6 +204,7 @@ export default function MyList(props: Iprops) {
                       readOnly
                       style={{
                         maxHeight: '186px',
+                        padding: '5px',
                         overflow: 'hidden',
                       }}
                     />

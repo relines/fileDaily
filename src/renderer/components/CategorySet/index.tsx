@@ -149,6 +149,7 @@ export default function HeaderCom(props: Iprops) {
             onClick={() => {
               setModalType('edit');
               setEditRecord(record);
+              addForm.setFieldsValue(record);
             }}
           >
             编辑
@@ -259,7 +260,6 @@ export default function HeaderCom(props: Iprops) {
                 width: '200px',
               },
             }}
-            initialValues={editRecord}
             style={{ maxWidth: 600 }}
             autoComplete="off"
           >

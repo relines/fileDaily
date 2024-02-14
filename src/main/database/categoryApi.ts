@@ -38,7 +38,7 @@ export default {
       const listByName = stmQueryByName.all({ name });
       const listBySort = stmQueryBySort.all({ sort });
       if (listByName.length !== 0 || listBySort.length !== 0) {
-        return { code: 400, msg: 'repeat' };
+        return { code: 400, msg: '名称或排序重复' };
       }
       stmAdd.run({ name, remark, sort, createTime });
       return { code: 200, msg: '成功' };
