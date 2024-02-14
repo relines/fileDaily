@@ -1,5 +1,6 @@
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
+// import './App.css';
+import './global.less';
 
 import IndexCom from './pages/Index';
 import ViewCom from './pages/View';

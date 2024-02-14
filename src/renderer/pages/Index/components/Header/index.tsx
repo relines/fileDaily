@@ -8,6 +8,7 @@ import { MenuUnfoldOutlined } from '@ant-design/icons';
 
 import useWindowSize from '../../../../hooks/useWindowSize';
 import CategorySetCom from '../../../../components/CategorySet';
+import { setUpTheme } from '../../../../theme';
 
 import styles from './index.module.less';
 
@@ -22,6 +23,7 @@ export default function HeaderCom(props: Iprops) {
 
   const [isFullScreen, setIsFullScreen] = useState<any>(false);
   const [category, setCategory] = useState<any>('all');
+  const [theme, setTheme] = useState<any>('light');
 
   const workSpace = window.electron.ipcRenderer.getStoreValue('workSpace');
   const { windowWidth } = useWindowSize();
@@ -58,7 +60,7 @@ export default function HeaderCom(props: Iprops) {
         menu={{
           items: [
             {
-              key: '3',
+              key: 'calendar',
               label: (
                 <div
                   onClick={() => {
@@ -66,6 +68,24 @@ export default function HeaderCom(props: Iprops) {
                   }}
                 >
                   {showCalendar ? '隐藏日历' : '显示日历'}
+                </div>
+              ),
+            },
+            {
+              key: 'theme',
+              label: (
+                <div
+                  onClick={() => {
+                    if (theme === 'dark') {
+                      setUpTheme('light');
+                      setTheme('light');
+                    } else {
+                      setUpTheme('dark');
+                      setTheme('dark');
+                    }
+                  }}
+                >
+                  {theme === 'dark' ? 'light' : 'dark'}
                 </div>
               ),
             },
