@@ -1,7 +1,41 @@
+@primaryBgColor: var(--primary-bg-color, #fff);
+@primaryColor: var(--primary-color, #000);
+
 .eidtContainer {
   padding: 5px;
 
   .editor {
     width: 100%;
+  }
+}
+
+:global {
+  .ql-snow .ql-picker {
+    color: @primaryColor;
+  }
+
+  .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+    background-color: @primaryBgColor;
+  }
+
+  .ql-snow .ql-stroke {
+    stroke: @primaryColor;
+  }
+
+  .ant-select-selection-item {
+    color: @primaryColor;
+  }
+
+  .ant-select .ant-select-arrow {
+    color: @primaryColor;
+  }
+
+  .ant-input {
+    color: @primaryColor;
+
+    &::placeholder {
+      color: @primaryColor;
+      opacity: 0.6;
+    }
   }
 }
