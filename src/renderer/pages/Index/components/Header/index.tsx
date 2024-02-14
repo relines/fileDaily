@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { Dropdown, Tooltip } from 'antd';
 import { MenuUnfoldOutlined } from '@ant-design/icons';
 
+import useWindowSize from '../../../../hooks/useWindowSize';
 import CategorySetCom from '../../../../components/CategorySet';
 
 import styles from './index.module.less';
@@ -20,9 +21,10 @@ export default function HeaderCom(props: Iprops) {
   const { showCalendar, changeShowCalendar, changeCategory } = props;
 
   const [isFullScreen, setIsFullScreen] = useState<any>(false);
-  const [category, setCategory] = useState<any>('');
+  const [category, setCategory] = useState<any>('all');
 
   const workSpace = window.electron.ipcRenderer.getStoreValue('workSpace');
+  const { windowWidth } = useWindowSize();
 
   window.electron.ipcRenderer.on('mainWindowResize', (arg) => {
     setIsFullScreen(arg);
@@ -87,6 +89,9 @@ export default function HeaderCom(props: Iprops) {
       <Tooltip title={workSpace}>
         <span
           className={styles.workSpace}
+          style={{
+            width: `${windowWidth - 230}px`,
+          }}
           onClick={() => {
             window.electron.ipcRenderer.send('open-folder', workSpace);
           }}
@@ -102,6 +107,7 @@ export default function HeaderCom(props: Iprops) {
           changeCategory(val);
           setCategory(val);
         }}
+        origin="header"
       />
     </div>
   );

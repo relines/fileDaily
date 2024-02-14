@@ -16,16 +16,19 @@ import {
 } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 
+import useWindowSize from '../../hooks/useWindowSize';
+
 import styles from './index.module.less';
 
 type Iprops = {
   category: string;
   changeCategory: (val: string) => void;
   style: any;
+  origin: string;
 };
 
 export default function HeaderCom(props: Iprops) {
-  const { style, category, changeCategory } = props;
+  const { style, category, changeCategory, origin } = props;
 
   const [showCategorySetModal, setShowCategorySetModal] = useState(false);
   const [categoryOption, setCategoryOption] = useState<any[]>([]);
@@ -33,6 +36,8 @@ export default function HeaderCom(props: Iprops) {
   const [modalType, setModalType] = useState<string>('');
   const [editRecord, setEditRecord] = useState<any>({});
   const [tableData, setTableData] = useState<any[]>([]);
+
+  const { windowWidth } = useWindowSize();
 
   const [addForm] = Form.useForm();
 
@@ -45,7 +50,18 @@ export default function HeaderCom(props: Iprops) {
         value: item.name,
       };
     });
-    setCategoryOption(opt);
+    if (origin === 'header') {
+      setCategoryOption([
+        {
+          label: '全部',
+          value: 'all',
+        },
+        ...opt,
+      ]);
+    } else {
+      setCategoryOption(opt);
+    }
+
     setTableData(resp.data);
     setLoading(false);
   };
@@ -185,6 +201,7 @@ export default function HeaderCom(props: Iprops) {
         variant="borderless"
         style={{
           marginLeft: '-10px',
+          maxWidth: windowWidth < 330 ? '59px' : '200px',
         }}
         size="small"
         popupMatchSelectWidth={false}

@@ -17,7 +17,7 @@ export default function IndexCom() {
   const [total, setTotal] = useState<number>(0);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>('');
-  const [category, setCategory] = useState<string>('');
+  const [category, setCategory] = useState<string>('all');
   const [searchTime, setSearchTime] = useState<any>();
 
   const pageIndexRef = useRef<number>(0);
@@ -62,13 +62,8 @@ export default function IndexCom() {
       searchTime,
     });
     setTotal(result?.total);
-    console.log(123, result);
     return result;
   };
-
-  useEffect(() => {
-    getData();
-  }, [category]);
 
   const changeDataSource = async (
     type: 'more' | 'new' | 'save' | 'rename',
@@ -113,6 +108,12 @@ export default function IndexCom() {
       setTableData(newData);
     }
   };
+
+  useEffect(() => {
+    if (category) {
+      changeDataSource('new');
+    }
+  }, [category]);
 
   useEffect(() => {
     changeDataSource('new');

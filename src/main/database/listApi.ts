@@ -7,35 +7,39 @@ export default {
     const db = connect();
 
     // 获取total语法
-    const stmTotal = !keyword
-      ? db.prepare(
-          `select count(*) total from list_table where category like '%${category}%' and createTime <= ${
-            searchTime || 9999999999999
-          }`,
-        )
-      : db.prepare(
-          `select count(*) total from list_table where category like '%${category}%' and createTime <= ${
-            searchTime || 9999999999999
-          } and content like '%${keyword}%' or tag like '%${keyword}%'`,
-        );
+    const stmTotal =
+      category === 'all'
+        ? db.prepare(
+            `select count(*) total from list_table where createTime <= ${
+              searchTime || 9999999999999
+            } and (content like '%${keyword}%' or tag like '%${keyword}%')`,
+          )
+        : db.prepare(
+            `select count(*) total from list_table where category = @category and createTime <= ${
+              searchTime || 9999999999999
+            } and (content like '%${keyword}%' or tag like '%${keyword}%')`,
+          );
     // 实现分页语法
-    const stmList = !keyword
-      ? db.prepare(
-          `select * from list_table where category like '%${category}%' and createTime <= ${
-            searchTime || 9999999999999
-          } ORDER BY createTime DESC LIMIT 20 OFFSET ${20 * pageIndex}`,
-        )
-      : db.prepare(
-          `select * from list_table where category like '%${category}%' and createTime <= ${
-            searchTime || 9999999999999
-          } and content like '%${keyword}%' or tag like '%${keyword}%' ORDER BY createTime DESC LIMIT 20 OFFSET ${
-            20 * pageIndex
-          }`,
-        );
+    const stmList =
+      category === 'all'
+        ? db.prepare(
+            `select * from list_table where createTime <= ${
+              searchTime || 9999999999999
+            } and (content like '%${keyword}%' or tag like '%${keyword}%') ORDER BY createTime DESC LIMIT 20 OFFSET ${
+              20 * pageIndex
+            }`,
+          )
+        : db.prepare(
+            `select * from list_table where category = @category and createTime <= ${
+              searchTime || 9999999999999
+            } and (content like '%${keyword}%' or tag like '%${keyword}%') ORDER BY createTime DESC LIMIT 20 OFFSET ${
+              20 * pageIndex
+            }`,
+          );
 
     try {
-      const total: any = stmTotal.all();
-      const data = stmList.all();
+      const total: any = stmTotal.all({ category });
+      const data = stmList.all({ category });
       return { code: 200, msg: '成功', data, total: total[0]?.total };
     } catch (error) {
       return { code: 400, msg: error };
