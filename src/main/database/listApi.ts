@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import connect from './index';
 
+const fs = require('fs');
+
 export default {
   getList(params: any) {
     const { pageIndex = 1, category, keyword, searchTime } = params;
@@ -139,7 +141,7 @@ export default {
     }
   },
   delList(params: any) {
-    const { code } = params;
+    const { code, fileList } = params;
     const db = connect();
 
     const stmInquire = db.prepare(
@@ -153,6 +155,9 @@ export default {
         return { code: 201, msg: '没有查到code', data: item };
       }
       stmDel.run({ code });
+      fileList?.forEach((item2: any) => {
+        fs.unlinkSync(`${item2.url}`);
+      });
       return { code: 200, msg: '成功' };
     } catch (error) {
       return { code: 400, msg: error };

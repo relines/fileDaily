@@ -59,8 +59,10 @@ export default function MyList(props: Iprops) {
   };
 
   const handleDelete = async (val: any) => {
+    console.log(333, val);
     await window.electron.ipcRenderer.invoke('delete-data', {
       code: val.code,
+      fileList: JSON.parse(val.fileList),
     });
     if (activeItem.code === val.code) {
       changeActiveItem({});
