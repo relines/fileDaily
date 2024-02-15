@@ -176,7 +176,6 @@ export default function ScrollCalendar(props: Iprops) {
                     (item3: any) =>
                       item3.date === dayjs(item2).format('YYYY-MM-DD'),
                   )[0];
-                  console.log(333, fileInfo);
                   return (
                     <div
                       key={index2}

@@ -108,16 +108,23 @@ export default function Index(props: Iprops) {
                     fileRef.current[`${item.name}_${index}`] = r;
                   }}
                   onLoad={(e: any) => {
-                    if (e.target.width > e.target.height) {
+                    if (dataSource.length === 1) {
                       fileRef.current[`${item.name}_${index}`].style.width =
-                        'auto';
-                      fileRef.current[`${item.name}_${index}`].style.height =
                         '100%';
+                      fileRef.current[`${item.name}_${index}`].style.height =
+                        'auto';
                     } else {
-                      fileRef.current[`${item.name}_${index}`].style.width =
-                        '100%';
-                      fileRef.current[`${item.name}_${index}`].style.height =
-                        'auto';
+                      if (e.target.width > e.target.height) {
+                        fileRef.current[`${item.name}_${index}`].style.width =
+                          'auto';
+                        fileRef.current[`${item.name}_${index}`].style.height =
+                          '100%';
+                      } else {
+                        fileRef.current[`${item.name}_${index}`].style.width =
+                          '100%';
+                        fileRef.current[`${item.name}_${index}`].style.height =
+                          'auto';
+                      }
                     }
                   }}
                 />
