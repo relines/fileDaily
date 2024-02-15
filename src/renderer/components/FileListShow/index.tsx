@@ -156,7 +156,7 @@ export default function FileListShow(props: Iprops) {
                             );
                           }}
                         >
-                          打开文件目录
+                          打开文件位置
                         </div>
                       ),
                       key: 'open',
@@ -272,7 +272,7 @@ export default function FileListShow(props: Iprops) {
                           );
                         }}
                       >
-                        打开文件目录
+                        打开文件位置
                       </div>
                     ),
                     key: 'open',

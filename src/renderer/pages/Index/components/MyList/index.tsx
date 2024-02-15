@@ -59,7 +59,6 @@ export default function MyList(props: Iprops) {
   };
 
   const handleDelete = async (val: any) => {
-    console.log(333, val);
     await window.electron.ipcRenderer.invoke('delete-data', {
       code: val.code,
       fileList: JSON.parse(val.fileList),
@@ -116,110 +115,35 @@ export default function MyList(props: Iprops) {
         {dataSource.map((item: any, index: number) => {
           return (
             <div key={item.code} className={styles.listItem}>
-              <div className={styles.timeLine}>
-                <div className={styles.left}>
-                  {dayjs(item.createTime).format('DD')}
-                </div>
-                <div className={styles.right}>
-                  <div className={styles.month}>
-                    {dayjs(item.createTime).format('MM')}月
-                  </div>
-                  <div className={styles.week}>
-                    {dayjs(item.createTime).locale('zh-cn').format('dddd')}
-                  </div>
-                </div>
-              </div>
-              <div className={styles.circlePoint} />
-              <div
-                className={`${styles.content} ${
-                  activeItem?.code === item.code && styles.activedContent
-                }`}
+              <Dropdown
+                menu={{
+                  items: [
+                    {
+                      label: (
+                        <div
+                          style={{
+                            width: '30px',
+                            height: '15px',
+                            lineHeight: '15px',
+                            textAlign: 'center',
+                            color: '#f00',
+                          }}
+                          onClick={() => {
+                            handleDelete(item);
+                          }}
+                        >
+                          删除
+                        </div>
+                      ),
+                      key: 'del',
+                    },
+                  ],
+                }}
+                trigger={['contextMenu']}
+                key={item.code}
               >
-                <Dropdown
-                  menu={{
-                    items: [
-                      {
-                        label: (
-                          <div
-                            style={{
-                              width: '30px',
-                              height: '15px',
-                              lineHeight: '15px',
-                              textAlign: 'center',
-                            }}
-                            onClick={() => {
-                              changeActiveItem(item);
-                            }}
-                          >
-                            编辑
-                          </div>
-                        ),
-                        key: 'edit',
-                      },
-                      {
-                        label: (
-                          <div
-                            style={{
-                              width: '30px',
-                              height: '15px',
-                              lineHeight: '15px',
-                              textAlign: 'center',
-                              color: '#f00',
-                            }}
-                            onClick={() => {
-                              handleDelete(item);
-                            }}
-                          >
-                            删除
-                          </div>
-                        ),
-                        key: 'del',
-                      },
-                    ],
-                  }}
-                  trigger={['contextMenu']}
-                  key={item.code}
-                >
-                  <div
-                    className={styles.text}
-                    onClick={() => {
-                      if (activeItem.code && activeItem.code === item.code) {
-                        changeActiveItem({});
-                      } else {
-                        changeActiveItem(item);
-                      }
-                    }}
-                  >
-                    {/* <div
-                      style={{
-                        whiteSpace: 'pre-line',
-                      }}
-                    >
-                      {item.content}
-                    </div> */}
-                    <ReactQuill
-                      theme="snow"
-                      value={item.content}
-                      modules={{
-                        toolbar: null,
-                      }}
-                      readOnly
-                      style={{
-                        maxHeight: '186px',
-                        padding: '5px',
-                        overflow: 'hidden',
-                      }}
-                    />
-                  </div>
-                </Dropdown>
-
-                <FileListShowCom
-                  dataSource={item}
-                  changeDataSource={changeDataSource}
-                />
-
                 <div
-                  className={styles.bottom}
+                  className={styles.timeLine}
                   onClick={() => {
                     if (activeItem.code && activeItem.code === item.code) {
                       changeActiveItem({});
@@ -228,6 +152,55 @@ export default function MyList(props: Iprops) {
                     }
                   }}
                 >
+                  <div className={styles.left}>
+                    {dayjs(item.createTime).format('DD')}
+                  </div>
+                  <div className={styles.right}>
+                    <div className={styles.month}>
+                      {dayjs(item.createTime).format('MM')}月
+                    </div>
+                    <div className={styles.week}>
+                      {dayjs(item.createTime).locale('zh-cn').format('dddd')}
+                    </div>
+                  </div>
+                </div>
+              </Dropdown>
+
+              <div className={styles.circlePoint} />
+              <div
+                className={`${styles.content} ${
+                  activeItem?.code === item.code && styles.activedContent
+                }`}
+              >
+                <div className={styles.text}>
+                  {/* <div
+                      style={{
+                        whiteSpace: 'pre-line',
+                      }}
+                    >
+                      {item.content}
+                    </div> */}
+                  <ReactQuill
+                    theme="snow"
+                    value={item.content}
+                    modules={{
+                      toolbar: null,
+                    }}
+                    readOnly
+                    style={{
+                      maxHeight: '186px',
+                      padding: '5px',
+                      overflow: 'hidden',
+                    }}
+                  />
+                </div>
+
+                <FileListShowCom
+                  dataSource={item}
+                  changeDataSource={changeDataSource}
+                />
+
+                <div className={styles.bottom}>
                   <span className={styles.time}>
                     {dataSource.length - index}
                     {'-->'}

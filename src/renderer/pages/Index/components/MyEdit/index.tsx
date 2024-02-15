@@ -133,7 +133,7 @@ export default function MyEdit(props: Iprops) {
             chooseFile();
           }}
         >
-          选择图片
+          选择文件
         </Button>
         <Button
           type="default"
