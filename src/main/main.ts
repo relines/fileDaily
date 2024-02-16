@@ -173,9 +173,10 @@ const ipcFunc = () => {
     const result = await fileApi.chooseFolder();
     if (result) {
       store.set('workSpace', result);
-      await fileApi.initFolder();
-      initDatabase();
-      return result;
+      fileApi.initFolder(() => {
+        initDatabase();
+        return result;
+      });
     }
     return null;
   });
@@ -265,6 +266,7 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
+  // mainWindow.webContents.openDevTools();
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
@@ -315,6 +317,8 @@ app.on('window-all-closed', () => {
 });
 
 const initWorkSpace = () => {
+  console.log(123, store.get('workSpace'), app.getPath('documents'));
+
   if (!store.get('workSpace')) {
     // 默认工作空间在Document/fileDaily
     const documentUrl = app.getPath('documents');
@@ -324,10 +328,11 @@ const initWorkSpace = () => {
 
 const init = async () => {
   initWorkSpace();
-  await fileApi.initFolder();
-  initDatabase();
-  ipcFunc();
-  createWindow();
+  fileApi.initFolder(() => {
+    initDatabase();
+    ipcFunc();
+    createWindow();
+  });
 };
 
 app

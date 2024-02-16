@@ -1,3 +1,4 @@
+import { app } from 'electron';
 import path from 'path';
 // import exif from 'exif';
 // const ffmpeg = require('fluent-ffmpeg');
@@ -72,33 +73,35 @@ export default {
     const data = await Promise.all(promises);
     return data;
   },
-  initFolder() {
+  initFolder(callback: any) {
     const workSpace = store.get('workSpace');
-    return new Promise((resolve, reject) => {
-      // 查看workSpace文件夹是否存在，不存在则创建
-      fs.access(workSpace, (err: any) => {
-        console.log('👉👉👉--------------->fileDaily文件夹是否存在', err);
-        if (err) {
-          fs.mkdir(workSpace, (error: any) => {
-            if (error) reject();
-            resolve({});
-            console.log('👉👉👉--------------->fileDaily目录创建成功');
-          });
-        }
-        resolve({});
-      });
-      // 查看workSpace/file文件夹是否存在，不存在则创建
-      fs.access(`${workSpace}/file`, (err: any) => {
-        if (err) {
-          fs.mkdir(`${workSpace}/file`, (error: any) => {
-            if (error) reject();
-            resolve({});
-            console.log('👉👉👉--------------->file目录创建成功');
-          });
-        }
-        resolve({});
-      });
-    });
+    let folderExist;
+    let fileExist;
+    try {
+      fs.accessSync(workSpace);
+      folderExist = true;
+    } catch (err) {
+      folderExist = false;
+    }
+    try {
+      fs.accessSync(`${workSpace}/file`);
+      fileExist = true;
+    } catch (err) {
+      fileExist = false;
+    }
+    if (folderExist === false) {
+      const documentUrl = app.getPath('documents');
+      store.set('workSpace', `${documentUrl}/fileDaily`);
+      fs.mkdirSync(`${documentUrl}/fileDaily`);
+      this.initFolder(callback);
+    }
+    if (folderExist === true && fileExist === false) {
+      fs.mkdirSync(`${workSpace}/file`);
+      this.initFolder(callback);
+    }
+    if (folderExist && fileExist) {
+      callback();
+    }
   },
   changeFileName(val: any) {
     try {
