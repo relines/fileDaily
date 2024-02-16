@@ -230,6 +230,17 @@ export default function ScrollCalendar(props: Iprops) {
                             fileRef.current[`${fileInfo.id}_${index}`] = r;
                           }}
                           onCanPlay={(e: any) => {
+                            if (fileInfo.initialPlay) return;
+                            fileInfo.initialPlay = true;
+                            const videoDuration =
+                              fileRef.current[`${fileInfo.id}_${index}`]
+                                .duration;
+                            const quotient = Math.round(videoDuration / 2);
+                            console.log('currentTime', quotient);
+                            fileRef.current[
+                              `${fileInfo.id}_${index}`
+                            ].currentTime = quotient;
+
                             if (e.target.videoWidth > e.target.videoHeight) {
                               fileRef.current[
                                 `${fileInfo.id}_${index}`
