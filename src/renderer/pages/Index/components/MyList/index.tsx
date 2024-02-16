@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Input, Dropdown, message } from 'antd';
+import { Input, Dropdown, message, Tag } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -211,6 +211,21 @@ export default function MyList(props: Iprops) {
                   dataSource={item}
                   changeDataSource={changeDataSource}
                 />
+
+                <div className={styles.tagContainer}>
+                  {JSON.parse(item.tag)?.map((item2: any) => {
+                    return (
+                      <Tag
+                        key={item2.id}
+                        color={item2.color}
+                        bordered={false}
+                        className={styles.tag}
+                      >
+                        {item2.value}
+                      </Tag>
+                    );
+                  })}
+                </div>
 
                 <div className={styles.bottom}>
                   <span className={styles.time}>
