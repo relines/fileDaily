@@ -190,20 +190,20 @@ export default function Index(props: Iprops) {
                     quotient;
 
                   if (dataSource?.length === 1) {
-                    fileRef.current[`${item.name}_${index}`].style.maxWidth =
+                    fileRef.current[`${item.name}_${index}`].style.width =
                       '100%';
-                    fileRef.current[`${item.name}_${index}`].style.maxHeight =
+                    fileRef.current[`${item.name}_${index}`].style.height =
                       'none';
                   } else {
                     if (e.target.videoWidth > e.target.videoHeight) {
-                      fileRef.current[`${item.name}_${index}`].style.maxWidth =
+                      fileRef.current[`${item.name}_${index}`].style.width =
                         'none';
-                      fileRef.current[`${item.name}_${index}`].style.maxHeight =
+                      fileRef.current[`${item.name}_${index}`].style.height =
                         '100%';
                     } else {
-                      fileRef.current[`${item.name}_${index}`].style.maxWidth =
+                      fileRef.current[`${item.name}_${index}`].style.width =
                         '100%';
-                      fileRef.current[`${item.name}_${index}`].style.maxHeight =
+                      fileRef.current[`${item.name}_${index}`].style.height =
                         'none';
                     }
                   }
