@@ -37,9 +37,6 @@ export default function HeaderCom(props: Iprops) {
     if (resp) {
       localStorage.setItem('workSpace', resp);
       window.electron.ipcRenderer.send('main-window-reload');
-      setTimeout(() => {
-        window.location.reload();
-      }, 400);
     }
   };
 

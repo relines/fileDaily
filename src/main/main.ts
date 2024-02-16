@@ -1,4 +1,12 @@
-import { app, BrowserWindow, shell, ipcMain, protocol, net } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  protocol,
+  globalShortcut,
+  net,
+} from 'electron';
 import path from 'path';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -265,7 +273,6 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
-  // mainWindow.webContents.openDevTools();
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
@@ -315,6 +322,21 @@ app.on('window-all-closed', () => {
   }
 });
 
+const registerGlobalShortcut = (shortcut: any, callback: any) => {
+  if (!shortcut) return false;
+  let flag = false;
+  try {
+    flag = globalShortcut.isRegistered(shortcut);
+    if (flag) return true;
+    flag = globalShortcut.register(shortcut, () => {
+      callback();
+    });
+  } catch (e) {
+    console.error(e);
+  }
+  return flag;
+};
+
 const initWorkSpace = () => {
   if (!store.get('workSpace')) {
     // 默认工作空间在Document/fileDaily
@@ -323,12 +345,24 @@ const initWorkSpace = () => {
   }
 };
 
+const initGlobalShortCut = () => {
+  registerGlobalShortcut('F12', () => {
+    mainWindow?.webContents.toggleDevTools();
+    viewWindow?.webContents.toggleDevTools();
+  });
+  registerGlobalShortcut('Cmd+R', () => {
+    mainWindow?.reload();
+    viewWindow?.reload();
+  });
+};
+
 const init = async () => {
   initWorkSpace();
   fileApi.initFolder(() => {
     initDatabase();
     ipcFunc();
     createWindow();
+    initGlobalShortCut();
   });
 };
 
