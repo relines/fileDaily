@@ -47,6 +47,12 @@ export default function MyList(props: Iprops) {
   const ContainerHeight = windowHeight === 0 ? 200 : windowHeight - 73;
 
   const addData = async () => {
+    if (
+      ['', '<p><br></p>'].includes(dataSource[0]?.content) &&
+      [null, '[]'].includes(dataSource[0]?.fileList)
+    ) {
+      return;
+    }
     setLoading(true);
     const resp = await window.electron.ipcRenderer.invoke('add-data', {
       content: '',
@@ -73,7 +79,13 @@ export default function MyList(props: Iprops) {
   return (
     <div className={styles.listContainer}>
       <div className={styles.header}>
-        <span>共{total}条</span>
+        <span
+          style={{
+            userSelect: 'none',
+          }}
+        >
+          共{total}条
+        </span>
         <PlusCircleOutlined
           disabled={loading}
           style={{
