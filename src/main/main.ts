@@ -175,10 +175,9 @@ const ipcFunc = () => {
       store.set('workSpace', result);
       fileApi.initFolder(() => {
         initDatabase();
-        return result;
       });
     }
-    return null;
+    return result;
   });
   ipcMain.on('open-folder', (event, message) => {
     fileApi.openFolder(message);
@@ -317,8 +316,6 @@ app.on('window-all-closed', () => {
 });
 
 const initWorkSpace = () => {
-  console.log(123, store.get('workSpace'), app.getPath('documents'));
-
   if (!store.get('workSpace')) {
     // 默认工作空间在Document/fileDaily
     const documentUrl = app.getPath('documents');
