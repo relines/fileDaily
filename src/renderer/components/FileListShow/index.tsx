@@ -349,6 +349,15 @@ export default function FileListShow(props: Iprops) {
                     fileRef.current[`${item.name}_${index}`] = r;
                   }}
                   onCanPlay={(e: any) => {
+                    if (item.initialPlay) return;
+                    item.initialPlay = true;
+                    const videoDuration =
+                      fileRef.current[`${item.name}_${index}`].duration;
+                    const quotient = Math.round(videoDuration / 2);
+                    console.log('currentTime', quotient);
+                    fileRef.current[`${item.name}_${index}`].currentTime =
+                      quotient;
+
                     if (fileList?.length === 1) {
                       fileRef.current[`${item.name}_${index}`].style.maxWidth =
                         '100%';
