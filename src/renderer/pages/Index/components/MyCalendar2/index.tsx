@@ -176,7 +176,7 @@ function ScrollCalendar(props: Iprops, ref: any) {
           return [...schedule, nextSchedule];
         });
       }
-    }, 1000);
+    }, 400);
 
     calendarRef.current?.addEventListener('scroll', scrollEvent);
   };
