@@ -52,7 +52,7 @@ export default function HeaderCom(props: Iprops) {
     setCategoryOption([
       {
         label: '全部',
-        value: 'all',
+        value: '全部',
       },
       ...opt,
     ]);
@@ -63,6 +63,7 @@ export default function HeaderCom(props: Iprops) {
 
   const addCategory = async () => {
     const values = addForm.getFieldsValue();
+
     const resp = await window.electron.ipcRenderer.invoke('add-category', {
       ...values,
     });

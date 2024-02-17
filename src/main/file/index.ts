@@ -175,7 +175,9 @@ export default {
 
     // 删除原目录中的文件
     oriList?.forEach((item: any) => {
-      fs.unlinkSync(`${oriDir}/${item}`);
+      fs.unlink(`${oriDir}/${item}`, (err: any) => {
+        if (err) throw err;
+      });
     });
 
     return {

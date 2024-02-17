@@ -22,7 +22,7 @@ export default function HeaderCom(props: Iprops) {
   const { showCalendar, changeShowCalendar, changeCategory } = props;
 
   const [isFullScreen, setIsFullScreen] = useState<any>(false);
-  const [category, setCategory] = useState<any>('all');
+  const [category, setCategory] = useState<any>('全部');
   const [theme, setTheme] = useState<any>('light');
 
   const workSpace = window.electron.ipcRenderer.getStoreValue('workSpace');
