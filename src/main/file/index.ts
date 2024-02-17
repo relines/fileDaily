@@ -221,7 +221,7 @@ export default {
         fs.createReadStream(item.url).pipe(fs.createWriteStream(destUrl));
         return {
           ...item,
-          name: `${item.base}-${code}-${random4}.${item.ext}`,
+          name: `${item.base}-${code}-${random4}${item.ext}`,
           url: destUrl,
         };
       });
