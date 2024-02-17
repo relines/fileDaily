@@ -110,7 +110,7 @@ export default function HeaderCom(props: Iprops) {
         <span
           className={styles.workSpace}
           style={{
-            width: `${windowWidth - 230}px`,
+            width: `${windowWidth - 300}px`,
           }}
           onClick={() => {
             window.electron.ipcRenderer.send('open-folder', workSpace);
