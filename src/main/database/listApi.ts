@@ -120,9 +120,15 @@ export default {
         return { code: 201, msg: '没有查到code', data: item };
       }
 
-      calendarApi.delCalendar({
-        date: dayjs(oldCreateTime).format('YYYY-MM-DD'),
-      });
+      // 如果修改了时间日期，删除日历图
+      if (
+        dayjs(oldCreateTime).format('YYYY-MM-DD') !==
+        dayjs(createTime).format('YYYY-MM-DD')
+      ) {
+        calendarApi.delCalendar({
+          date: dayjs(oldCreateTime).format('YYYY-MM-DD'),
+        });
+      }
 
       return { code: 200, msg: '成功', data: item };
     } catch (error) {
