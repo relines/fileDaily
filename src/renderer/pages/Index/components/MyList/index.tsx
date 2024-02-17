@@ -169,7 +169,7 @@ export default function MyList(props: Iprops) {
                   </div>
                   <div className={styles.right}>
                     <div className={styles.month}>
-                      {dayjs(item.createTime).format('MM')}月
+                      {dayjs(item.createTime).format('M')}月
                     </div>
                     <div className={styles.week}>
                       {dayjs(item.createTime).locale('zh-cn').format('dddd')}
@@ -213,18 +213,19 @@ export default function MyList(props: Iprops) {
                 />
 
                 <div className={styles.tagContainer}>
-                  {JSON.parse(item.tag)?.map((item2: any) => {
-                    return (
-                      <Tag
-                        key={item2.id}
-                        color={item2.color}
-                        bordered={false}
-                        className={styles.tag}
-                      >
-                        {item2.value}
-                      </Tag>
-                    );
-                  })}
+                  {item.tag &&
+                    JSON.parse(item.tag)?.map((item2: any) => {
+                      return (
+                        <Tag
+                          key={item2.id}
+                          color={item2.color}
+                          bordered={false}
+                          className={styles.tag}
+                        >
+                          {item2.value}
+                        </Tag>
+                      );
+                    })}
                 </div>
 
                 <div className={styles.bottom}>

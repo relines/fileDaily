@@ -99,7 +99,6 @@ export default {
       fs.mkdirSync(`${workSpace}/file`);
       this.initFolder(callback);
     }
-    console.log(1234, folderExist, fileExist);
     if (folderExist && fileExist) {
       callback();
     }
