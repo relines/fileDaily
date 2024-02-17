@@ -21,6 +21,7 @@ export default function IndexCom() {
   const [searchTime, setSearchTime] = useState<any>();
 
   const pageIndexRef = useRef<number>(0);
+  const calendarRef = useRef<any>();
 
   const { windowWidth, windowHeight } = useWindowSize();
 
@@ -87,6 +88,7 @@ export default function IndexCom() {
         setTableData(result.data);
         message.warning('暂无数据');
       }
+      calendarRef.current?.queryCalendarInfo();
     }
     if (type === 'save') {
       const newData = tableData.map((item: any) => {
@@ -97,6 +99,7 @@ export default function IndexCom() {
       });
       setTableData(newData);
       setActiveItem(data);
+      calendarRef.current?.queryCalendarInfo();
     }
     if (type === 'rename') {
       const newData = tableData.map((item: any) => {
@@ -106,6 +109,7 @@ export default function IndexCom() {
         return item;
       });
       setTableData(newData);
+      calendarRef.current?.queryCalendarInfo();
     }
   };
 
@@ -124,7 +128,14 @@ export default function IndexCom() {
       <div className={styles.headerContainer}>
         <HeaderCom
           showCalendar={showCalendar}
-          changeShowCalendar={setShowCalendar}
+          changeShowCalendar={(val: any) => {
+            setShowCalendar(val);
+            if (val) {
+              setTimeout(() => {
+                calendarRef.current?.queryCalendarInfo();
+              }, 1000);
+            }
+          }}
           changeCategory={(val: any) => {
             setCategory(val);
           }}
@@ -135,6 +146,7 @@ export default function IndexCom() {
           <MyCalendar
             searchTime={searchTime}
             changeSearchTime={setSearchTime}
+            ref={calendarRef}
           />
         </div>
       )}
@@ -147,6 +159,9 @@ export default function IndexCom() {
           activeItem={activeItem}
           changeActiveItem={setActiveItem}
           changeDataSource={changeDataSource}
+          queryCalendarInfo={() => {
+            calendarRef.current?.queryCalendarInfo();
+          }}
         />
       </div>
       {activeItem?.code && (

@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import connect from './index';
 
+import calendarApi from './calendarApi';
+
 const fs = require('fs');
 
 export default {
@@ -82,8 +84,16 @@ export default {
     }
   },
   updateList(params: any) {
-    const { code, content, fileList, category, createTime, address, tag } =
-      params;
+    const {
+      code,
+      content,
+      fileList,
+      category,
+      createTime,
+      oldCreateTime,
+      address,
+      tag,
+    } = params;
     const db = connect();
 
     const stmInquire = db.prepare(
@@ -92,9 +102,9 @@ export default {
     const stmUpdate = db.prepare(
       `UPDATE list_table SET content = @content, fileList = @fileListJson, category = @category, createTime = @createTime, address = @address, tag = @tagJson WHERE code = @code`,
     );
+
     const fileListJson = JSON.stringify(fileList);
     const tagJson = JSON.stringify(tag);
-
     try {
       stmUpdate.run({
         content,
@@ -109,6 +119,11 @@ export default {
       if (!item) {
         return { code: 201, msg: '没有查到code', data: item };
       }
+
+      calendarApi.delCalendar({
+        date: dayjs(oldCreateTime).format('YYYY-MM-DD'),
+      });
+
       return { code: 200, msg: '成功', data: item };
     } catch (error) {
       return { code: 400, msg: error };
@@ -141,7 +156,7 @@ export default {
     }
   },
   delList(params: any) {
-    const { code, fileList } = params;
+    const { code, createTime, fileList } = params;
     const db = connect();
 
     const stmInquire = db.prepare(
@@ -157,6 +172,9 @@ export default {
       stmDel.run({ code });
       fileList?.forEach((item2: any) => {
         fs.unlinkSync(`${item2.url}`);
+      });
+      calendarApi.delCalendar({
+        date: dayjs(createTime).format('YYYY-MM-DD'),
       });
       return { code: 200, msg: '成功' };
     } catch (error) {

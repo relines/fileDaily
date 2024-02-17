@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Input, Dropdown, message, Tag } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
@@ -27,6 +27,7 @@ type Iprops = {
     type: 'more' | 'new' | 'save' | 'rename',
     data?: any,
   ) => void;
+  queryCalendarInfo: () => void;
 };
 
 export default function MyList(props: Iprops) {
@@ -38,6 +39,7 @@ export default function MyList(props: Iprops) {
     activeItem,
     changeActiveItem,
     changeDataSource,
+    queryCalendarInfo,
   } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -67,6 +69,7 @@ export default function MyList(props: Iprops) {
   const handleDelete = async (val: any) => {
     await window.electron.ipcRenderer.invoke('delete-data', {
       code: val.code,
+      createTime: val.createTime,
       fileList: JSON.parse(val.fileList),
     });
     if (activeItem.code === val.code) {
@@ -210,6 +213,7 @@ export default function MyList(props: Iprops) {
                 <FileListShowCom
                   dataSource={item}
                   changeDataSource={changeDataSource}
+                  queryCalendarInfo={queryCalendarInfo}
                 />
 
                 <div className={styles.tagContainer}>

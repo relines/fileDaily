@@ -18,10 +18,11 @@ type Iprops = {
     type: 'more' | 'new' | 'save' | 'rename',
     data?: any,
   ) => void;
+  queryCalendarInfo: () => void;
 };
 
 export default function FileListShow(props: Iprops) {
-  const { dataSource, changeDataSource } = props;
+  const { dataSource, changeDataSource, queryCalendarInfo } = props;
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -64,6 +65,10 @@ export default function FileListShow(props: Iprops) {
         type: 'success',
         content: '保存成功',
       });
+      queryCalendarInfo();
+      setTimeout(() => {
+        queryCalendarInfo();
+      }, 400);
     } else {
       messageApi.open({
         type: 'error',
@@ -252,6 +257,14 @@ export default function FileListShow(props: Iprops) {
               </Dropdown>
             );
           }
+
+          if (
+            item.type === 'video' &&
+            fileRef.current[`${item.name}_${index}`]
+          ) {
+            fileRef.current[`${item.name}_${index}`].currentTime = 10;
+          }
+
           return (
             <Dropdown
               menu={{
@@ -349,14 +362,14 @@ export default function FileListShow(props: Iprops) {
                     fileRef.current[`${item.name}_${index}`] = r;
                   }}
                   onCanPlay={(e: any) => {
-                    if (item.initialPlay) return;
-                    item.initialPlay = true;
-                    const videoDuration =
-                      fileRef.current[`${item.name}_${index}`].duration;
-                    const quotient = Math.round(videoDuration / 2);
-                    console.log('currentTime', quotient);
-                    fileRef.current[`${item.name}_${index}`].currentTime =
-                      quotient;
+                    // if (item.initialPlay) return;
+                    // item.initialPlay = true;
+                    // const videoDuration =
+                    //   fileRef.current[`${item.name}_${index}`].duration;
+                    // const quotient = Math.round(videoDuration / 2);
+                    console.log('currentTime');
+                    // fileRef.current[`${item.name}_${index}`].currentTime =
+                    //   quotient;
 
                     if (fileList?.length === 1) {
                       fileRef.current[`${item.name}_${index}`].style.width =

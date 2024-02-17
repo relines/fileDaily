@@ -61,6 +61,7 @@ export default function MyEdit(props: Iprops) {
         fileList,
         category,
         address,
+        oldCreateTime: activeItem.createTime,
         createTime: time,
         tag,
       },

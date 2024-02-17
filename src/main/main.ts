@@ -115,6 +115,10 @@ const ipcFunc = () => {
     const result = calendarApi.updateCalendar(message);
     return result;
   });
+  ipcMain.handle('del-calendar', async (event, message) => {
+    const result = calendarApi.delCalendar(message);
+    return result;
+  });
 
   // 分类操作
   ipcMain.handle('add-category', async (event, message) => {

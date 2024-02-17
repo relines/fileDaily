@@ -78,16 +78,9 @@ export default {
   delCalendar({ date }: any) {
     const db = connect();
 
-    const stmQueryById = db.prepare(
-      `select * from calendar_table where id = @id`,
-    );
     const stmDel = db.prepare(`DELETE FROM calendar_table WHERE date = @date`);
 
     try {
-      const item = stmQueryById.get({ date });
-      if (!item) {
-        return { code: 400, msg: '没有查到date', data: item };
-      }
       stmDel.run({ date });
       return { code: 200, msg: '删除成功' };
     } catch (error) {

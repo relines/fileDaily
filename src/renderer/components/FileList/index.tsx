@@ -132,6 +132,9 @@ export default function Index(props: Iprops) {
             </Dropdown>
           );
         }
+        if (item.type === 'video' && fileRef.current[`${item.name}_${index}`]) {
+          fileRef.current[`${item.name}_${index}`].currentTime = 10;
+        }
         return (
           <Dropdown
             menu={{
@@ -180,14 +183,14 @@ export default function Index(props: Iprops) {
                   fileRef.current[`${item.name}_${index}`] = r;
                 }}
                 onCanPlay={(e: any) => {
-                  if (item.initialPlay) return;
-                  item.initialPlay = true;
-                  const videoDuration =
-                    fileRef.current[`${item.name}_${index}`].duration;
-                  const quotient = Math.round(videoDuration / 2);
-                  console.log('currentTime', quotient);
-                  fileRef.current[`${item.name}_${index}`].currentTime =
-                    quotient;
+                  // if (item.initialPlay) return;
+                  // item.initialPlay = true;
+                  // const videoDuration =
+                  //   fileRef.current[`${item.name}_${index}`].duration;
+                  // const quotient = Math.round(videoDuration / 2);
+                  // console.log('currentTime', quotient);
+                  // fileRef.current[`${item.name}_${index}`].currentTime =
+                  //   quotient;
 
                   if (dataSource?.length === 1) {
                     fileRef.current[`${item.name}_${index}`].style.width =

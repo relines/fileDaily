@@ -1,6 +1,13 @@
-import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+  useImperativeHandle,
+} from 'react';
 
-import { message, Form } from 'antd';
+import { message, Form, Dropdown } from 'antd';
 import { ModalForm, ProFormDatePicker } from '@ant-design/pro-components';
 
 import dayjs, { Dayjs } from 'dayjs';
@@ -19,7 +26,7 @@ type Iprops = {
   changeSearchTime: (val: any) => void;
 };
 
-export default function ScrollCalendar(props: Iprops) {
+function ScrollCalendar(props: Iprops, ref: any) {
   const { searchTime, changeSearchTime } = props;
 
   const [fileList, setFileList] = useState<any[]>([]);
@@ -62,10 +69,14 @@ export default function ScrollCalendar(props: Iprops) {
     }
   };
 
-  useEffect(() => {
+  const queryCalendarInfo = () => {
     getCalendarInfo(
       schedules.map((item: any) => dayjs(item.month).format('YYYY-MM')),
     );
+  };
+
+  useEffect(() => {
+    queryCalendarInfo();
   }, [schedules]);
 
   const backToday = () => {
@@ -96,6 +107,28 @@ export default function ScrollCalendar(props: Iprops) {
     calendarRef.current?.scrollTo({ top: 1 });
     setModalShow(false);
   };
+
+  const handleDelete = async (val: any) => {
+    const resp = await window.electron.ipcRenderer.invoke('del-calendar', {
+      date: val.date,
+    });
+    if (resp.code === 200) {
+      messageApi.open({
+        type: 'success',
+        content: '删除成功',
+      });
+      queryCalendarInfo();
+    } else {
+      messageApi.open({
+        type: 'error',
+        content: resp.msg,
+      });
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    queryCalendarInfo,
+  }));
 
   const weekTitles = useMemo(() => {
     return [...Array(7)].map((_, weekInx) => {
@@ -208,6 +241,15 @@ export default function ScrollCalendar(props: Iprops) {
                     (item3: any) =>
                       item3.date === dayjs(item2).format('YYYY-MM-DD'),
                   )[0];
+
+                  if (
+                    fileInfo &&
+                    fileInfo.type === 'video' &&
+                    fileRef.current[`${fileInfo.id}_${index}`]
+                  ) {
+                    fileRef.current[`${fileInfo.id}_${index}`].currentTime = 10;
+                  }
+
                   return (
                     <div
                       key={index2}
@@ -224,14 +266,43 @@ export default function ScrollCalendar(props: Iprops) {
                         changeSearchTime(dayjs(item2).endOf('day').valueOf());
                       }}
                     >
-                      <span
-                        style={{
-                          position: 'relative',
-                          zIndex: 1,
+                      <Dropdown
+                        menu={{
+                          items: [
+                            {
+                              label: (
+                                <div
+                                  style={{
+                                    // width: '30px',
+                                    height: '15px',
+                                    lineHeight: '15px',
+                                    textAlign: 'center',
+                                    color: '#f00',
+                                  }}
+                                  onClick={() => {
+                                    handleDelete(fileInfo);
+                                  }}
+                                >
+                                  删除日历图
+                                </div>
+                              ),
+                              key: 'del',
+                            },
+                          ],
                         }}
+                        trigger={['contextMenu']}
+                        key="del"
                       >
-                        {item2 ? item2.format('DD') : ''}
-                      </span>
+                        <span
+                          style={{
+                            position: 'relative',
+                            zIndex: 1,
+                          }}
+                        >
+                          {item2 ? item2.format('DD') : ''}
+                        </span>
+                      </Dropdown>
+
                       {fileInfo && fileInfo.type === 'img' && (
                         <div className={styles.imgContainer}>
                           <img
@@ -269,16 +340,16 @@ export default function ScrollCalendar(props: Iprops) {
                             fileRef.current[`${fileInfo.id}_${index}`] = r;
                           }}
                           onCanPlay={(e: any) => {
-                            if (fileInfo.initialPlay) return;
-                            fileInfo.initialPlay = true;
-                            const videoDuration =
-                              fileRef.current[`${fileInfo.id}_${index}`]
-                                .duration;
-                            const quotient = Math.round(videoDuration / 2);
-                            console.log('currentTime', quotient);
-                            fileRef.current[
-                              `${fileInfo.id}_${index}`
-                            ].currentTime = quotient;
+                            // if (fileInfo.initialPlay) return;
+                            // fileInfo.initialPlay = true;
+                            // const videoDuration =
+                            //   fileRef.current[`${fileInfo.id}_${index}`]
+                            //     .duration;
+                            // const quotient = Math.round(videoDuration / 2);
+                            // console.log('currentTime', quotient);
+                            // fileRef.current[
+                            //   `${fileInfo.id}_${index}`
+                            // ].currentTime = quotient;
 
                             if (e.target.videoWidth > e.target.videoHeight) {
                               fileRef.current[
@@ -323,7 +394,6 @@ export default function ScrollCalendar(props: Iprops) {
           forceRender: true,
           onCancel: () => setModalShow(false),
         }}
-        submitTimeout={2000}
         onFinish={async (values) => {
           goToMonth(values.month);
         }}
@@ -339,3 +409,5 @@ export default function ScrollCalendar(props: Iprops) {
     </div>
   );
 }
+
+export default React.forwardRef(ScrollCalendar);
