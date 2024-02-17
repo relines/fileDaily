@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 
-import { message } from 'antd';
+import { message, Form } from 'antd';
+import { ModalForm, ProFormDatePicker } from '@ant-design/pro-components';
 
 import dayjs, { Dayjs } from 'dayjs';
 import { debounce } from 'lodash-es';
@@ -22,6 +23,7 @@ export default function ScrollCalendar(props: Iprops) {
   const { searchTime, changeSearchTime } = props;
 
   const [fileList, setFileList] = useState<any[]>([]);
+  const [modalShow, setModalShow] = useState(false);
 
   const calendarRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<any>({});
@@ -29,6 +31,8 @@ export default function ScrollCalendar(props: Iprops) {
   const { windowHeight } = useWindowSize();
 
   const [messageApi, contextHolder] = message.useMessage();
+
+  const [form] = Form.useForm<any>();
 
   const getDays = useCallback((month: Dayjs) => {
     return getDaysOfMonth(month.year(), month.month() + 1);
@@ -75,6 +79,22 @@ export default function ScrollCalendar(props: Iprops) {
     setSchedules(arr);
     changeSearchTime(dayjs(new Date()).endOf('day').valueOf());
     calendarRef.current?.scrollTo({ top: 1 });
+  };
+
+  const goToMonth = (val: string) => {
+    const arr = [
+      dayjs(val),
+      dayjs(val).add(1, 'month'),
+      dayjs(val).add(2, 'month'),
+    ].map((month) => ({
+      month,
+      days: getDays(month),
+      url: '',
+    }));
+    setSchedules(arr);
+    changeSearchTime(dayjs(new Date()).endOf('day').valueOf());
+    calendarRef.current?.scrollTo({ top: 1 });
+    setModalShow(false);
   };
 
   const weekTitles = useMemo(() => {
@@ -166,7 +186,19 @@ export default function ScrollCalendar(props: Iprops) {
             <div key={index}>
               {/* 年 月 */}
               <div className={styles.calendarMonth}>
-                <div>{schedule.month.format('MMM YYYY')}</div>
+                <div
+                  style={{
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    form.setFieldsValue({
+                      month: new Date(),
+                    });
+                    setModalShow(true);
+                  }}
+                >
+                  {schedule.month.format('MMM YYYY')}
+                </div>
               </div>
 
               {/* 日 */}
@@ -192,7 +224,14 @@ export default function ScrollCalendar(props: Iprops) {
                         changeSearchTime(dayjs(item2).endOf('day').valueOf());
                       }}
                     >
-                      <span>{item2 ? item2.format('DD') : ''}</span>
+                      <span
+                        style={{
+                          position: 'relative',
+                          zIndex: 1,
+                        }}
+                      >
+                        {item2 ? item2.format('DD') : ''}
+                      </span>
                       {fileInfo && fileInfo.type === 'img' && (
                         <div className={styles.imgContainer}>
                           <img
@@ -272,6 +311,31 @@ export default function ScrollCalendar(props: Iprops) {
           );
         })}
       </div>
+      <ModalForm
+        title="选择月份"
+        form={form}
+        open={modalShow}
+        width={300}
+        autoFocusFirstInput
+        layout="inline"
+        modalProps={{
+          destroyOnClose: true,
+          forceRender: true,
+          onCancel: () => setModalShow(false),
+        }}
+        submitTimeout={2000}
+        onFinish={async (values) => {
+          goToMonth(values.month);
+        }}
+      >
+        <ProFormDatePicker
+          name="month"
+          label="月份"
+          fieldProps={{
+            picker: 'month',
+          }}
+        />
+      </ModalForm>
     </div>
   );
 }
