@@ -230,8 +230,15 @@ export default function MyList(props: Iprops) {
                 <div className={styles.bottom}>
                   <span className={styles.time}>
                     {dataSource.length - index}
-                    {'-->'}
-                    {dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')}
+                    <span
+                      style={{
+                        position: 'relative',
+                        top: '-1px',
+                      }}
+                    >
+                      {' --> '}
+                    </span>
+                    {dayjs(item.createTime).format('YYYY年MM月DD日 HH:mm:ss')}
                   </span>
                 </div>
               </div>
