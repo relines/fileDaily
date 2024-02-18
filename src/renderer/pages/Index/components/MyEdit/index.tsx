@@ -210,7 +210,11 @@ export default function MyEdit(props: Iprops) {
       <FileListCom
         dataSource={fileList}
         changeDataSource={(val: any) => {
-          setFileList(val);
+          const list = val.map((item: any, index: number) => {
+            item.order = index + 1;
+            return item;
+          });
+          setFileList(list);
         }}
         activeItem={activeItem}
       />
