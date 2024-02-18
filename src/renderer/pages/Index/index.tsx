@@ -7,7 +7,7 @@ import MyCalendar from './components/MyCalendar2';
 import MyList from './components/MyList';
 import MyEdit from './components/MyEdit';
 
-import useWindowSize from '../../hooks/useWindowSize';
+// import useWindowSize from '../../hooks/useWindowSize';
 
 import styles from './index.module.less';
 
@@ -23,37 +23,36 @@ export default function IndexCom() {
   const pageIndexRef = useRef<number>(0);
   const calendarRef = useRef<any>();
 
-  const { windowWidth, windowHeight } = useWindowSize();
+  // const { windowWidth, windowHeight } = useWindowSize();
 
-  useEffect(() => {
-    if (!activeItem) return;
-    if (windowWidth === 0 || windowHeight === 0) return;
-
-    if (showCalendar && activeItem.code) {
-      window.electron.ipcRenderer.send('change-window-size', {
-        width: 1280,
-        height: windowHeight + 28,
-      });
-    }
-    if (showCalendar && !activeItem.code) {
-      window.electron.ipcRenderer.send('change-window-size', {
-        width: 750,
-        height: windowHeight + 28,
-      });
-    }
-    if (!showCalendar && activeItem.code) {
-      window.electron.ipcRenderer.send('change-window-size', {
-        width: 820,
-        height: windowHeight + 28,
-      });
-    }
-    if (!showCalendar && !activeItem.code) {
-      window.electron.ipcRenderer.send('change-window-size', {
-        width: 300,
-        height: windowHeight + 28,
-      });
-    }
-  }, [activeItem, showCalendar]);
+  // useEffect(() => {
+  //   if (!activeItem) return;
+  //   if (windowWidth === 0 || windowHeight === 0) return;
+  //   if (showCalendar && activeItem.code) {
+  //     window.electron.ipcRenderer.send('change-window-size', {
+  //       width: 1280,
+  //       height: windowHeight + 28,
+  //     });
+  //   }
+  //   if (showCalendar && !activeItem.code) {
+  //     window.electron.ipcRenderer.send('change-window-size', {
+  //       width: 750,
+  //       height: windowHeight + 28,
+  //     });
+  //   }
+  //   if (!showCalendar && activeItem.code) {
+  //     window.electron.ipcRenderer.send('change-window-size', {
+  //       width: 820,
+  //       height: windowHeight + 28,
+  //     });
+  //   }
+  //   if (!showCalendar && !activeItem.code) {
+  //     window.electron.ipcRenderer.send('change-window-size', {
+  //       width: 300,
+  //       height: windowHeight + 28,
+  //     });
+  //   }
+  // }, [activeItem, showCalendar]);
 
   const getData = async () => {
     const result = await window.electron.ipcRenderer.invoke('get-list', {
