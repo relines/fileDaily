@@ -71,11 +71,6 @@ export default function MyEdit(props: Iprops) {
     setLoading(false);
     message.success('保存成功');
     changeDataSource('save', result?.data);
-    if (activeItem.code && activeItem.code === result.data.code) {
-      changeActiveItem({});
-    } else {
-      changeActiveItem(result?.data);
-    }
   };
 
   const chooseFile = async () => {
