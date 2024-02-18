@@ -31,7 +31,7 @@ export default function IndexCom() {
 
     if (showCalendar && activeItem.code) {
       window.electron.ipcRenderer.send('change-window-size', {
-        width: 1270,
+        width: 1280,
         height: windowHeight + 28,
       });
     }
@@ -43,7 +43,7 @@ export default function IndexCom() {
     }
     if (!showCalendar && activeItem.code) {
       window.electron.ipcRenderer.send('change-window-size', {
-        width: 810,
+        width: 820,
         height: windowHeight + 28,
       });
     }
