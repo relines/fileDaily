@@ -12,7 +12,7 @@ export default {
 
     // 获取total语法
     const stmTotal =
-      category === 'all'
+      category === '全部'
         ? db.prepare(
             `select count(*) total from list_table where createTime <= ${
               searchTime || 9999999999999
@@ -25,7 +25,7 @@ export default {
           );
     // 实现分页语法
     const stmList =
-      category === 'all'
+      category === '全部'
         ? db.prepare(
             `select * from list_table where createTime <= ${
               searchTime || 9999999999999

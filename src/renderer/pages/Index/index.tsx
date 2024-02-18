@@ -17,7 +17,7 @@ export default function IndexCom() {
   const [total, setTotal] = useState<number>(0);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>('');
-  const [category, setCategory] = useState<string>('all');
+  const [category, setCategory] = useState<string>('全部');
   const [searchTime, setSearchTime] = useState<any>();
 
   const pageIndexRef = useRef<number>(0);
