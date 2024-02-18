@@ -14,7 +14,7 @@ export default {
     const stmTotal =
       category === '全部'
         ? db.prepare(
-            `select count(*) total from list_table where createTime <= ${
+            `select count(*) total from list_table where category != @recycleCategory and createTime <= ${
               searchTime || 9999999999999
             } and (content like '%${keyword}%' or tag like '%${keyword}%')`,
           )
@@ -27,7 +27,7 @@ export default {
     const stmList =
       category === '全部'
         ? db.prepare(
-            `select * from list_table where createTime <= ${
+            `select * from list_table where category != @recycleCategory and createTime <= ${
               searchTime || 9999999999999
             } and (content like '%${keyword}%' or tag like '%${keyword}%') ORDER BY createTime DESC LIMIT 20 OFFSET ${
               20 * pageIndex
@@ -42,14 +42,14 @@ export default {
           );
 
     try {
-      const total: any = stmTotal.all({ category });
-      const data = stmList.all({ category });
+      const total: any = stmTotal.all({ category, recycleCategory: '回收站' });
+      const data = stmList.all({ category, recycleCategory: '回收站' });
       return { code: 200, msg: '成功', data, total: total[0]?.total };
     } catch (error) {
       return { code: 400, msg: error };
     }
   },
-  addList({ content, tag, createTime }: any) {
+  addList({ content, category, tag, createTime }: any) {
     const db = connect();
 
     const formatDay = dayjs(new Date()).format('YYYYMMDD');
@@ -60,7 +60,7 @@ export default {
       `SELECT * FROM list_table WHERE code LIKE @formatDay`,
     );
     const stmAdd = db.prepare(
-      `INSERT INTO list_table (code, content, tag, createTime) values (@code, @content, @tag, @createTime)`,
+      `INSERT INTO list_table (code, content, category, tag, createTime) values (@code, @content, @category, @tag, @createTime)`,
     );
 
     try {
@@ -73,7 +73,7 @@ export default {
           return { code: 201, msg: '已经达到9999条数据', data: list };
         }
       }
-      stmAdd.run({ code, content, tag, createTime });
+      stmAdd.run({ code, content, category, tag, createTime });
       return {
         code: 200,
         msg: '成功',
@@ -173,7 +173,7 @@ export default {
     try {
       const item = stmInquire.get({ code });
       if (!item) {
-        return { code: 201, msg: '没有查到code', data: item };
+        return { code: 201, msg: '没有查到code2', data: item };
       }
       stmDel.run({ code });
       fileList?.forEach((item2: any) => {

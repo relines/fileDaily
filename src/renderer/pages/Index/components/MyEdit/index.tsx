@@ -25,7 +25,7 @@ type Iprops = {
   activeItem: any;
   changeActiveItem: (val: any) => void;
   changeDataSource: (
-    type: 'more' | 'new' | 'save' | 'rename',
+    type: 'more' | 'new' | 'save' | 'delete' | 'rename',
     data?: any,
   ) => void;
 };
@@ -71,7 +71,11 @@ export default function MyEdit(props: Iprops) {
     setLoading(false);
     message.success('保存成功');
     changeDataSource('save', result?.data);
-    changeActiveItem(result?.data);
+    if (activeItem.code && activeItem.code === result.data.code) {
+      changeActiveItem({});
+    } else {
+      changeActiveItem(result?.data);
+    }
   };
 
   const chooseFile = async () => {

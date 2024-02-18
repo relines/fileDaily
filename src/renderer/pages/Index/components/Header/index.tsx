@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useState, useEffect } from 'react';
 
 import { Dropdown, Tooltip } from 'antd';
@@ -86,6 +83,19 @@ export default function HeaderCom(props: Iprops) {
                   }}
                 >
                   {theme === 'dark' ? 'light' : 'dark'}
+                </div>
+              ),
+            },
+            {
+              key: 'recycle',
+              label: (
+                <div
+                  onClick={() => {
+                    changeCategory('回收站');
+                    setCategory('回收站');
+                  }}
+                >
+                  回收站
                 </div>
               ),
             },

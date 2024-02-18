@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Input, Dropdown, message, Tag } from 'antd';
+import { Input, Dropdown, Tag } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -24,7 +24,7 @@ type Iprops = {
   activeItem: any;
   changeActiveItem: any;
   changeDataSource: (
-    type: 'more' | 'new' | 'save' | 'rename',
+    type: 'more' | 'new' | 'save' | 'delete' | 'rename',
     data?: any,
   ) => void;
   queryCalendarInfo: () => void;
@@ -58,6 +58,7 @@ export default function MyList(props: Iprops) {
     setLoading(true);
     const resp = await window.electron.ipcRenderer.invoke('add-data', {
       content: '',
+      category: '全部',
       tag: '',
       createTime: new Date().getTime(),
     });
@@ -67,16 +68,33 @@ export default function MyList(props: Iprops) {
   };
 
   const handleDelete = async (val: any) => {
-    await window.electron.ipcRenderer.invoke('delete-data', {
-      code: val.code,
-      createTime: val.createTime,
-      fileList: JSON.parse(val.fileList),
-    });
+    if (val.category !== '回收站') {
+      const result = await window.electron.ipcRenderer.invoke('update-data', {
+        data: {
+          code: val.code,
+          content: val.content,
+          fileList: JSON.parse(val.fileList),
+          category: '回收站',
+          address: val.address,
+          oldCreateTime: activeItem.createTime,
+          createTime: val.createTime,
+          tag: val.tag ? JSON.parse(val.tag) : [],
+        },
+        categoryChanged: true,
+        oriCategory: val.category,
+      });
+      changeDataSource('delete', result?.data);
+    } else {
+      await window.electron.ipcRenderer.invoke('delete-data', {
+        code: val.code,
+        createTime: val.createTime,
+        fileList: JSON.parse(val.fileList),
+      });
+      changeDataSource('delete', val);
+    }
     if (activeItem.code === val.code) {
       changeActiveItem({});
     }
-    message.success('删除成功');
-    changeDataSource('new');
   };
 
   return (
@@ -137,7 +155,6 @@ export default function MyList(props: Iprops) {
                       label: (
                         <div
                           style={{
-                            width: '30px',
                             height: '15px',
                             lineHeight: '15px',
                             textAlign: 'center',
@@ -147,7 +164,7 @@ export default function MyList(props: Iprops) {
                             handleDelete(item);
                           }}
                         >
-                          删除
+                          {item.category === '回收站' ? '彻底删除' : '删除'}
                         </div>
                       ),
                       key: 'del',
@@ -218,6 +235,7 @@ export default function MyList(props: Iprops) {
 
                 <div className={styles.tagContainer}>
                   {item.tag &&
+                    item.tag !== '"[]"' &&
                     JSON.parse(item.tag)?.map((item2: any) => {
                       return (
                         <Tag

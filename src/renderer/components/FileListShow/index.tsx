@@ -15,7 +15,7 @@ require('dayjs/locale/zh-cn');
 type Iprops = {
   dataSource: any;
   changeDataSource: (
-    type: 'more' | 'new' | 'save' | 'rename',
+    type: 'more' | 'new' | 'save' | 'delete' | 'rename',
     data?: any,
   ) => void;
   queryCalendarInfo: () => void;

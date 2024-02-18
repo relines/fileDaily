@@ -67,7 +67,7 @@ export default function IndexCom() {
   };
 
   const changeDataSource = async (
-    type: 'more' | 'new' | 'save' | 'rename',
+    type: 'more' | 'new' | 'save' | 'delete' | 'rename',
     data?: any,
   ) => {
     // more: 下拉刷新, pageIndex += 1,然后获取tableData；
@@ -91,14 +91,23 @@ export default function IndexCom() {
       calendarRef.current?.queryCalendarInfo();
     }
     if (type === 'save') {
-      const newData = tableData.map((item: any) => {
-        if (item.code === data?.code) {
-          return data;
-        }
-        return item;
-      });
+      let newData = tableData;
+      if (category === '回收站') {
+        newData = tableData.filter((item: any) => item.code !== data.code);
+      } else {
+        newData = tableData.map((item: any) => {
+          if (item.code === data?.code) {
+            return data;
+          }
+          return item;
+        });
+      }
       setTableData(newData);
-      setActiveItem(data);
+      calendarRef.current?.queryCalendarInfo();
+    }
+    if (type === 'delete') {
+      const newData = tableData.filter((item: any) => item.code !== data.code);
+      setTableData(newData);
       calendarRef.current?.queryCalendarInfo();
     }
     if (type === 'rename') {
@@ -112,6 +121,12 @@ export default function IndexCom() {
       calendarRef.current?.queryCalendarInfo();
     }
   };
+
+  useEffect(() => {
+    if (tableData.map((item: any) => item.code)?.includes(activeItem.code))
+      return;
+    setActiveItem({});
+  }, [tableData]);
 
   useEffect(() => {
     if (category) {
