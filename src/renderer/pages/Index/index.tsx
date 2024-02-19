@@ -21,6 +21,7 @@ export default function IndexCom() {
 
   const pageIndexRef = useRef<number>(0);
   const calendarRef = useRef<any>();
+  const listRef = useRef<any>();
 
   const [listForm] = Form.useForm();
 
@@ -89,6 +90,7 @@ export default function IndexCom() {
         setTableData(result.data);
         message.warning('暂无数据');
       }
+      listRef.current?.scrollToTop();
       calendarRef.current?.queryCalendarInfo();
     }
     if (type === 'save') {
@@ -171,6 +173,7 @@ export default function IndexCom() {
           dataSource={tableData}
           total={total}
           form={listForm}
+          ref={listRef}
           activeItem={activeItem}
           changeActiveItem={setActiveItem}
           changeDataSource={changeDataSource}
@@ -185,6 +188,7 @@ export default function IndexCom() {
             activeItem={activeItem}
             changeActiveItem={setActiveItem}
             changeDataSource={changeDataSource}
+            scrollToActiveItem={listRef.current?.scrollToActiveItem}
           />
         </div>
       )}

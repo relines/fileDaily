@@ -6,6 +6,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import { Button, message, Modal, Radio, Space } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import dayjs from 'dayjs';
 import useWindowSize from '../../../../hooks/useWindowSize';
@@ -24,6 +25,7 @@ import styles from './index.module.less';
 type Iprops = {
   activeItem: any;
   changeActiveItem: (val: any) => void;
+  scrollToActiveItem: () => void;
   changeDataSource: (
     type: 'more' | 'new' | 'save' | 'delete' | 'rename',
     data?: any,
@@ -31,7 +33,8 @@ type Iprops = {
 };
 
 export default function MyEdit(props: Iprops) {
-  const { activeItem, changeActiveItem, changeDataSource } = props;
+  const { activeItem, changeActiveItem, scrollToActiveItem, changeDataSource } =
+    props;
 
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -114,7 +117,7 @@ export default function MyEdit(props: Iprops) {
     <div
       className={styles.eidtContainer}
       style={{
-        height: `${windowHeight === 0 ? 200 : windowHeight - 50}px`,
+        height: `${windowHeight === 0 ? 200 : windowHeight - 76}px`,
         overflow: 'auto',
       }}
     >
@@ -181,6 +184,16 @@ export default function MyEdit(props: Iprops) {
             borderRadius: '5px',
           }}
           onChange={setValue}
+        />
+        <ExclamationCircleOutlined
+          style={{
+            position: 'absolute',
+            top: '110px',
+            right: '140px',
+            cursor: 'pointer',
+          }}
+          title="定位到列表"
+          onClick={() => scrollToActiveItem()}
         />
       </div>
       <CategorySetCom

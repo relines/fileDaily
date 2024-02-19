@@ -1,4 +1,4 @@
-import React, { useState, useImperativeHandle } from 'react';
+import React, { useState, useRef, useImperativeHandle } from 'react';
 
 import { Input, Dropdown, Tag, Form } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
@@ -41,6 +41,8 @@ function MyList(props: Iprops, ref: any) {
   } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const rowRef = useRef<any>({});
 
   const { windowHeight } = useWindowSize();
 
@@ -96,7 +98,12 @@ function MyList(props: Iprops, ref: any) {
   };
 
   useImperativeHandle(ref, () => ({
-    queryCalendarInfo,
+    scrollToTop: () => {
+      rowRef.current?.[dataSource[0]?.code]?.scrollIntoView();
+    },
+    scrollToActiveItem: () => {
+      rowRef.current?.[activeItem.code]?.scrollIntoView();
+    },
   }));
 
   return (
@@ -105,6 +112,10 @@ function MyList(props: Iprops, ref: any) {
         <span
           style={{
             userSelect: 'none',
+            cursor: 'pointer',
+          }}
+          onClick={() => {
+            rowRef.current?.[dataSource[0]?.code]?.scrollIntoView();
           }}
         >
           共{total}条
@@ -158,7 +169,13 @@ function MyList(props: Iprops, ref: any) {
       >
         {dataSource.map((item: any, index: number) => {
           return (
-            <div key={item.code} className={styles.listItem}>
+            <div
+              key={item.code}
+              className={styles.listItem}
+              ref={(r: any) => {
+                rowRef.current[item.code] = r;
+              }}
+            >
               <Dropdown
                 menu={{
                   items: [
