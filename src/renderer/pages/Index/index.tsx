@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import { message } from 'antd';
+import { message, Form } from 'antd';
 
 import HeaderCom from './components/Header';
 import MyCalendar from './components/MyCalendar2';
@@ -16,12 +16,13 @@ export default function IndexCom() {
   const [tableData, setTableData] = useState<any[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
-  const [keyword, setKeyword] = useState<string>('');
   const [category, setCategory] = useState<string>('全部');
   const [searchTime, setSearchTime] = useState<any>();
 
   const pageIndexRef = useRef<number>(0);
   const calendarRef = useRef<any>();
+
+  const [listForm] = Form.useForm();
 
   // const { windowWidth, windowHeight } = useWindowSize();
 
@@ -55,6 +56,7 @@ export default function IndexCom() {
   // }, [activeItem, showCalendar]);
 
   const getData = async () => {
+    const keyword = listForm.getFieldsValue().search || '';
     const result = await window.electron.ipcRenderer.invoke('get-list', {
       pageIndex: pageIndexRef.current,
       category,
@@ -168,8 +170,7 @@ export default function IndexCom() {
         <MyList
           dataSource={tableData}
           total={total}
-          keyword={keyword}
-          changeKeyword={setKeyword}
+          form={listForm}
           activeItem={activeItem}
           changeActiveItem={setActiveItem}
           changeDataSource={changeDataSource}

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle } from 'react';
 
-import { Input, Dropdown, Tag } from 'antd';
+import { Input, Dropdown, Tag, Form } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -19,8 +19,7 @@ require('dayjs/locale/zh-cn');
 type Iprops = {
   dataSource: any[];
   total: number;
-  keyword: string;
-  changeKeyword: (val: string) => void;
+  form: any;
   activeItem: any;
   changeActiveItem: any;
   changeDataSource: (
@@ -30,12 +29,11 @@ type Iprops = {
   queryCalendarInfo: () => void;
 };
 
-export default function MyList(props: Iprops) {
+function MyList(props: Iprops, ref: any) {
   const {
     dataSource,
     total,
-    keyword,
-    changeKeyword,
+    form,
     activeItem,
     changeActiveItem,
     changeDataSource,
@@ -97,6 +95,10 @@ export default function MyList(props: Iprops) {
     }
   };
 
+  useImperativeHandle(ref, () => ({
+    queryCalendarInfo,
+  }));
+
   return (
     <div className={styles.listContainer}>
       <div className={styles.header}>
@@ -116,20 +118,29 @@ export default function MyList(props: Iprops) {
           }}
           onClick={() => addData()}
         />
-        <Input.Search
-          placeholder="input search text"
-          allowClear
-          size="small"
-          value={keyword}
-          onChange={(e: any) => {
-            changeKeyword(e.target.value);
+        <Form
+          name="add"
+          form={form}
+          autoComplete="off"
+          style={{
+            width: 200,
+            height: '20px',
+            marginTop: '-3px',
+            float: 'right',
           }}
-          onSearch={(val, e, info) => {
-            if (info?.source === 'clear') return;
-            changeDataSource('new');
-          }}
-          style={{ width: 200, height: '20px', float: 'right' }}
-        />
+        >
+          <Form.Item name="search">
+            <Input.Search
+              placeholder="input search text"
+              allowClear
+              size="small"
+              onSearch={(val, e, info) => {
+                if (info?.source === 'clear') return;
+                changeDataSource('new');
+              }}
+            />
+          </Form.Item>
+        </Form>
       </div>
       <div className={styles.liner}> </div>
       <InfiniteScroll
@@ -272,3 +283,5 @@ export default function MyList(props: Iprops) {
     </div>
   );
 }
+
+export default React.forwardRef(MyList);
