@@ -49,12 +49,6 @@ function MyList(props: Iprops, ref: any) {
   const ContainerHeight = windowHeight === 0 ? 200 : windowHeight - 73;
 
   const addData = async () => {
-    if (
-      ['', '<p><br></p>'].includes(dataSource[0]?.content) &&
-      [null, '[]'].includes(dataSource[0]?.fileList)
-    ) {
-      return;
-    }
     setLoading(true);
     const resp = await window.electron.ipcRenderer.invoke('add-data', {
       content: '',
@@ -127,7 +121,17 @@ function MyList(props: Iprops, ref: any) {
             marginTop: '5px',
             marginLeft: '5px',
           }}
-          onClick={() => addData()}
+          onClick={() => {
+            if (
+              ['', '<p><br></p>'].includes(dataSource[0]?.content) &&
+              [null, '[]'].includes(dataSource[0]?.fileList)
+            ) {
+              rowRef.current?.[dataSource[0]?.code]?.scrollIntoView();
+              changeActiveItem(dataSource[0]);
+              return;
+            }
+            addData();
+          }}
         />
         <Form
           name="add"
